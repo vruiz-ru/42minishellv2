@@ -120,3 +120,34 @@ Your program has to implement:
 • && and || with parenthesis for priorities.
 • Wildcards * should work for the current working directory.
 */
+
+/* auxiliary ideas for implementing the prototype of the project
+
+1.  since we've got to save the user's input into a history file, is better to do this at the start of the program
+	so we want to use open() with flags O_WRONLY | O_APPEND | O_CREAT, 0644 (permissions) 
+			ex. int fd = open(HISTORY, O_WRONLY | O_APPEND | O_CREAT, 0644)
+
+2.  then, we extract the last row (last user input) with GETNEXTLINE.
+
+3.  checking the input/tokens (what tokens actually stand for is the command, its flags, and path/input)
+
+4.  we are parsing the with strtok() - stands for string tokenizing or split() of our libft. 
+			ex  char **tokens = ft_split(args, " ").
+				while (args) if *args *tokens = *args;
+				*toket[LAST_IDX] = NULL; 
+
+5.  builtin commands:
+		cd [dir]			Change current working directory (use chdir())
+		exit	            Exit the shell (use exit())
+		pwd					Print current directory (use getcwd())
+		echo [args...]		Print arguments to stdout
+		setenv / unsetenv	Set or unset environment variables
+		env					Print all environment variables
+		clear				Clear screen (printf("\033[H\033[J"))
+		help				Custom — show list of built-ins supported
+		.---------------------------------------------------------------.
+		| history				Optional — store & print input commands |
+		'---------------------------------------------------------------'
+
+*/
+
