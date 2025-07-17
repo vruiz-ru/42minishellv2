@@ -137,17 +137,68 @@ Your program has to implement:
 				*toket[LAST_IDX] = NULL; 
 
 5.  builtin commands:
-		cd [dir]			Change current working directory (use chdir())
-		exit	            Exit the shell (use exit())
-		pwd					Print current directory (use getcwd())
-		echo [args...]		Print arguments to stdout
-		setenv / unsetenv	Set or unset environment variables
-		env					Print all environment variables
-		clear				Clear screen (printf("\033[H\033[J"))
-		help				Custom — show list of built-ins supported
+	I.		cd [dir]			Change current working directory (use chdir())
+	II.		exit	            Exit the shell (use exit())
+	III.	pwd					Print current directory (use getcwd())
+	IV.		echo [args...]		Print arguments to stdout
+	V.		setenv / unsetenv	Set or unset environment variables
+	VI.		env					Print all environment variables
+	VII.	clear				Clear screen (printf("\033[H\033[J"))
+	VIII.	help				Custom — show list of built-ins supported
 		.---------------------------------------------------------------.
 		| history				Optional — store & print input commands |
 		'---------------------------------------------------------------'
 
+
+EXIT/SUSPEND ANY ONGOING PROCESS SIGNALS 
+
+SIGINT (CTRL + C) - EXIT
+SIGTSTP (CTRL + Z) - SUSUPENDS
+
+6.	parsing the built ins commands should be done into a separate function that will returns 0 if there was a problem and > 0 if there are none.
+	I.		cd command:
+				protect returns
+				print required arguments (token)/if its not, we are going back to the start cwd
+				chdir returns 0 if success
+				don't forget to implement ../../../ (thought: counting sequence "../" and then backward as many folders as sequence are)
+	II.		pwd command:
+				getcwd(buffer_str, buffer_size) -> buffer size is usual 4096
+				store the result of getcwd into a string for better usecase
+					ex: char	*store_cwd = getcwd(NULL, 0); -> will show the current work directory
+				don't manage the rest of arguments (tokens) after pwd
+				don't forget to free the store_cwd string after use;
+	III.	echo command:
+				treate the flag -n properly -> quit the \n char
+				doesn't recognize simple backslash
+					ex: echo \new -> new
+						echo \\new -> \new
+				expect a closing " if there is one
+					ex: 1.echo sadas" -> > (for continuation and after we put " will outputs) in this case: 	sadas
+																											: command not found
+						2. echo "
+						> asdsa
+						> asdasdsa
+						> adsadsa
+						> adasdsadsa
+						> adsadas
+						> "
+					output:	\n (because the " is on the line with echo and its empty)
+						asdsa
+						asdasdsa
+						adsadsa
+						adasdsadsa
+						adsadas
+						\n (becaue the closing " its on the last row and its empty)
+						3. treat the variable within '$VAR' literally, instead of "$VAR" or $VAR which prints the value of that specific variable (in case of variable doesn't exists, will print a new line char)
+	IV.		env command should be stipulated on the main
+	V.		exit command is a simple EXIT_SUCCESS/FAILURE
+
+7. not to forget to implement the current working directory inside of command line as we navigate thru the shell
+8. implementing our own strtok involves kinda ft_split, but every time calling the strtok on the string to be tokenized, the string will have the value - strtok'times. Split combined with static variables (gnl)
+9. while command implementing:
+	-> beside searching into a builtin structure commands, we want to search another commands inside of kernel (usr/bin) so we want to look into a TOKENIZED PATH
+	
+
 */
 
+_
