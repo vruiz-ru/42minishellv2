@@ -132,7 +132,7 @@ Your program has to implement:
 
 3.[CHECKING ARGS/TOKENS]  checking the input/tokens (what tokens actually stand for is the command, its flags, and path/input)
 
-v4. [STRTOK] Implemented
+checked 4. [STRTOK] Implemented
 
 5.[BUILTINS]  builtin commands:			
 	* parsing the built ins commands should be done into a separate function that will returns 0 if there was a problem and > 0 if there are none.
@@ -217,21 +217,4 @@ v4. [STRTOK] Implemented
 	-> have to check the access of the command: if (access(path, X_OK) == 0) then execve *X_OK is the flag to check if we are granted with execute permission*
 */
 
-#include <stddef.h>
-#include "libft/libft.h"
 
-int main(void)
-{
-	char *s1 = "  Hello >> World!";
-	char *s2 = ",,A,,B,,C,,";
-	char *s3 = "abc";
-	char *s4 = "";
-	char *t;
-	
-	t = ft_strtok(s1, " ");
-	while (t) {
-		ft_printf("Token: [%s]\n", t);
-		t = ft_strtok(NULL, " ");
-	}
-	return (0);
-}
