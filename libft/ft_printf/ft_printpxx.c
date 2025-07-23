@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 10:18:55 by aghergut          #+#    #+#             */
-/*   Updated: 2024/10/17 16:42:04 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/23 17:20:55 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static int	ft_memcase(t_flags *flags, unsigned long long mem, char type)
 		len = 1;
 	if (flags->alt > 0)
 		len += 2;
-	if (!flags->zpad && !flags->left && flags->width)
+	if (flags->right)
 		len += ft_fill(flags->width, len, ' ');
 	ft_flagalt(flags, type);
 	if (flags-> zpad)
@@ -88,7 +88,7 @@ static int	ft_ptrcase(t_flags *flags, unsigned long long mem, char type)
 	len += ft_flagspace(flags, type, 0);
 	if (flags->prec)
 		return (ft_precpxx(flags, mem, len, type) + flags->sign);
-	if (!flags->zpad && !flags->left && flags->width)
+	if (flags->right)
 		len += ft_fill(flags->width, len + flags->alt, ' ');
 	len += ft_flagsign(flags, type, 0);
 	len += ft_flagalt(flags, type);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghergut <aghergut@student.42madrid>       +#+  +:+       +#+        */
+/*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 14:24:12 by aghergut          #+#    #+#             */
-/*   Updated: 2024/01/09 17:16:00 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/23 15:43:57 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

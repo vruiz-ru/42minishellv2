@@ -217,4 +217,472 @@ checked 4. [STRTOK] Implemented
 	-> have to check the access of the command: if (access(path, X_OK) == 0) then execve *X_OK is the flag to check if we are granted with execute permission*
 */
 
+#include <stdio.h>
+#include <limits.h>
+#include "libft/libft.h"
+#define CHECK_MARK  "✅"
+#define CROSS_MARK  "❌"
+
+// Suppress unused warnings
+#define SEP printf("-----------------------------\n");
+
+void test_char()
+{
+    char c = 'A';
+    char nul = '\0';
+	int mine, orig;
+    SEP
+    printf("Char tests:\n");
+    orig = printf("orig: [%c]\n", c);
+    mine = ft_printf("mine: [%c]\n", c);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%5c]\n", c);
+    mine = ft_printf("mine: [%5c]\n", c);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%-5c]\n", c);
+    mine = ft_printf("mine: [%-5c]\n", c);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%c] (nul)\n", nul);
+    mine = ft_printf("mine: [%c] (nul)\n", nul);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%5c] (nul)\n", nul);
+    mine = ft_printf("mine: [%5c] (nul)\n", nul);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+}
+
+void test_string()
+{
+    char *s = "hello";
+    char *null_str = NULL;
+	int mine, orig;
+
+    SEP
+    printf("String tests:\n");
+    orig = printf("orig: [%s]\n", s);
+    mine = ft_printf("mine: [%s]\n", s);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%.3s]\n", s);
+    mine = ft_printf("mine: [%.3s]\n", s);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%8.4s]\n", s);
+    mine = ft_printf("mine: [%8.4s]\n", s);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%-10s]\n", s);
+    mine = ft_printf("mine: [%-10s]\n", s);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%.0s]\n", s);
+    mine = ft_printf("mine: [%.0s]\n", s);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%.0s] (null)\n", null_str);
+    mine = ft_printf("mine: [%.0s] (null)\n", null_str);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%s] (null)\n", null_str);
+    mine = ft_printf("mine: [%s] (null)\n", null_str);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+}
+
+void test_signed_int()
+{
+    int pos = 42;
+    int neg = -42;
+    int zero = 0;
+	int mine, orig;
+
+    SEP
+    printf("Signed int tests:\n");
+    orig = printf("orig: [%d]\n", pos);
+    mine = ft_printf("mine: [%d]\n", pos);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%d]\n", neg);
+    mine = ft_printf("mine: [%d]\n", neg);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%+d]\n", pos);
+    mine = ft_printf("mine: [%+d]\n", pos);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [% d]\n", pos);
+    mine = ft_printf("mine: [% d]\n", pos);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%5d]\n", pos);
+    mine = ft_printf("mine: [%5d]\n", pos);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%05d]\n", pos);
+    mine = ft_printf("mine: [%05d]\n", pos);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%+08d]\n", pos);
+    mine = ft_printf("mine: [%+08d]\n", pos);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%-8d]\n", neg);
+    mine = ft_printf("mine: [%-8d]\n", neg);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%.0d]\n", zero);
+    mine = ft_printf("mine: [%.0d]\n", zero);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%8.4d]\n", pos);
+    mine = ft_printf("mine: [%8.4d]\n", pos);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [INT_MAX: %d]\n", INT_MAX);
+    mine = ft_printf("mine: [INT_MAX: %d]\n", INT_MAX);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [INT_MIN: %d]\n", INT_MIN);
+    mine = ft_printf("mine: [INT_MIN: %d]\n", INT_MIN);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+	orig = printf("orig: [%+08d]\n", 99);
+	mine = ft_printf("mine: [%+08d]\n", 99);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+}
+
+void test_unsigned_int()
+{
+    unsigned int uval = 12345;
+    unsigned int umax = UINT_MAX;
+	int mine, orig;
+
+    SEP
+    printf("Unsigned int tests:\n");
+    orig = printf("orig: [%u]\n", uval);
+    mine = ft_printf("mine: [%u]\n", uval);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%010u]\n", uval);
+    mine = ft_printf("mine: [%010u]\n", uval);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%10.6u]\n", uval);
+    mine = ft_printf("mine: [%10.6u]\n", uval);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%.0u]\n", 0);
+    mine = ft_printf("mine: [%.0u]\n", 0);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%u] (UINT_MAX)\n", umax);
+    mine = ft_printf("mine: [%u] (UINT_MAX)\n", umax);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+}
+
+void test_hex()
+{
+    int val = 255;
+    int zero = 0;
+	int	mine, orig;
+
+    SEP
+    printf("Hex tests:\n");
+    orig = printf("orig: [%x]\n", val);
+    mine = ft_printf("mine: [%x]\n", val);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%#x]\n", val);
+    mine = ft_printf("mine: [%#x]\n", val);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%#X]\n", val);
+    mine = ft_printf("mine: [%#X]\n", val);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%08x]\n", val);
+    mine = ft_printf("mine: [%08x]\n", val);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%8.4x]\n", val);
+    mine = ft_printf("mine: [%8.4x]\n", val);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%.0x]\n", zero);
+    mine = ft_printf("mine: [%.0x]\n", zero);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%#x] (zero)\n", zero);
+    mine = ft_printf("mine: [%#x] (zero)\n", zero);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%#08x]\n", 42);
+	mine = ft_printf("mine: [%#08x]\n", 42);
+    if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+	orig = printf("orig: [%#-15.10x]\n", 123456);
+	mine = ft_printf("mine: [%#-15.10x]\n", 123456);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%# 010.5X]\n", 255);
+	mine = ft_printf("mine: [%# 010.5X]\n", 255);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%#020.15x]\n", 1234);
+	mine = ft_printf("mine: [%#020.15x]\n", 1234);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+}
+
+void test_pointer()
+{
+    int x = 42;
+    void *ptr = &x;
+    void *nil = NULL;
+	int	mine, orig;
+
+    SEP
+    printf("Pointer tests:\n");
+    orig = printf("orig: [%p]\n", ptr);
+    mine = ft_printf("mine: [%p]\n", ptr);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%-20p]\n", ptr);
+    mine = ft_printf("mine: [%-20p]\n", ptr);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%20p]\n", ptr);
+    mine = ft_printf("mine: [%20p]\n", ptr);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [NULL: %p]\n", nil);
+    mine = ft_printf("mine: [NULL: %p]\n", nil);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+}
+
+void test_mixed_flags()
+{
+    int nums[] = {0, 1, 42, 123456, -42};
+	int	mine, orig;
+    SEP
+    printf("Mixed flag tests:\n");
+
+    orig = printf("orig: [%#08x]\n", nums[2]);
+    mine = ft_printf("mine: [%#08x]\n", nums[2]);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+
+    orig = printf("orig: [%#-15.10x]\n", nums[3]);
+    mine = ft_printf("mine: [%#-15.10x]\n", nums[3]);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%+08d]\n", nums[2]);
+    mine = ft_printf("mine: [%+08d]\n", nums[2]);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%+-9d]\n", nums[4]);
+    mine = ft_printf("mine: [%+-9d]\n", nums[4]);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [% 05d]\n", nums[1]);
+    mine = ft_printf("mine: [% 05d]\n", nums[1]);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%#020.15x]\n", nums[3]);
+    mine = ft_printf("mine: [%#020.15x]\n", nums[3]);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%# 010.5X]\n", nums[2]);
+    mine = ft_printf("mine: [%# 010.5X]\n", nums[2]);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%#-12.6x]\n", nums[2]);
+    mine = ft_printf("mine: [%#-12.6x]\n", nums[2]);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+    orig = printf("orig: [%#x]\n", nums[0]);
+    mine = ft_printf("mine: [%#x]\n", nums[0]);
+	if (orig == mine)
+		ft_printf("%s\n", CHECK_MARK);
+	else
+		printf("%s\n", CROSS_MARK);
+	
+}
+
+int main()
+{
+    test_char();
+    test_string();
+    test_signed_int();
+    test_unsigned_int();
+    test_hex();
+    test_pointer();
+	test_mixed_flags();
+    return 0;
+}
 

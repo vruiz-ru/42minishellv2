@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 10:20:34 by aghergut          #+#    #+#             */
-/*   Updated: 2024/10/16 16:27:17 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/23 17:22:02 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	ft_printu(t_flags *flags, unsigned int number)
 		return (ft_precu(flags, number));
 	if (flags->zpad)
 		length += ft_fill(flags->width, length, '0');
-	if (!flags->zpad && !flags->left && flags->width)
+	if (flags->right)
 		length += ft_fill(flags->width, length, ' ');
 	ft_putuint(number, temp);
 	if (flags->left)

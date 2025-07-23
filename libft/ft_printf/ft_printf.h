@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 15:52:14 by aghergut          #+#    #+#             */
-/*   Updated: 2024/12/21 18:09:41 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/23 16:58:12 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,18 @@
 // printf flags
 typedef struct s_flags
 {
-	int				prec;
-	int				precw;
-	int				space;
-	int				sign;
-	int				left;
-	int				zpad;
-	int				alt;
-	int				width;
+	int	prec;
+	int	precw;
+	int	space;
+	int	sign;
+	int	left;
+	int	right;
+	int	zpad;
+	int	alt;
+	int	width;
 }	t_flags;
 
 const char	*ft_flagadd(va_list *args, t_flags *flags, const char *format);
-void		ft_flagset(t_flags *flags);
 int			ft_flagalt(t_flags *flags, char type);
 int			ft_flagsign(t_flags *flags, char type, int n);
 int			ft_flagspace(t_flags *flags, char type, int n);

@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 16:16:59 by aghergut          #+#    #+#             */
-/*   Updated: 2024/10/16 16:27:42 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/23 18:32:10 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ static int	ft_parse_main(va_list *args, t_flags *flags, const char *format)
 	{
 		if (*format == '%' && *(++format))
 		{
+            ft_memset(flags, 0, sizeof(t_flags));
 			format = ft_flagadd(args, flags, format);
 			width += ft_parse_values(args, flags, *format);
 		}

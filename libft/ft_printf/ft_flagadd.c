@@ -6,11 +6,31 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 15:18:36 by aghergut          #+#    #+#             */
-/*   Updated: 2024/10/16 16:25:22 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/23 18:22:28 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+
+static const char	*ft_addright(va_list *args, t_flags *flags, const char *f)
+{
+	if ((ft_isdigit(*f) && *f != '0') || *f == '*')
+	{
+		flags->width = 0;
+		if (*f == '*')
+		{
+			flags->width = va_arg(*args, int);
+			f++;
+		}
+		while (ft_isdigit(*f))
+		{
+			flags->width = flags->width * 10 + (*f - '0');
+			f++;
+		}
+		flags->right = 1;
+	}
+	return (f);
+}
 
 static const char	*ft_addleft(va_list *args, t_flags *flags, const char *f)
 {
@@ -18,8 +38,9 @@ static const char	*ft_addleft(va_list *args, t_flags *flags, const char *f)
 
 	tmp[0] = f[0];
 	tmp[1] = '\0';
-	if (*f == '-' || ft_atoi(tmp) > 0)
+	if (*f == '-')
 	{
+        flags->width = 0;
 		while (*f == '-')
 		{
 			f++;
@@ -45,6 +66,7 @@ static const char	*ft_addzero(va_list *args, t_flags *flags, const char *f)
 	if (*f == '0')
 	{
 		f++;
+        flags->width = 0;
 		if (*f == '*')
 		{
 			flags->width = va_arg(*args, int);
@@ -52,7 +74,7 @@ static const char	*ft_addzero(va_list *args, t_flags *flags, const char *f)
 		}
 		else
 		{
-			while (ft_isdigit(*f) != 0)
+			while (ft_isdigit(*f))
 			{
 				flags->width = flags->width * 10 + (*f - '0');
 				f++;
@@ -83,34 +105,29 @@ static const char	*ft_addprec(va_list *args, t_flags *flags, const char *f)
 	return (f);
 }
 
-static void	ft_addsimple(t_flags *flags, const char *format)
-{
-	if (*format == '#')
-		flags->alt = 2;
-	else if (*format == '+')
-	{
-		flags->sign = 1;
-		flags->space = 0;
-	}
-	else if (*format == ' ')
-	{
-		if (flags->sign == 1)
-			flags->space = 0;
-		else
-			flags->space = 1;
-	}
-}
-
 const char	*ft_flagadd(va_list *args, t_flags *flags, const char *format)
 {
-	ft_flagset(flags);
 	while (ft_strchr("# +", *format))
 	{
-		ft_addsimple(flags, format);
+		if (*format == '#')
+			flags->alt = 2;
+		else if (*format == '+')
+		{
+			flags->sign = 1;
+			flags->space = 0;
+		}
+		else if (*format == ' ')
+		{
+			if (flags->sign == 1)
+				flags->space = 0;
+			else
+				flags->space = 1;
+		}
 		format++;
 	}
-	format = ft_addzero(args, flags, format);
 	format = ft_addleft(args, flags, format);
+	format = ft_addzero(args, flags, format);
+	format = ft_addright(args, flags, format);
 	format = ft_addprec(args, flags, format);
 	return (format);
 }

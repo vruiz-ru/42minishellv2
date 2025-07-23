@@ -6,7 +6,7 @@
 #    By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/22 13:11:03 by aghergut          #+#    #+#              #
-#    Updated: 2025/07/23 12:49:26 by aghergut         ###   ########.fr        #
+#    Updated: 2025/07/23 17:25:27 by aghergut         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,13 +54,12 @@ SRCS8 = $(LISTS_FOLDER)ft_lstnew.c $(LISTS_FOLDER)ft_lstadd_front.c \
 	  $(LISTS_FOLDER)ft_lstclear.c $(LISTS_FOLDER)ft_lstiter.c \
 	  $(LISTS_FOLDER)ft_lstmap.c
 SRCS9 = $(FTPRINTF_FOLDER)flags/ft_flagadd.c $(FTPRINTF_FOLDER)prints/ft_printchar.c \
-	  $(FTPRINTF_FOLDER)flags/ft_flagset.c $(FTPRINTF_FOLDER)prints/ft_printstr.c \
-	  $(FTPRINTF_FOLDER)flags/ft_flagalt.c $(FTPRINTF_FOLDER)prints/ft_printint.c \
-	  $(FTPRINTF_FOLDER)flags/ft_flagsign.c $(FTPRINTF_FOLDER)prints/ft_printu.c \
-	  $(FTPRINTF_FOLDER)flags/ft_flagspace.c $(FTPRINTF_FOLDER)prints/ft_printpxx.c \
-	  $(FTPRINTF_FOLDER)utils/ft_fill.c $(FTPRINTF_FOLDER)utils/ft_gethex.c \
-	  $(FTPRINTF_FOLDER)utils/ft_memlen.c $(FTPRINTF_FOLDER)utils/ft_numlen.c \
-	  $(FTPRINTF_FOLDER)ft_printf.c
+		$(FTPRINTF_FOLDER)prints/ft_printstr.c $(FTPRINTF_FOLDER)flags/ft_flagalt.c \
+		$(FTPRINTF_FOLDER)prints/ft_printint.c $(FTPRINTF_FOLDER)flags/ft_flagsign.c \
+		$(FTPRINTF_FOLDER)prints/ft_printu.c $(FTPRINTF_FOLDER)flags/ft_flagspace.c \
+		$(FTPRINTF_FOLDER)prints/ft_printpxx.c $(FTPRINTF_FOLDER)utils/ft_fill.c \
+		$(FTPRINTF_FOLDER)utils/ft_gethex.c $(FTPRINTF_FOLDER)utils/ft_memlen.c \
+		$(FTPRINTF_FOLDER)utils/ft_numlen.c $(FTPRINTF_FOLDER)ft_printf.c
 
 # Object directories
 OBJS_DIR_CHANGECHAR = $(CHANGECHAR_FOLDER)o_files/

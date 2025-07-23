@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 10:18:21 by aghergut          #+#    #+#             */
-/*   Updated: 2024/10/16 16:26:37 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/23 17:21:41 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	ft_printstr(t_flags *flags, char *content)
 			len += ft_fill(flags->width, flags->precw, ' ');
 		return (len);
 	}
-	if (flags->zpad || (!flags->zpad && !flags->left && flags->width))
+	if (flags->zpad || flags->right)
 		len += ft_fill(flags->width, len, ' ');
 	ft_putstr_fd(content, 1);
 	if (flags->left)
