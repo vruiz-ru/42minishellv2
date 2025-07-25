@@ -139,12 +139,14 @@ Your program has to implement:
 
 5.[BUILTINS]  builtin commands:			
 	* parsing the built ins commands should be done into a separate function that will returns 0 if there was a problem and > 0 if there are none.
+	* every bulitin command should operate in the original process, not a child
 	I.		cd command:		Change current working directory (use chdir())
 				protect returns
 				print required arguments (token)/if its not, we are going back to the start cwd
 				chdir returns 0 if success
 				don't forget to implement ../../../ (thought: counting sequence "../" and then backward as many folders as sequence are)
-	
+
+
 	✅II.		pwd command:	Print current directory (use getcwd())
 				getcwd(buffer_str, buffer_size) -> buffer size is usual 4096
 				store the result of getcwd into a string for better usecase
@@ -176,6 +178,12 @@ Your program has to implement:
 						\n (becaue the closing " its on the last row and its empty)
 				treat the variable within '$VAR' literally, 
 				instead of "$VAR" or $VAR which prints the value of that specific variable (in case of variable doesn't exists, will print a new line char)
+		!!!!		other example with {} special char
+						$> foo=4
+						$> echo $foo
+						4
+						$> echo ${foo}d
+						4d
 				.----------------------------------------------.
 				| $$ - print parent process id with getppid(); |
 				'----------------------------------------------'
@@ -193,8 +201,26 @@ Your program has to implement:
 					- if the variable exists, just change the value, if not, create a new one
 					- for the sake of robustness, the name of variable should be as the others from env, if not, print a message	
 	✅VII.	clear command:	Clear screen (printf("\033[H\033[J"))
-	VIII.	which command:	Shows the path of the argument. Ex. which ls -> /usr/bin/ls
+	VIII. 	 which command:	Shows the path of the argument. Ex. which ls -> /usr/bin/ls
 				* we want to look into a TOKENIZED PATH (the path of everything)
+	IX.		 export ->	transfer a shell variable in env variable making available to child process
+					->	if you are entering into a subshell (name of shell and should be entering into a child process)
+					the variable exported its written into memory and coudl be available for child process, if not exported
+					the variable shouldn't be available for the subshell
+					example:
+						$>	MYVAR=123
+						$>	echo $MYVAR      
+						123
+						$>	bash             
+						$>	echo $MYVAR      
+						(nothing because we were entered into a subshell with $> bash)
+						$>	exit  
+						(returning to the prev shell)	
+						$>	export MYVAR=123
+						$>	bash     
+						$>	echo $MYVAR
+						$>	exit
+
 		.---------------------------------------------------------------.
 		| history command:		Optional — store & print input commands |
 		'---------------------------------------------------------------'
@@ -241,6 +267,9 @@ Your program has to implement:
 		-> implementing the bonus as:
 						-> cmd1 && cmd2 = if cmd1 returns exit status SUCCESS, then cmd2 its running 
 						-> cmd1 || cmd2 = if cmd1 returns exit status FAILURE, then cmd2 its running, contrarly cmd2 is not running if cmd1 have exit SUCCESS 
+14. [NON BUILTINS COMMANDS]
+		*idea* should first check the arguments, and then do the normal behavior
+
 */
 
 // SUPERFICIAL EXAMPLE
