@@ -1,4 +1,5 @@
-/*
+/* 42 Instructions
+
 Program name minishell
 Turn in files Makefile, *.h, *.c
 Makefile NAME, all, clean, fclean, re
@@ -10,10 +11,10 @@ External functs.
 readline
 
 rl_clear_history, 
-rl_on_new_line,
-rl_replace_line, 
-rl_redisplay, 
-add_history,
+rl_on_new_line		->
+rl_replace_line, 	->
+rl_redisplay, 		->
+add_history,		-> add the line to the history since we have to save the history
 
 -------------- INPUT/OUTPUT -------------------
 printf 
@@ -21,22 +22,23 @@ malloc/free,
 write
 
 ------- File and Directory Input/Output -------
-access, 
+access, 			-> access is using in searching for the command introduced by the user
 open, 
 read,
 close,
 
 --------------- Process Control ---------------
-fork 
-wait/waitpid/wait3/wait4 
+fork 						-> we'll use this command when we want to execute in child process, the command from the user
+wait/waitpid/wait3/wait4 	-> waiting for zombies
 exit(status)
 
 ------------------- SIGNALS -------------------
+				-> using SIGNALS for CTRL+C, CTRL+Z, CTRL+\
 signal,
 sigaction, 
 sigemptyset, 
 sigaddset, 
-kill, 
+kill, 					
 
 ---------- File System and Directory ---------- 
 
@@ -46,7 +48,7 @@ unlink = deletes a file
 opendir/readdir/closedir = aplicabulty on directory stream
 
 ----------------- EXECUTION --------------------
-execve
+execve						-> execute the user input
 
 --------- File descriptor manipulation ----------
 dup/dup2 
@@ -133,7 +135,7 @@ Your program has to implement:
 
 3.[CHECKING ARGS/TOKENS]  checking the input/tokens (what tokens actually stand for is the command, its flags, and path/input)
 
-checked 4. [STRTOK] Implemented
+✅4. [STRTOK] Implemented
 
 5.[BUILTINS]  builtin commands:			
 	* parsing the built ins commands should be done into a separate function that will returns 0 if there was a problem and > 0 if there are none.
@@ -143,7 +145,7 @@ checked 4. [STRTOK] Implemented
 				chdir returns 0 if success
 				don't forget to implement ../../../ (thought: counting sequence "../" and then backward as many folders as sequence are)
 	
-	II.		pwd command:	Print current directory (use getcwd())
+	✅II.		pwd command:	Print current directory (use getcwd())
 				getcwd(buffer_str, buffer_size) -> buffer size is usual 4096
 				store the result of getcwd into a string for better usecase
 					ex: char	*store_cwd = getcwd(NULL, 0); -> will show the current work directory
@@ -179,9 +181,9 @@ checked 4. [STRTOK] Implemented
 				'----------------------------------------------'
 				the differences between getpid and getppid is that the getpid returns the id of the current instance execution and get ppid returns the id of the whole process of file we are working on
 				
-	IV.		env command:	Print all environment variables
+	✅IV.		env command:	Print all environment variables
 				should be stipulated on the main
-	V.		exit command is a simple EXIT_SUCCESS/FAILURE (Exit the shell)
+	✅V.		exit command is a simple EXIT_SUCCESS/FAILURE (Exit the shell)
 	VI.		setenv & unsetenv commands:	Set or unset environment variables 
 				* should be call before shell builts, right after parse input
 				* setenv represents adding/changing a variable to the environment (char **env)
@@ -190,7 +192,7 @@ checked 4. [STRTOK] Implemented
 					- That means we have to count the variables and alloc a new env with the new variable string.
 					- if the variable exists, just change the value, if not, create a new one
 					- for the sake of robustness, the name of variable should be as the others from env, if not, print a message	
-	VII.	clear command:	Clear screen (printf("\033[H\033[J"))
+	✅VII.	clear command:	Clear screen (printf("\033[H\033[J"))
 	VIII.	which command:	Shows the path of the argument. Ex. which ls -> /usr/bin/ls
 				* we want to look into a TOKENIZED PATH (the path of everything)
 		.---------------------------------------------------------------.
@@ -217,60 +219,40 @@ checked 4. [STRTOK] Implemented
 	-> have to append the command of user input
 	-> have to check the access of the command: if (access(path, X_OK) == 0) then execve *X_OK is the flag to check if we are granted with execute permission*
 */
-#include "libft/libft.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <stddef.h>
-#include <limits.h>
 
-#define PROMPT		"👉 "
-#define REPLY	"💬"
-#define WRONG		"❓"
+// SUPERFICIAL EXAMPLE
 
-int	main(void)
+#include "minishell.h"
+
+int	main(int argc, char *argv[], char *envp[])
 {
 	char	*line;
-	char	*commands[4] = {"cat", "echo", "cd", NULL};
+	char    *prompt;
+	char    *variable;
+	char	*commands[8] = {"cat", "echo", "cd", "clear", "env", "pwd", "exit", NULL};
 	char	*token;
-	int		n_path;
 	char	**args;
 	int		n_arg;
 	int		i;
 	int		j;
 	char	delimiter;
 	int		check;
-	char	cwd[4096];
+	
 
 	delimiter = ' ';
 	while (1)
 	{
-		// GET CURRENT WORK DIRECTORY
-		if (getcwd(cwd, sizeof(cwd)) == NULL)
-		{
-			perror("getcwd");
-			return (0);
-		}
-		
-		// PRINT ONLY LAST FOLDER AS PATH OF SHELL
-		j = 0;
-		n_path = 0;
-		while (cwd[j])
-		{
-			if (cwd[j] == '/')
-				n_path = j + 1;
-			j++;
-		}
-		ft_printf("%s ", cwd + n_path);
+		// HANDLE SIGINT (CTRL+C)
+		signal(SIGINT, handle_sigint);
 
 		// READ INPUT FROM USER
-		n_arg = 0;
-		line = readline(PROMPT);
+		prompt = get_prompt();
+		line = readline(prompt);
 		if (line == NULL)
 			exit(EXIT_FAILURE);
-		
+		add_history(line);
 		// COUNT NUMBER OF ARGS
+		n_arg = 0;
 		i = 0;
 		while (line[i])
 		{
@@ -299,20 +281,39 @@ int	main(void)
 		// CHECK AVAILABILITY OF ARGUMENTS
 		check = 0;
 		i = 0;
-		while (commands[i])
-		{
-			if (!ft_strncmp(args[0], commands[i], ft_strlen(commands[i])))
-				check = 1;	
-			i++;
-		}
-		if (!check)
-			ft_printf("%scommand '%s' doesn't exist!\n", WRONG, args[0]);
+		if (!ft_strncmp(args[0], commands[3], ft_strlen(args[0])))
+			printf("%s", CLEAR);
+		else if (!ft_strncmp(args[0], commands[1], ft_strlen(args[0])))
+			printf("%s\n", get_variable(envp, args[1] + 1));
+		else if (!ft_strncmp(args[0], commands[4], ft_strlen(args[0])))
+			get_env(envp);
+		else if (!ft_strncmp(args[0], commands[5], ft_strlen(args[0])))
+			printf("%s\n", get_cwd(NULL));
+		else if (!ft_strncmp(args[0], commands[6], ft_strlen(args[0])))
+			break ;
 		else
-			ft_printf("%sCommand found!\n", REPLY);
-		
+		{
+			while (commands[i])
+			{
+				if (!ft_strncmp(args[0], commands[i], ft_strlen(commands[i])))
+					check = 1;	
+				i++;
+			}
+			if (!check)
+				ft_printf("%scommand '%s' doesn't exist!\n", WRONG, args[0]);
+			else
+				ft_printf("%sCommand found!\n", REPLY);
+		}
 		// ELIBERATE MEMORY OF USER INPUT;
 		free(line);
+		free(prompt);
 		line = NULL;
+		prompt = NULL;
 	}
+	free(line);
+	free(prompt);
+	line = NULL;
+	prompt = NULL;
 	return (0);
 }
+
