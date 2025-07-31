@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 12:49:41 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 21:23:24 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:46:51 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@
 #include <signal.h>
 
 
-#define PROMPT		" 👉 "
+#define PROMPT	" 👉 "
 #define REPLY	"💬"
-#define WRONG		"❓"
-
+#define WRONG	"❓"
+#define NAME	"minishell42"
 #define CLEAR	"\e[1;1H\e[2J"	// \033[H\033[J"
 
 typedef struct Shell_utils
@@ -47,7 +47,7 @@ void	free_map(char **map);
 void	free_main(t_utils *main);
 char	*ft_getvar(char *envp[], char *var_name);
 int		is_variable(char *envp[], char *var_name);
-char	*ft_prompt(void);
+char	*ft_prompt(t_utils *main_struct);
 int		ft_readinput(t_utils **main);
 // BUILTINS
 int		ft_builtins(t_utils *main_struct, char *envp[]);
@@ -56,7 +56,8 @@ void	ft_clear(void);
 int	    ft_echo(t_utils *main_struct, char *envp[]);
 int		ft_exit(t_utils *main_struct);
 int 	ft_export(t_utils *main_struct, char *envp[]);
-char	*ft_getcwd(char *flags);
+char	*ft_getcwd(t_utils *main_struct, char *flags);
+int 	ft_pwd(t_utils *main_struct, char *flags);
 int		ft_getenv(char *envp[]);
 int		ft_unset(t_utils *main_struct, char *envp[]);
 // HANDLERS

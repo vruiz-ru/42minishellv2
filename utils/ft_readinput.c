@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:35:16 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 21:11:37 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:34:17 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,17 @@ static void	add_tokens(char *line, char	***tokens, char delimiter)
 	(*tokens)[map_idx] = NULL;
 }
 
-int	ft_readinput(t_utils **main)
+int	ft_readinput(t_utils **main_struct)
 {
-	(*main)->prompt = ft_prompt();
-	(*main)->line = readline((*main)->prompt);
-	if ((*main)->line == NULL)
+	(*main_struct)->prompt = ft_prompt(*main_struct);
+	(*main_struct)->line = readline((*main_struct)->prompt);
+	if ((*main_struct)->line == NULL)
 	{
-		free_main(*main);
+		free_main(*main_struct);
 		exit(EXIT_FAILURE);
 		return (0);
 	}
-	add_history((*main)->line);
-	add_tokens((*main)->line, &(*main)->tokens, ' ');
+	add_history((*main_struct)->line);
+	add_tokens((*main_struct)->line, &(*main_struct)->tokens, ' ');
 	return (1);
 }

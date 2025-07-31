@@ -361,5 +361,5 @@ int	main(int argc, char *argv[], char *envp[])
 			return(0);
 		free_main(main_struct);
 	}
-	return (free_main(main_struct), 0);
+	return (0);
 }

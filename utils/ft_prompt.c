@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 11:38:22 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 21:11:11 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:42:14 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,17 @@ char    *current_prompt(char *cwd)
 }
 */ 
 
-char	*ft_prompt(void)
+char	*ft_prompt(t_utils *main_struct)
 {
 	char	*cwd;
 	char	*base;
 	char	*res;
 	
-	cwd = ft_getcwd(NULL);
-	base = ft_strrchr(cwd, '/');
+	cwd = ft_getcwd(main_struct, NULL);
+	base = ft_strrchr(cwd, '/') + 1;
 	res = NULL;
-	if (base)
-		res = ft_strjoin(base + 1, PROMPT);
+	if (!ft_strncmp(base, NAME, ft_strlen(NAME)))
+		res = ft_strjoin("/~ ", PROMPT);
 	else
 		res = ft_strdup(cwd);
 	free(cwd);
