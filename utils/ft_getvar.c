@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_variable.c                                     :+:      :+:    :+:   */
+/*   ft_getvar.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:15:42 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 14:32:45 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/31 20:10:29 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int is_variable(char *envp[], char *var_name)
 {
@@ -30,7 +30,7 @@ int is_variable(char *envp[], char *var_name)
 	return (0);
 }
 
-char	*get_variable(char *envp[], char *var_name)
+char	*ft_getvar(char *envp[], char *var_name)
 {
 	char	**split;
 	char	*value;

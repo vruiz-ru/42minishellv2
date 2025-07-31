@@ -6,11 +6,11 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 14:07:18 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 12:35:38 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/31 20:10:16 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int valid_cmd(char line, char *envp[])
 {

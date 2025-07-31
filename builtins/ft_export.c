@@ -1,30 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_cwd.c                                          :+:      :+:    :+:   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/24 11:41:00 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 15:18:22 by aghergut         ###   ########.fr       */
+/*   Created: 2025/07/31 19:51:21 by aghergut          #+#    #+#             */
+/*   Updated: 2025/07/31 21:09:51 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-
-char	*get_cwd(char *flags)
+int ft_export(t_utils *main_struct, char *envp[])
 {
-	char	cwd[4096];
-
-	if (flags == NULL)
-	{
-		if (getcwd(cwd, sizeof(cwd)) == NULL)
-		{
-			perror("getcwd");
-			return (0);
-		}
-		return (ft_strdup(cwd));
-	}
-	return (NULL);
+    (void)main_struct;
+    (void)envp;
+    return (1);
 }

@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/25 14:00:34 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 12:20:08 by aghergut         ###   ########.fr       */
+/*   Created: 2025/07/31 18:55:02 by aghergut          #+#    #+#             */
+/*   Updated: 2025/07/31 21:21:00 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	handle_sigint(int sig) 
+int	ft_unset(t_utils *main_struct, char *envp[])
 {
-	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	char	**env;
+	int     i;
+
+	if (!envp || !*envp)
+		return (0);
+	(void)main_struct;
+	env = envp;
+	i = -1;
+	while (env[++i])
+		printf("%s\n", env[i]);
+	return (1);
 }

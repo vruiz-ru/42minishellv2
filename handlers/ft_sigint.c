@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_env.c                                          :+:      :+:    :+:   */
+/*   ft_sigint.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/24 12:51:08 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/24 12:52:40 by aghergut         ###   ########.fr       */
+/*   Created: 2025/07/25 14:00:34 by aghergut          #+#    #+#             */
+/*   Updated: 2025/07/31 20:08:34 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	get_env(char *envp[])
+void	handle_sigint(int sig) 
 {
-	while (*envp)
+	if (sig == SIGINT)
 	{
-		ft_printf("%s\n", *envp);
-		envp++;
+		write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();	
 	}
 }

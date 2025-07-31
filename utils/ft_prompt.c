@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
+/*   ft_prompt.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 11:38:22 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 14:04:23 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:11:11 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 /* I don't know if I need this if we are walking thru the new created directories
 
@@ -38,13 +38,13 @@ char    *current_prompt(char *cwd)
 }
 */ 
 
-char	*get_prompt(void)
+char	*ft_prompt(void)
 {
 	char	*cwd;
 	char	*base;
 	char	*res;
 	
-	cwd = get_cwd(NULL);
+	cwd = ft_getcwd(NULL);
 	base = ft_strrchr(cwd, '/');
 	res = NULL;
 	if (base)

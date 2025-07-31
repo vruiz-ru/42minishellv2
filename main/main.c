@@ -77,8 +77,8 @@ tgoto
 tputs
 
 Your shell should:
-• Display a prompt when waiting for a new command.
-• Have a working history.
+✅• Display a prompt when waiting for a new command.
+✅• Have a working history.
 • Search and launch the right executable (based on the PATH variable or using a
 relative or an absolute path).
 • Avoid using more than one global variable to indicate a received signal. Consider
@@ -98,23 +98,23 @@ delimiter is seen. However, it doesn’t have to update the history!
 ◦ >> should redirect output in append mode.
 • Implement pipes (| character). The output of each command in the pipeline is
 connected to the input of the next command via a pipe.
-• Handle environment variables ($ followed by a sequence of characters) which
+✅• Handle environment variables ($ followed by a sequence of characters) which
 should expand to their values.
 • Handle $? which should expand to the exit status of the most recently executed
 foreground pipeline.
 • Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash.
 • In interactive mode:
-◦ ctrl-C displays a new prompt on a new line.
+✅◦ ctrl-C displays a new prompt on a new line.
 ◦ ctrl-D exits the shell.
 ◦ ctrl-\ does nothing.
 • Your shell must implement the following builtins:
 ◦ echo with option -n
 ◦ cd with only a relative or absolute path
-◦ pwd with no options
+✅◦ pwd with no options
 ◦ export with no options
 ◦ unset with no options
-◦ env with no options or arguments
-◦ exit with no options
+✅◦ env with no options or arguments
+✅◦ exit with no options
 The readline() function can cause memory leaks. You don’t have to fix them. But
 that doesn’t mean your own code, yes the code you wrote, can have memory
 leaks.
@@ -295,6 +295,7 @@ Your program has to implement:
 // SUPERFICIAL EXAMPLE
 
 #include "minishell.h"
+/*
 
 int is_sym(char *token, char sym)
 {
@@ -315,6 +316,7 @@ void	built_echo(char **tokens, char *envp[])
 	char	*input;
 
 	idx = 0;
+
 	while (tokens[++idx])
 	{
 		if (is_sym(tokens[idx], '\''))
@@ -326,63 +328,7 @@ void	built_echo(char **tokens, char *envp[])
 		}
 	}
 }
-
-int	count_tokens(char *line, char delimiter)
-{
-	int	count;
-	int	inside;
-
-	count = 0;
-	inside = 0;
-	while (*line)
-	{
-		if (*line != delimiter && !inside)
-		{
-			inside = 1;
-			count++;
-		}
-		if (*line == delimiter)
-			inside = 0;
-		line++;
-	}
-	return (count);
-}
-
-void	add_tokens(char *line, char	***tokens, char delimiter)
-{
-	char	*token;
-	int		map_size;
-	int		map_idx;
-
-	map_size = count_tokens(line, delimiter);
-	*tokens = malloc((map_size + 1) * sizeof(char *));
-	if (!*tokens)
-		return ;
-	token = ft_strtok(line, " ");
-	map_idx = 0;
-	while (token)
-	{
-		(*tokens)[map_idx++] = ft_strdup(token);
-		free(token);
-		token = ft_strtok(NULL, " ");
-	}
-	(*tokens)[map_idx] = NULL;
-}
-
-int	ft_readinput(t_utils **main)
-{
-	(*main)->prompt = get_prompt();
-	(*main)->line = readline((*main)->prompt);
-	if ((*main)->line == NULL)
-	{
-		free_main(*main);
-		exit(EXIT_FAILURE);
-		return (0);
-	}
-	add_history((*main)->line);
-	add_tokens((*main)->line, &(*main)->tokens, ' ');
-	return (1);
-}
+*/
 
 int	init_main(t_utils **main_struct)
 {
@@ -393,15 +339,17 @@ int	init_main(t_utils **main_struct)
 	(*main_struct)->tokens = NULL;
 	(*main_struct)->running = true;
 	(*main_struct)->prompt = NULL;
-	(*main_struct)->res = NULL;
+	(*main_struct)->buffer_var = NULL;
+	(*main_struct)->home_path = NULL;
 	return (1);
 }
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	char	*commands[8] = {"cat", "echo", "cd", "clear", "env", "pwd", "exit", NULL};
 	t_utils	*main_struct;
 
+	(void)argc;
+	(void)argv;
 	while (1)
 	{
 		if (!init_main(&main_struct))
@@ -409,27 +357,9 @@ int	main(int argc, char *argv[], char *envp[])
 		signal(SIGINT, handle_sigint);
 		if (!ft_readinput(&main_struct))
 			return (0);
-		if (!ft_strncmp(main_struct->tokens[0], commands[3], ft_strlen(main_struct->tokens[0])))
-			printf("%s", CLEAR);
-		else if (!ft_strncmp(main_struct->tokens[0], commands[1], ft_strlen(main_struct->tokens[0])))
-		{
-			main_struct->res = get_variable(envp, main_struct->tokens[1] + 1);
-			printf("%s\n", main_struct->res);
-		}
-		else if (!ft_strncmp(main_struct->tokens[0], commands[4], ft_strlen(main_struct->tokens[0])))
-			get_env(envp);
-		else if (!ft_strncmp(main_struct->tokens[0], commands[5], ft_strlen(main_struct->tokens[0])))
-		{
-			main_struct->res = get_cwd(NULL);
-			printf("%s\n", main_struct->res);
-		}
-		else if (!ft_strncmp(main_struct->tokens[0], commands[6], ft_strlen(main_struct->tokens[0])))
-			break ;
-		else
-			ft_printf("%scommand '%s' doesn't exist!\n", WRONG, main_struct->tokens[0]);
-		// ELIBERATE MEMORY OF USER INPUT;
+		if (!ft_builtins(main_struct, envp))
+			return(0);
 		free_main(main_struct);
 	}
-	rl_clear_history();
 	return (free_main(main_struct), 0);
 }

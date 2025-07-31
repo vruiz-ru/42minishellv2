@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   frees.c                                            :+:      :+:    :+:   */
+/*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:20:33 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 15:41:19 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/07/31 20:10:26 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	free_map(char **map)
 {
@@ -34,8 +34,10 @@ void	free_main(t_utils *main_struct)
 			free(main_struct->line);
 		if (main_struct->prompt)
 			free(main_struct->prompt);
-		if (main_struct->res)
-			free(main_struct->res);
+		if (main_struct->buffer_var)
+			free(main_struct->buffer_var);
+		if (main_struct->home_path)
+			free(main_struct->home_path);
 		free(main_struct);
 	}
 }
