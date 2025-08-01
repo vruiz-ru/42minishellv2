@@ -6,36 +6,36 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 11:41:00 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 21:53:14 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/08/01 18:14:34 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*ft_getcwd(t_utils *main_struct, char *flags)
+char	*ft_getcwd(void)
 {
 	char	cwd[4096];
-    
-	if (flags == NULL)
+	char    *res;
+
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		if (getcwd(cwd, sizeof(cwd)) == NULL)
-		{
-			perror("getcwd");
-			return (0);
-		}
-        main_struct->home_path = ft_strdup(cwd);
-        return (main_struct->home_path);
+		perror("getcwd");
+		return (0);
 	}
-	return (NULL);
+	res = ft_strdup(cwd);
+	return (res);
 }
 
-int ft_pwd(t_utils *main_struct, char *flags)
+int ft_pwd(t_utils *shell)
 {
-    char    *res;
+	char    *dir_path;
+	char	*buff;
 
-    res = ft_getcwd(main_struct, flags);
-    if (!res)
-        return (0);
-    ft_printf("%s\n", res);
-    return (1);
+	buff = ft_getcwd();
+	dir_path = ft_strnstr(buff, shell->name, ft_strlen(buff));
+	if (!dir_path)
+		return (0);
+	ft_printf("%s\n", dir_path);
+	free(buff);
+	return (1);
 }

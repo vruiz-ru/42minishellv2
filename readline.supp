@@ -48,20 +48,6 @@
    match-leak-kinds: reachable
    fun:malloc
    fun:xmalloc
-   fun:_rl_reset_region_color
-   fun:_rl_init_terminal_io
-   fun:rl_initialize
-   fun:readline
-   fun:ft_readinput
-   fun:main
-}
-
-{
-   <insert_a_suppression_name_here>
-   Memcheck:Leak
-   match-leak-kinds: reachable
-   fun:malloc
-   fun:xmalloc
    fun:_rl_init_locale
    fun:_rl_init_eightbit
    fun:rl_initialize

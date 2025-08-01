@@ -6,66 +6,37 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:35:16 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 21:34:17 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/08/01 17:58:00 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	count_tokens(char *line, char delimiter)
+int	ft_readinput(t_utils *shell)
 {
-	int	count;
-	int	inside;
+	t_builts  *ptr_built;
+	char    *prompt;
+	char    *token;
 
-	count = 0;
-	inside = 0;
-	while (*line)
+	ptr_built = shell->builtins;
+	if (shell->prompt == NULL)
+		prompt = PROMPT_HOME;	
+	else
+		prompt = shell->prompt;
+	shell->line = readline(prompt);
+	if (shell->line == NULL)
 	{
-		if (*line != delimiter && !inside)
-		{
-			inside = 1;
-			count++;
-		}
-		if (*line == delimiter)
-			inside = 0;
-		line++;
-	}
-	return (count);
-}
-
-static void	add_tokens(char *line, char	***tokens, char delimiter)
-{
-	char	*token;
-	int		map_size;
-	int		map_idx;
-
-	map_size = count_tokens(line, delimiter);
-	*tokens = malloc((map_size + 1) * sizeof(char *));
-	if (!*tokens)
-		return ;
-	token = ft_strtok(line, " ");
-	
-	map_idx = 0;
-	while (token)
-	{
-		(*tokens)[map_idx++] = ft_strdup(token);
-		free(token);
-		token = ft_strtok(NULL, " ");
-	}
-	(*tokens)[map_idx] = NULL;
-}
-
-int	ft_readinput(t_utils **main_struct)
-{
-	(*main_struct)->prompt = ft_prompt(*main_struct);
-	(*main_struct)->line = readline((*main_struct)->prompt);
-	if ((*main_struct)->line == NULL)
-	{
-		free_main(*main_struct);
+		free_main(shell);
 		exit(EXIT_FAILURE);
 		return (0);
 	}
-	add_history((*main_struct)->line);
-	add_tokens((*main_struct)->line, &(*main_struct)->tokens, ' ');
-	return (1);
+	if (shell->line[0] != '\0')
+		add_history(shell->line);
+	token = ft_strtok(shell->line, " ");
+	while (token)
+	{
+		ft_lstadd_back(&ptr_built->tokens, ft_lstnew(token));
+		token = ft_strtok(NULL, " ");
+	}
+	return (free(shell->line), shell->line = NULL, 1);
 }

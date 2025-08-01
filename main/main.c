@@ -330,36 +330,41 @@ void	built_echo(char **tokens, char *envp[])
 }
 */
 
-int	init_main(t_utils **main_struct)
+int	init_main(t_utils **shell, char *name)
 {
-	*main_struct = malloc(sizeof(t_utils));
-	if (!*main_struct)
-		return (0);
-	(*main_struct)->line = NULL;
-	(*main_struct)->tokens = NULL;
-	(*main_struct)->running = true;
-	(*main_struct)->prompt = NULL;
-	(*main_struct)->buffer_var = NULL;
-	(*main_struct)->home_path = NULL;
+	*shell = malloc(sizeof(t_utils));
+	(*shell)->builtins =(t_builts *) malloc(sizeof(t_builts));
+	if (!*shell || !(*shell)->builtins)
+		return (perror("malloc"), 0);
+	(*shell)->builtins->tokens = NULL;
+	(*shell)->builtins->double_quotes = false;
+	(*shell)->builtins->single_quotes = false;
+	(*shell)->builtins->in_file = false;
+	(*shell)->builtins->out_file = false;
+	(*shell)->builtins->flags = false;
+	(*shell)->prompt = NULL;
+	(*shell)->line = NULL;
+	(*shell)->running = true;
+	(*shell)->name = ft_strdup(name + 1);
 	return (1);
 }
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	t_utils	*main_struct;
+	t_utils	*shell;
 
 	(void)argc;
-	(void)argv;
 	while (1)
 	{
-		if (!init_main(&main_struct))
+		shell = NULL;
+		if (!init_main(&shell, argv[0]))
 			exit(EXIT_FAILURE);
 		signal(SIGINT, handle_sigint);
-		if (!ft_readinput(&main_struct))
+		if (!ft_readinput(shell))
 			return (0);
-		if (!ft_builtins(main_struct, envp))
+		if (!ft_builtins(shell, envp))
 			return(0);
-		free_main(main_struct);
+		free_main(shell);
 	}
 	return (0);
 }

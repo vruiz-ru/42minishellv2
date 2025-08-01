@@ -64,5 +64,5 @@
     "minishell.h": "c",
     "stddef.h": "c",
     "stdbool.h": "c"
-}
+  }
 }

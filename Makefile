@@ -6,7 +6,7 @@
 #    By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/24 13:18:15 by aghergut          #+#    #+#              #
-#    Updated: 2025/07/31 21:25:08 by aghergut         ###   ########.fr        #
+#    Updated: 2025/08/01 18:04:34 by aghergut         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ GREEN = \033[0;92m
 RED = \033[38;5;160m
 RESET = \033[0m
 
-NAME = minishell
+NAME = minishell42
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
@@ -52,7 +52,7 @@ SRCS1 =	$(BUILTINS_DIR)ft_builtins.c $(BUILTINS_DIR)ft_cd.c \
 SRCS2 =	$(HANDLERS_DIR)ft_sigint.c
 
 SRCS3 =	$(UTILS_DIR)ft_free.c $(UTILS_DIR)ft_getvar.c \
-		$(UTILS_DIR)ft_prompt.c $(UTILS_DIR)ft_readinput.c
+		$(UTILS_DIR)ft_readinput.c
 
 SRCS4 =	$(MAIN_DIR)main.c
 
