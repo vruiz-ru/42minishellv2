@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   maps.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/31 18:46:30 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/01 19:06:29 by aghergut         ###   ########.fr       */
+/*   Created: 2025/08/01 18:45:50 by aghergut          #+#    #+#             */
+/*   Updated: 2025/08/01 20:47:24 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#ifndef MAPS_H
+# define MAPS_H
 
-# include "changechar/changechar.h"
-# include "checkchar/checkchar.h"
-# include "lists/lists.h"
-# include "memory/memory.h"
-# include "strtoint/strtoint.h"
-# include "strings/strings.h"
-# include "puts/puts.h"
-# include "get_next_line/get_next_line.h"
-# include "ft_printf/ft_printf.h"
-# include "maps/maps.h"
+#include <unistd.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <limits.h>
+#include "../strings/strings.h"
+
+size_t	ft_mapsize(char **map);
+char	**ft_mapdup(char **map);
+void	ft_mapfree(char **map);
+char	**ft_mapreplace_item(char **map, char *item, size_t n);
+char	**ft_mapdelete_item(char **map, size_t del_idx);
+int		ft_mapitem_index(char **map, char *str);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/22 13:11:03 by aghergut          #+#    #+#              #
-#    Updated: 2025/07/23 17:25:27 by aghergut         ###   ########.fr        #
+#    Updated: 2025/08/01 20:46:32 by aghergut         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,72 +16,78 @@ CFLAGS = -Wall -Werror -Wextra -fPIE
 NAME = libft.a
 
 # Define folders for different parts of the library
-CHANGECHAR_FOLDER = changechar/
-CHECKCHAR_FOLDER = checkchar/
-STRTOINT_FOLDER = strtoint/
-GET_NEXT_LINE_FOLDER = get_next_line/
-STRINGS_FOLDER = strings/
-MEMORY_FOLDER = memory/
-PUTS_FOLDER = puts/
-LISTS_FOLDER = lists/
-FTPRINTF_FOLDER = ft_printf/
+CHANGECHAR_DIR = changechar/
+CHECKCHAR_DIR = checkchar/
+STRTOINT_DIR = strtoint/
+GET_NEXT_LINE_DIR = get_next_line/
+STRINGS_DIR = strings/
+MAPS_DIR = maps/
+MEMORY_DIR = memory/
+PUTS_DIR = puts/
+LISTS_DIR = lists/
+FTPRINTF_DIR = ft_printf/
 
 # Source files for each module
-SRCS1 = $(CHANGECHAR_FOLDER)ft_tolower.c $(CHANGECHAR_FOLDER)ft_toupper.c
-SRCS2 = $(CHECKCHAR_FOLDER)ft_isalnum.c $(CHECKCHAR_FOLDER)ft_isascii.c \
-	  $(CHECKCHAR_FOLDER)ft_isalpha.c $(CHECKCHAR_FOLDER)ft_isdigit.c \
-	  $(CHECKCHAR_FOLDER)ft_isprint.c
-SRCS3 = $(STRTOINT_FOLDER)ft_atoi.c $(STRTOINT_FOLDER)ft_itoa.c
-SRCS4 = $(GET_NEXT_LINE_FOLDER)get_next_line.c
-SRCS5 = $(STRINGS_FOLDER)ft_strchr.c $(STRINGS_FOLDER)ft_strlcat.c \
-	  $(STRINGS_FOLDER)ft_strlcpy.c $(STRINGS_FOLDER)ft_strlen.c \
-	  $(STRINGS_FOLDER)ft_strncmp.c $(STRINGS_FOLDER)ft_strnstr.c \
-	  $(STRINGS_FOLDER)ft_strrchr.c $(STRINGS_FOLDER)ft_strtrim.c \
-	  $(STRINGS_FOLDER)ft_substr.c $(STRINGS_FOLDER)ft_strjoin.c \
-	  $(STRINGS_FOLDER)ft_split.c $(STRINGS_FOLDER)ft_strdup.c \
-	  $(STRINGS_FOLDER)ft_strmapi.c $(STRINGS_FOLDER)ft_strncat.c \
-	  $(STRINGS_FOLDER)ft_striteri.c $(STRINGS_FOLDER)ft_calloc.c \
-	  $(STRINGS_FOLDER)ft_bzero.c $(STRINGS_FOLDER)ft_strtok.c
-SRCS6 = $(MEMORY_FOLDER)ft_memset.c $(MEMORY_FOLDER)ft_memcpy.c \
-	  $(MEMORY_FOLDER)ft_memmove.c $(MEMORY_FOLDER)ft_memchr.c \
-	  $(MEMORY_FOLDER)ft_memcmp.c
-SRCS7 = $(PUTS_FOLDER)ft_putchar_fd.c $(PUTS_FOLDER)ft_putstr_fd.c \
-	  $(PUTS_FOLDER)ft_putendl_fd.c $(PUTS_FOLDER)ft_putnbr_fd.c \
-	  $(PUTS_FOLDER)ft_putuint.c
-SRCS8 = $(LISTS_FOLDER)ft_lstnew.c $(LISTS_FOLDER)ft_lstadd_front.c \
-	  $(LISTS_FOLDER)ft_lstsize.c $(LISTS_FOLDER)ft_lstlast.c \
-	  $(LISTS_FOLDER)ft_lstadd_back.c $(LISTS_FOLDER)ft_lstdelone.c \
-	  $(LISTS_FOLDER)ft_lstclear.c $(LISTS_FOLDER)ft_lstiter.c \
-	  $(LISTS_FOLDER)ft_lstmap.c
-SRCS9 = $(FTPRINTF_FOLDER)flags/ft_flagadd.c $(FTPRINTF_FOLDER)prints/ft_printchar.c \
-		$(FTPRINTF_FOLDER)prints/ft_printstr.c $(FTPRINTF_FOLDER)flags/ft_flagalt.c \
-		$(FTPRINTF_FOLDER)prints/ft_printint.c $(FTPRINTF_FOLDER)flags/ft_flagsign.c \
-		$(FTPRINTF_FOLDER)prints/ft_printu.c $(FTPRINTF_FOLDER)flags/ft_flagspace.c \
-		$(FTPRINTF_FOLDER)prints/ft_printpxx.c $(FTPRINTF_FOLDER)utils/ft_fill.c \
-		$(FTPRINTF_FOLDER)utils/ft_gethex.c $(FTPRINTF_FOLDER)utils/ft_memlen.c \
-		$(FTPRINTF_FOLDER)utils/ft_numlen.c $(FTPRINTF_FOLDER)ft_printf.c
+SRCS0 =	$(CHANGECHAR_DIR)ft_tolower.c $(CHANGECHAR_DIR)ft_toupper.c
+SRCS1 = $(CHECKCHAR_DIR)ft_isalnum.c $(CHECKCHAR_DIR)ft_isascii.c \
+		$(CHECKCHAR_DIR)ft_isalpha.c $(CHECKCHAR_DIR)ft_isdigit.c \
+		$(CHECKCHAR_DIR)ft_isprint.c
+SRCS2 = $(STRTOINT_DIR)ft_atoi.c $(STRTOINT_DIR)ft_itoa.c
+SRCS3 = $(GET_NEXT_LINE_DIR)get_next_line.c
+SRCS4 = $(STRINGS_DIR)ft_strchr.c $(STRINGS_DIR)ft_strlcat.c \
+	  	$(STRINGS_DIR)ft_strlcpy.c $(STRINGS_DIR)ft_strlen.c \
+		$(STRINGS_DIR)ft_strncmp.c $(STRINGS_DIR)ft_strnstr.c \
+	  	$(STRINGS_DIR)ft_strrchr.c $(STRINGS_DIR)ft_strtrim.c \
+		$(STRINGS_DIR)ft_substr.c $(STRINGS_DIR)ft_strjoin.c \
+	  	$(STRINGS_DIR)ft_split.c $(STRINGS_DIR)ft_strdup.c \
+	  	$(STRINGS_DIR)ft_strmapi.c $(STRINGS_DIR)ft_strncat.c \
+	  	$(STRINGS_DIR)ft_striteri.c $(STRINGS_DIR)ft_calloc.c \
+	  	$(STRINGS_DIR)ft_bzero.c $(STRINGS_DIR)ft_strtok.c
+SRCS5 = $(MEMORY_DIR)ft_memset.c $(MEMORY_DIR)ft_memcpy.c \
+	  	$(MEMORY_DIR)ft_memmove.c $(MEMORY_DIR)ft_memchr.c \
+	  	$(MEMORY_DIR)ft_memcmp.c
+SRCS6 = $(PUTS_DIR)ft_putchar_fd.c $(PUTS_DIR)ft_putstr_fd.c \
+	  	$(PUTS_DIR)ft_putendl_fd.c $(PUTS_DIR)ft_putnbr_fd.c \
+	  	$(PUTS_DIR)ft_putuint.c
+SRCS7 = $(LISTS_DIR)ft_lstnew.c $(LISTS_DIR)ft_lstadd_front.c \
+	  	$(LISTS_DIR)ft_lstsize.c $(LISTS_DIR)ft_lstlast.c \
+	  	$(LISTS_DIR)ft_lstadd_back.c $(LISTS_DIR)ft_lstdelone.c \
+	  	$(LISTS_DIR)ft_lstclear.c $(LISTS_DIR)ft_lstiter.c \
+	  	$(LISTS_DIR)ft_lstmap.c
+SRCS8 = $(FTPRINTF_DIR)ft_fill.c $(FTPRINTF_DIR)ft_flagadd.c \
+		$(FTPRINTF_DIR)ft_flagalt.c $(FTPRINTF_DIR)ft_flagsign.c \
+		$(FTPRINTF_DIR)ft_flagspace.c $(FTPRINTF_DIR)ft_gethex.c \
+		$(FTPRINTF_DIR)ft_memlen.c $(FTPRINTF_DIR)ft_numlen.c \
+		$(FTPRINTF_DIR)ft_printchar.c $(FTPRINTF_DIR)ft_printstr.c  \
+		$(FTPRINTF_DIR)ft_printint.c  $(FTPRINTF_DIR)ft_printu.c  \
+		$(FTPRINTF_DIR)ft_printpxx.c $(FTPRINTF_DIR)ft_printf.c
+SRCS9 =	$(MAPS_DIR)ft_mapdelete_item.c $(MAPS_DIR)ft_mapdup.c \
+		$(MAPS_DIR)ft_mapfree.c $(MAPS_DIR)ft_mapitem_index.c \
+		$(MAPS_DIR)ft_mapreplace_item.c $(MAPS_DIR)ft_mapsize.c
 
 # Object directories
-OBJS_DIR_CHANGECHAR = $(CHANGECHAR_FOLDER)o_files/
-OBJS_DIR_CHECKCHAR = $(CHECKCHAR_FOLDER)o_files/
-OBJS_DIR_STRTOINT = $(STRTOINT_FOLDER)o_files/
-OBJS_DIR_GET_NEXT_LINE = $(GET_NEXT_LINE_FOLDER)o_files/
-OBJS_DIR_STRINGS = $(STRINGS_FOLDER)o_files/
-OBJS_DIR_MEMORY = $(MEMORY_FOLDER)o_files/
-OBJS_DIR_PUTS = $(PUTS_FOLDER)o_files/
-OBJS_DIR_LISTS = $(LISTS_FOLDER)o_files/
-OBJS_DIR_FTPRINTF = $(FTPRINTF_FOLDER)o_files/
+OBJS_DIR_CHANGECHAR = $(CHANGECHAR_DIR)o_files/
+OBJS_DIR_CHECKCHAR = $(CHECKCHAR_DIR)o_files/
+OBJS_DIR_STRTOINT = $(STRTOINT_DIR)o_files/
+OBJS_DIR_GET_NEXT_LINE = $(GET_NEXT_LINE_DIR)o_files/
+OBJS_DIR_STRINGS = $(STRINGS_DIR)o_files/
+OBJS_DIR_MAPS = $(MAPS_DIR)o_files/
+OBJS_DIR_MEMORY = $(MEMORY_DIR)o_files/
+OBJS_DIR_PUTS = $(PUTS_DIR)o_files/
+OBJS_DIR_LISTS = $(LISTS_DIR)o_files/
+OBJS_DIR_FTPRINTF = $(FTPRINTF_DIR)o_files/
 
 # Object files with correct paths
-OBJS = $(addprefix $(OBJS_DIR_CHANGECHAR), $(notdir $(SRCS1:.c=.o))) \
-	$(addprefix $(OBJS_DIR_CHECKCHAR), $(notdir $(SRCS2:.c=.o))) \
-	$(addprefix $(OBJS_DIR_STRTOINT), $(notdir $(SRCS3:.c=.o))) \
-	$(addprefix $(OBJS_DIR_GET_NEXT_LINE), $(notdir $(SRCS4:.c=.o))) \
-	$(addprefix $(OBJS_DIR_STRINGS), $(notdir $(SRCS5:.c=.o))) \
-	$(addprefix $(OBJS_DIR_MEMORY), $(notdir $(SRCS6:.c=.o))) \
-	$(addprefix $(OBJS_DIR_PUTS), $(notdir $(SRCS7:.c=.o))) \
-	$(addprefix $(OBJS_DIR_LISTS), $(notdir $(SRCS8:.c=.o))) \
-	$(addprefix $(OBJS_DIR_FTPRINTF), $(notdir $(SRCS9:.c=.o)))
+OBJS =  $(SRCS0:$(CHANGECHAR_DIR)%.c=$(OBJS_DIR_CHANGECHAR)%.o) \
+        $(SRCS1:$(CHECKCHAR_DIR)%.c=$(OBJS_DIR_CHECKCHAR)%.o) \
+        $(SRCS2:$(STRTOINT_DIR)%.c=$(OBJS_DIR_STRTOINT)%.o) \
+        $(SRCS3:$(GET_NEXT_LINE_DIR)%.c=$(OBJS_DIR_GET_NEXT_LINE)%.o) \
+        $(SRCS4:$(STRINGS_DIR)%.c=$(OBJS_DIR_STRINGS)%.o) \
+        $(SRCS5:$(MEMORY_DIR)%.c=$(OBJS_DIR_MEMORY)%.o) \
+        $(SRCS6:$(PUTS_DIR)%.c=$(OBJS_DIR_PUTS)%.o) \
+        $(SRCS7:$(LISTS_DIR)%.c=$(OBJS_DIR_LISTS)%.o) \
+        $(SRCS8:$(FTPRINTF_DIR)%.c=$(OBJS_DIR_FTPRINTF)%.o) \
+        $(SRCS9:$(MAPS_DIR)%.c=$(OBJS_DIR_MAPS)%.o)
 
 INCLUDES = -I.
 
@@ -94,40 +100,44 @@ $(NAME): $(OBJS)
 	@echo "$(NAME) created successfully!"
 
 # Create object directories and compile
-$(OBJS_DIR_CHANGECHAR)%.o: $(CHANGECHAR_FOLDER)%.c
+$(OBJS_DIR_CHANGECHAR)%.o: $(CHANGECHAR_DIR)%.c
 	@mkdir -p $(OBJS_DIR_CHANGECHAR)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJS_DIR_CHECKCHAR)%.o: $(CHECKCHAR_FOLDER)%.c
+$(OBJS_DIR_CHECKCHAR)%.o: $(CHECKCHAR_DIR)%.c
 	@mkdir -p $(OBJS_DIR_CHECKCHAR)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJS_DIR_STRTOINT)%.o: $(STRTOINT_FOLDER)%.c
+$(OBJS_DIR_STRTOINT)%.o: $(STRTOINT_DIR)%.c
 	@mkdir -p $(OBJS_DIR_STRTOINT)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJS_DIR_GET_NEXT_LINE)%.o: $(GET_NEXT_LINE_FOLDER)%.c
+$(OBJS_DIR_GET_NEXT_LINE)%.o: $(GET_NEXT_LINE_DIR)%.c
 	@mkdir -p $(OBJS_DIR_GET_NEXT_LINE)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJS_DIR_STRINGS)%.o: $(STRINGS_FOLDER)%.c
+$(OBJS_DIR_STRINGS)%.o: $(STRINGS_DIR)%.c
 	@mkdir -p $(OBJS_DIR_STRINGS)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJS_DIR_MEMORY)%.o: $(MEMORY_FOLDER)%.c
+$(OBJS_DIR_MEMORY)%.o: $(MEMORY_DIR)%.c
 	@mkdir -p $(OBJS_DIR_MEMORY)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJS_DIR_PUTS)%.o: $(PUTS_FOLDER)%.c
+$(OBJS_DIR_PUTS)%.o: $(PUTS_DIR)%.c
 	@mkdir -p $(OBJS_DIR_PUTS)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJS_DIR_LISTS)%.o: $(LISTS_FOLDER)%.c
+$(OBJS_DIR_LISTS)%.o: $(LISTS_DIR)%.c
 	@mkdir -p $(OBJS_DIR_LISTS)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJS_DIR_FTPRINTF)%.o: $(FTPRINTF_FOLDER)%.c
+$(OBJS_DIR_FTPRINTF)%.o: $(FTPRINTF_DIR)%.c
 	@mkdir -p $(OBJS_DIR_FTPRINTF)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJS_DIR_MAPS)%.o: $(MAPS_DIR)%.c
+	@mkdir -p $(OBJS_DIR_MAPS)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 # Clean rule to remove object files

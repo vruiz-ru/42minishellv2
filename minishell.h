@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 12:49:41 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/01 17:52:51 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/08/01 20:52:15 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@
 #include <readline/history.h>
 #include <signal.h>
 
-#define PROMPT		"$>:"
+#define PROMPT		"minishell:"
 #define PROMPT_ARROW	" 👉 "
-#define PROMPT_HOME		"$>:~ 👉 "
+#define PROMPT_HOME		"minishell:~ 👉 "
 #define REPLY	"💬"
 #define WRONG	"❓"
 #define NAME	"minishell42"
@@ -49,12 +49,12 @@ typedef struct Shell_utils
 	char		*prompt;
 	char		*line;
 	char		*name;
+	char		**sh_envp;
 	bool		running;
 	bool		sigint_received;
 }	t_utils;
 
 // UTILS
-void	free_map(char **map);
 void	free_main(t_utils *main);
 char	*ft_getvar(char *envp[], char *var_name);
 int		is_variable(char *envp[], char *var_name);

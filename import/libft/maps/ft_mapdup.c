@@ -1,32 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free.c                                          :+:      :+:    :+:   */
+/*   ft_mapdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/24 12:20:33 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/01 18:56:06 by aghergut         ###   ########.fr       */
+/*   Created: 2025/08/01 18:41:48 by aghergut          #+#    #+#             */
+/*   Updated: 2025/08/01 19:05:17 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "maps.h"
 
-void	free_main(t_utils *shell)
+char	**ft_mapdup(char **map)
 {
-	if (shell)
+	char	**dup;
+	size_t	length;
+	int		i;
+
+	length = ft_mapsize(map);
+	if (!length)
+		return (NULL);
+	dup = (char **)malloc((length + 1) * sizeof(char *));
+	if (!dup)
+		return (NULL);
+	i = -1;
+	while (map[++i])
 	{
-		if (shell->builtins->tokens)
-			ft_lstclear(&shell->builtins->tokens, free);
-		if (shell->builtins)
-			free(shell->builtins);
-		if (shell->line)
-			free(shell->line);
-		if (shell->prompt)
-			free(shell->prompt);
-		if (shell->name)
-			free(shell->name);
-		if (shell)
-			free(shell);
+		dup[i] = ft_strdup(map[i]);
+		if (!dup[i])
+		{
+			while (--i >= 0)
+				free(dup[i]);
+			return (free(dup), NULL);
+		}
 	}
+	dup[i] = NULL;
+	return (dup);
 }

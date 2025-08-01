@@ -342,6 +342,7 @@ int	init_main(t_utils **shell, char *name)
 	(*shell)->builtins->in_file = false;
 	(*shell)->builtins->out_file = false;
 	(*shell)->builtins->flags = false;
+	
 	(*shell)->prompt = NULL;
 	(*shell)->line = NULL;
 	(*shell)->running = true;

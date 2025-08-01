@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   ft_mapsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/31 18:46:30 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/01 19:06:29 by aghergut         ###   ########.fr       */
+/*   Created: 2025/08/01 18:43:31 by aghergut          #+#    #+#             */
+/*   Updated: 2025/08/01 18:55:16 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#include "maps.h"
 
-# include "changechar/changechar.h"
-# include "checkchar/checkchar.h"
-# include "lists/lists.h"
-# include "memory/memory.h"
-# include "strtoint/strtoint.h"
-# include "strings/strings.h"
-# include "puts/puts.h"
-# include "get_next_line/get_next_line.h"
-# include "ft_printf/ft_printf.h"
-# include "maps/maps.h"
-
-#endif
+size_t	ft_mapsize(char **map)
+{
+	size_t	i;
+	
+	i = 0;
+	if (!map || !*map)
+		return (0);
+	while (map[i] != NULL)
+		i++;
+	return (i);
+}

@@ -1,27 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   ft_mapreplace_item.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/31 18:46:30 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/01 19:06:29 by aghergut         ###   ########.fr       */
+/*   Created: 2025/08/01 19:08:38 by aghergut          #+#    #+#             */
+/*   Updated: 2025/08/01 19:16:22 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#include "maps.h"
 
-# include "changechar/changechar.h"
-# include "checkchar/checkchar.h"
-# include "lists/lists.h"
-# include "memory/memory.h"
-# include "strtoint/strtoint.h"
-# include "strings/strings.h"
-# include "puts/puts.h"
-# include "get_next_line/get_next_line.h"
-# include "ft_printf/ft_printf.h"
-# include "maps/maps.h"
+char	**ft_mapreplace_item(char **map, char *item, size_t n)
+{
+	size_t	idx;
 
-#endif
+	if (!map || !*map || ft_mapsize(map) < n)
+		return (NULL);
+	idx = n - 1;
+	if (map[idx] != NULL)
+		free(map[idx]);
+	map[idx] = ft_strdup(item);
+	if (!map[idx])
+		return (NULL);
+	return (map);
+}
