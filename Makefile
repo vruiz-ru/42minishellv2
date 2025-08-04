@@ -6,7 +6,7 @@
 #    By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/24 13:18:15 by aghergut          #+#    #+#              #
-#    Updated: 2025/08/02 20:21:46 by aghergut         ###   ########.fr        #
+#    Updated: 2025/08/04 22:34:06 by aghergut         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,11 +35,13 @@ INCLUDES = -I. -I$(LIBFT) $(FLAGS_LIBFT) -lreadline
 BUILTINS_DIR = builtins/
 HANDLERS_DIR = handlers/
 UTILS_DIR = utils/
+READINPUT_DIR = readinput/
 MAIN_DIR = main/
 
 OBJS_BUILTINS = $(BUILTINS_DIR)objs/
 OBJS_HANDLERS = $(HANDLERS_DIR)objs/
 OBJS_UTILS = $(UTILS_DIR)objs/
+OBJS_READINPUT = $(READINPUT_DIR)objs/
 OBJS_MAIN = $(MAIN_DIR)objs/
 
 # SOURCES
@@ -49,18 +51,23 @@ SRCS1 =	$(BUILTINS_DIR)ft_builtins.c $(BUILTINS_DIR)ft_cd.c \
 		$(BUILTINS_DIR)ft_getcwd.c $(BUILTINS_DIR)ft_getenv.c \
 		$(BUILTINS_DIR)ft_unset.c
 
-SRCS2 =	$(HANDLERS_DIR)ft_sigint.c
+SRCS2 = $(READINPUT_DIR)ft_readinput.c $(READINPUT_DIR)ft_content.c
 
-SRCS3 =	$(UTILS_DIR)ft_free.c $(UTILS_DIR)ft_getvar.c \
-		$(UTILS_DIR)ft_readinput.c $(UTILS_DIR)ft_init.c
+SRCS3 =	$(HANDLERS_DIR)ft_sigint.c
 
-SRCS4 =	$(MAIN_DIR)main.c
+SRCS4 =	$(UTILS_DIR)ft_free.c $(UTILS_DIR)ft_getvar.c $(UTILS_DIR)ft_init.c\
+		$(UTILS_DIR)ft_appendre.c $(UTILS_DIR)ft_heredoc.c \
+		$(UTILS_DIR)ft_reinput.c $(UTILS_DIR)ft_reoutput.c \
+		$(UTILS_DIR)ft_dquotes.c $(UTILS_DIR)ft_squotes.c
+
+SRCS5 =	$(MAIN_DIR)main.c
 
 # OBJECTS
 OBJS =	$(SRCS1:$(BUILTINS_DIR)%.c=$(OBJS_BUILTINS)%.o) \
-		$(SRCS2:$(HANDLERS_DIR)%.c=$(OBJS_HANDLERS)%.o) \
-		$(SRCS3:$(UTILS_DIR)%.c=$(OBJS_UTILS)%.o) \
-		$(SRCS4:$(MAIN_DIR)%.c=$(OBJS_MAIN)%.o)
+		$(SRCS2:$(READINPUT_DIR)%.c=$(OBJS_READINPUT)%.o) \
+		$(SRCS3:$(HANDLERS_DIR)%.c=$(OBJS_HANDLERS)%.o) \
+		$(SRCS4:$(UTILS_DIR)%.c=$(OBJS_UTILS)%.o) \
+		$(SRCS5:$(MAIN_DIR)%.c=$(OBJS_MAIN)%.o)
 
 all: $(NAME)
 
@@ -81,12 +88,16 @@ $(OBJS_UTILS)%.o: $(UTILS_DIR)%.c
 	@mkdir -p $(OBJS_UTILS)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
+$(OBJS_READINPUT)%.o: $(READINPUT_DIR)%.c
+	@mkdir -p $(OBJS_READINPUT)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
 $(OBJS_MAIN)%.o: $(MAIN_DIR)%.c
 	@mkdir -p $(OBJS_MAIN)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	@rm -rf $(OBJS_BUILTINS) $(OBJS_HANDLERS) $(OBJS_UTILS) $(OBJS_MAIN)
+	@rm -rf $(OBJS_BUILTINS) $(OBJS_HANDLERS) $(OBJS_UTILS) $(OBJS_MAIN) $(OBJS_READINPUT)
 	@$(CLEAN_LIBFT)
 	@echo "$(GREEN)Object files removed$(RESET)"
 

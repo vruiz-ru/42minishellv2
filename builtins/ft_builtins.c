@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 21:21:54 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/02 20:13:07 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/08/03 11:44:03 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ int	ft_builtins(t_subproc *process)
 {
 	char    *cmd;
 	int		size;
-	
+
 	cmd = (char *)process->builtins->tokens->content;
 	size = ft_strlen(cmd);
-	if (!ft_strncmp(cmd, "clear", size))
+    if (!ft_strncmp(cmd, "clear", size))
 		ft_clear();
 	else if (!ft_strncmp(cmd, "exit", size) && !ft_exit(process))
 		return (0);	

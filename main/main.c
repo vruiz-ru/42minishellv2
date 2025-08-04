@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:50:39 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/02 20:26:19 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/08/04 13:22:05 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,11 @@ int	main(int argc, char *argv[], char *envp[])
 	while (1)
 	{
 		signal(SIGINT, handle_sigint);
-		if (!ft_readinput(process))
+        if (!ft_readinput(process))
 			return (0);
 		if (!ft_builtins(process))
 			return(0);
+        shell->status = 0;
 		reset_utils(&process);
 	}
 	return (0);
@@ -172,20 +173,14 @@ Your program has to implement:
 /* auxiliary ideas for implementing the prototype of the project
 0.[STRCMP] !! all checks between strings (user input, commands, etc.) should be done with ft_strcmp!!!
 
-1.[CREATE FILE]  since we've got to save the user's input into a history file, is better to do this at the start of the program
-	so we want to use open() with flags O_WRONLY | O_APPEND | O_CREAT, 0644 (permissions) 
-			ex. int fd = open(HISTORY, O_WRONLY | O_APPEND | O_CREAT, 0644)
-
-2.[GNL FROM HISTORY]  then, we extract the last row (last user input) with GETNEXTLINE.
-
 3.[CHECKING ARGS/TOKENS]  checking the input/tokens (what tokens actually stand for is the command, its flags, and path/input)
 
 ✅4. [STRTOK] Implemented
 
 5.[BUILTINS]  builtin commands:
-	"~" = /home/user. Whenever our minishell will see that will replace it with the mentioned path		
-	* parsing the built ins commands should be done into a separate function that will returns 0 if there was a problem and > 0 if there are none.
-	* every bulitin command should operate in the original process, not a child
+	✅"~" = /home/user. Whenever our minishell will see that will replace it with the mentioned path		
+	✅* parsing the built ins commands should be done into a separate function that will returns 0 if there was a problem and > 0 if there are none.
+	✅* every bulitin command should operate in the original process, not a child
 	I.		cd command:		Change current working directory (use chdir())
 				protect returns
 				print required arguments (token)/if its not, we are going back to the start cwd
@@ -242,7 +237,7 @@ Your program has to implement:
 	✅IV.		env command:	Print all environment variables
 				should be stipulated on the main
 	✅V.		exit command is a simple EXIT_SUCCESS(0)/FAILURE(nonzero) (Exit the shell)
-	VI.		setenv & unsetenv commands:	Set or unset environment variables 
+	✅VI.		setenv & unsetenv commands:	Set or unset environment variables 
 				* should be call before shell builts, right after parse input
 				* setenv represents adding/changing a variable to the environment (char **env)
 				* unsetenv delete a variable from environment (char **env)
@@ -251,9 +246,9 @@ Your program has to implement:
 					- if the variable exists, just change the value, if not, create a new one
 					- for the sake of robustness, the name of variable should be as the others from env, if not, print a message	
 	✅VII.	clear command:	Clear screen (printf("\033[H\033[J"))
-	VIII. 	 which command:	Shows the path of the argument. Ex. which ls -> /usr/bin/ls
+	🚫VIII. 	 which command:	Shows the path of the argument. Ex. which ls -> /usr/bin/ls
 				* we want to look into a TOKENIZED PATH (the path of everything)
-	IX.		 export ->	transfer a shell variable in env variable making available to child process
+	✅IX.		 export ->	transfer a shell variable in env variable making available to child process
 					->	if you are entering into a subshell (name of shell and should be entering into a child process)
 					the variable exported its written into memory and coudl be available for child process, if not exported
 					the variable shouldn't be available for the subshell
@@ -277,11 +272,12 @@ Your program has to implement:
 
 [IMPLEMENTING SIGNAL HANDLER]	EXIT/SUSPEND ANY ONGOING PROCESS SIGNALS 
 
-								SIGINT (CTRL + C) - EXIT
-								SIGTSTP (CTRL + Z) - SUSUPENDS
+							✅  SIGINT (CTRL + C) - EXIT
+							✅  CTRL + D - SENDS EOF
+                                CTRL + / - UNDO
 
 
-6.[DESIGN IDEA] not to forget to implement the current working directory inside of command line as we navigate thru the shell
+✅6.[DESIGN IDEA] not to forget to implement the current working directory inside of command line as we navigate thru the shell
 
 7.[FUNCTION OF UTILS]
 	get_path of token: 	-> usage WHICH builtin

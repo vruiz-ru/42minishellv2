@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:32:12 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/02 17:33:40 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/08/03 11:46:17 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	init_main(t_main **shell, char *name, char *envp[])
 	*shell = malloc(sizeof(t_main));	
 	if (!*shell)
 		return (perror("malloc main"), 0);
+    (*shell)->status = 1;
 	(*shell)->sh_envp = ft_mapdup(envp);
 	(*shell)->prompt = NULL;
 	(*shell)->line = NULL;

@@ -65,5 +65,5 @@
     "stddef.h": "c",
     "stdbool.h": "c",
     "cstdlib": "c"
-}
+  }
 }
