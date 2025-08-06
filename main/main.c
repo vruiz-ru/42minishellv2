@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:50:39 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/04 13:22:05 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/08/05 17:35:25 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ void	reset_utils(t_subproc **process)
 	(*process)->builtins->flags = false;
 	(*process)->builtins->in_file = false;
 	(*process)->builtins->out_file = false;
+    if ((*process)->prompt)
+        free((*process)->prompt);
+    (*process)->prompt = NULL;
 }
 
 int	main(int argc, char *argv[], char *envp[])

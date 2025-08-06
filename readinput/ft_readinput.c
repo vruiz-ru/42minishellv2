@@ -6,19 +6,19 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:35:16 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/04 22:30:11 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/08/06 08:53:45 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int scan_input(t_subproc *process, char *line)
+/*
+static int scan_input(t_subproc *process, char *line)
 {
 	char    *wildcards;
 	char    *buffer;
 	int     i;
 
-    (void)process;
+	(void)process;
 	wildcards = "\'\"$";
 	i = 0;
 	while (line[i])
@@ -28,21 +28,20 @@ int scan_input(t_subproc *process, char *line)
 			return (1);
 		i++;
 	}
-    return (0);
+	return (0);
 }
+*/
 
 int	ft_readinput(t_subproc *process)
 {
 	t_builts  *ptr_built;
-	char    *prompt;
 	char    *token;
 
 	ptr_built = process->builtins;
+	process->prompt = ft_prompt(process);
 	if (process->prompt == NULL)
-		prompt = PROMPT_HOME;	
-	else
-		prompt = process->prompt;
-	process->line = readline(prompt);
+		return (ft_putstr_fd("Malloc error", 1), 0);
+	process->line = readline(process->prompt);
 	if (process->line == NULL)
 	{
 		free_subprocess(process);

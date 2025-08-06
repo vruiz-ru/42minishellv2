@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/24 11:41:00 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/02 11:43:09 by aghergut         ###   ########.fr       */
+/*   Created: 2025/08/06 08:24:29 by aghergut          #+#    #+#             */
+/*   Updated: 2025/08/06 08:29:27 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,15 @@
 char	*ft_getcwd(void)
 {
 	char	cwd[4096];
-	char    *res;
+	char	*res;
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
 		perror("getcwd");
-		return (0);
+		return (NULL);
 	}
 	res = ft_strdup(cwd);
+	if (!res)
+		return (NULL);
 	return (res);
-}
-
-int ft_pwd(t_subproc *process)
-{
-	char    *dir_path;
-	char	*buff;
-
-	buff = ft_getcwd();
-	dir_path = ft_strnstr(buff, process->ptr_main->name, ft_strlen(buff));
-	if (!dir_path)
-		return (0);
-	ft_printf("%s\n", dir_path);
-	free(buff);
-	return (1);
 }

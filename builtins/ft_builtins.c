@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 21:21:54 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/03 11:44:03 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/08/05 16:44:18 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,7 @@ int	ft_builtins(t_subproc *process)
 		return (0);
 	else if (is_varformat(cmd) && !ft_mapitem_add(&process->buffer_env, cmd))
         return (0);
+    else if (!ft_strncmp(cmd, "cd", size) && !ft_cd(process))
+		return (0);	
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:32:12 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/03 11:46:17 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/08/05 22:34:39 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int	init_subproc(t_main *shell, t_subproc **sub)
 		return (free(sub), perror("malloc builts"), 0);
 	(*sub)->ptr_main = shell;
 	(*sub)->local_env = ft_mapdup(shell->sh_envp);
+    (*sub)->current_wd = ft_getcwd();
+    (*sub)->last_wd = ft_getcwd();
 	return (1);
 }
 
@@ -50,5 +52,6 @@ int	init_main(t_main **shell, char *name, char *envp[])
 	(*shell)->line = NULL;
 	(*shell)->running = true;
 	(*shell)->name = ft_strdup(name + 1);
+    (*shell)->home_path = ft_getcwd();
 	return (1);
 }
