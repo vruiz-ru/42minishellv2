@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 09:55:23 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/06 23:38:05 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/04 13:36:09 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ int path_input(t_subproc *process)
 	t_list	*ptr;
 	char	*path;
 
-	ptr = process->builtins->tokens->next;
+    ptr = process->builtins->tokens->next;
 	path = (char *)ptr->content;
 	if (ft_isalnum(path[0]))
 	{
 		if (ptr->next)
 			return (ft_putstr_fd("cd: too many arguments\n", 1) ,1);
-		if (chdir(path) != 0)
+        if (chdir(path) != 0)
 		{
 			ft_printf("cd: %s: No such file or directory\n", path);
 			return (1);
@@ -65,7 +65,7 @@ int path_input(t_subproc *process)
 		ft_setpaths(process);
 		if (!process->last_wd || !process->current_wd)
 			return (ft_putstr_fd("Malloc failed\n", 1), 0);
-		return (1);
+        return (1);
 	}
 	return (0);
 }

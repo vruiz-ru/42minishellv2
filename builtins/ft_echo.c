@@ -6,14 +6,14 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 19:59:40 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/06 23:44:10 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/02 21:50:56 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 /*
 
-*   treat the flag -n properly -> deletes the \n char
+*   treat the flag -n properly -> deletes the \n char *not applied on the double command case*
 				*   doesn't recognize simple backslash
 						ex: echo \new -> new
 							echo \\new -> \new
@@ -54,26 +54,13 @@ int	ft_echo(t_subproc *process)
 {
     t_list  *tokens;
     char    *content;
-    int     count;
 
     tokens = process->builtins->tokens;
-	count = 0;
     while (tokens)
     {
         content = (char *)tokens->content;
-        count++;
-        ft_printf("[%d]content -->> %s\n", count, content);
+        (void)content;
         tokens = tokens->next;
     }
     return (1);
 }
-
-/*
-
-resolve readinput tokenization
-update added values
-double quotes resolve
-resolve echo
-resolve cd "        foldername" case
-
-*/

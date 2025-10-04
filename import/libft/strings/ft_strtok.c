@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 12:45:52 by aghergut          #+#    #+#             */
-/*   Updated: 2025/07/31 15:09:52 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/04 12:37:42 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ static char	*get_token(char *cpy, const char *delim)
 
 	if (!cpy || !*cpy)
 		return (NULL);
-	while (*cpy && ft_strchr(delim, *cpy))
+	while (*cpy && cpy && ft_strchr(delim, *cpy))
 		cpy++;
 	if (!*cpy)
 		return (NULL);
 	size = 0;
-	while (cpy[size] && !ft_strchr(delim, cpy[size]))
+    while (cpy[size] && !ft_strchr(delim, cpy[size]))
 		size++;
 	token = malloc((size + 1) * sizeof(char));
 	if (!token)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_tokens.c                                        :+:      :+:    :+:   */
+/*   ft_create_tokens.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 22:07:38 by aghergut          #+#    #+#             */
-/*   Updated: 2025/09/17 20:49:41 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/04 13:19:28 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,17 @@ static int	ft_cmd_token(t_subproc *process)
 	return (1);
 }
 
-static char	*ft_normal_token(t_subproc *process, char *line)
+static char	*ft_normal_token(t_list *tokens, char *line)
 {
-	t_list	*tokens;
 	char	*new;
 	char	*res;
 	int		size;
 	int		length;
 
-	tokens = process->builtins->tokens;
+	
 	new = ft_strtok(NULL, " ");
 	if (!new)
 		return (NULL);
-    // ft_printf("new -->> |%s|\n", new);
 	ft_lstadd_back(&tokens, ft_lstnew(new));
 	size = ft_strlen(line);
 	length = ft_strlen(new);
@@ -43,38 +41,32 @@ static char	*ft_normal_token(t_subproc *process, char *line)
 	free(line);
 	return (res);}
 
-static char	*ft_quotes_token(t_subproc *process, char *line, char ch)
+char	*ft_quotes_token(t_list *tokens, char *line, char ch)
 {
-	t_list	*tokens;
-	char	*token;
+	char	*temp_token;
 	char	delim[2];
 	char	*new;
 	char	*res;
+	int		closed_quotes;
 
 	delim[0] = ch;
 	delim[1] = '\0';
 	new = NULL;
-	tokens = process->builtins->tokens;
-	token = ft_strtok(NULL, delim);
-	if (ft_checkpair(token, ch))
-    {
-        ft_printf("checkpair where delim(%c)\n", ch);
-        new = ft_strjoin_free(new, token);
-    }
+	temp_token = ft_strtok(NULL, delim);
+	if (ft_checkpair(temp_token, ch))
+		new = ft_strjoin_free(new, temp_token);
 	else
-    {
-        ft_putstr_fd("not checkpair\n", 1);
-        new = ft_strjoin_free(token, ft_strtok(NULL, delim));
-    }	
+		new = ft_strjoin_free(temp_token, ft_strtok(NULL, delim));
 	if (new == NULL)
 		return (perror("malloc"), NULL);
 	ft_lstadd_back(&tokens, ft_lstnew(new));
-	res = ft_strdup(ft_strnstr(line, new, ft_strlen(line)) + ft_strlen(new));
+	closed_quotes = ft_strlen(new) + 1;
+	res = ft_strdup(ft_strnstr(line, new, ft_strlen(line)) + closed_quotes);
 	free(line);
 	return (res);
 }
 
-int	create_tokens(t_subproc *process)
+int	ft_create_tokens(t_subproc *process)
 {
 	char	*line;
 	int		dquote_idx;
@@ -82,24 +74,21 @@ int	create_tokens(t_subproc *process)
 
 	if (!ft_cmd_token(process))
 		return (0);
-    // ft_printf("here create tokens -->> pricess line -> %s\nft strchr + 1 -->> %s\n", process->line, ft_strchr(process->line, ' '));
-	line = ft_strdup(ft_strchr(process->line, ' '));
-    // ft_printf("line at the beginning of while -->> |%s|\n", line);
-	while (line)
+	if (!ft_strchr(process->line, ' '))
+		return (1);
+	line = ft_strdup(ft_strchr(process->line, ' ') + 1);
+	while (*line && line)
 	{
 		dquote_idx = ft_getquote_idx(line, '"');
 		squote_idx = ft_getquote_idx(line, '\'');
-		if ((dquote_idx >= 0 && squote_idx < 0) || dquote_idx < squote_idx)
-        {
-            line = ft_quotes_token(process, line, '"');
-        }
-		else if ((squote_idx >= 0 && dquote_idx < 0) || squote_idx > dquote_idx)
-        {
-            line = ft_quotes_token(process, line, '\'');
-        }
+		if (dquote_idx >= 0 && \
+			(squote_idx < 0 || \
+			(squote_idx >= 0 && dquote_idx < squote_idx)))
+			line = ft_quotes_token(process->builtins->tokens, line, '"');
+		else if (squote_idx >= 0)
+			line = ft_quotes_token(process->builtins->tokens, line, '\'');
 		else
-			line = ft_normal_token(process, line);
-        // ft_printf("line in while loop -->> |%s|\n", line);
+			line = ft_normal_token(process->builtins->tokens, line);
 	}
 	return (1);
 }

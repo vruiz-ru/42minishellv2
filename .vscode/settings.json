@@ -66,6 +66,7 @@
     "stdbool.h": "c",
     "cstdlib": "c",
     "strings.h": "c",
-    "signal.h": "c"
-  }
+    "signal.h": "c",
+    "stdio.h": "c"
+}
 }

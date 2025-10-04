@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 21:02:10 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/06 08:58:50 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/04 13:21:25 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,17 @@ char	*ft_prompt(t_subproc *process)
 	char	*home_path;
 	char	*buffer;
 	char	*prompt;
-	size_t	size;
+	size_t	size_current;
+	size_t  size_home;
 	
 	current_path = process->current_wd;
 	home_path = process->ptr_main->home_path;
-	size = ft_strlen(home_path);
-	buffer = ft_strnstr(current_path, home_path, size) + size;
-	if (!buffer || !*buffer)
+	size_current = ft_strlen(current_path);
+	size_home = ft_strlen(home_path);
+	if (!ft_strncmp(current_path, home_path, size_current))
 		return (ft_strjoin(">/~", PROMPT_ARROW));
-	else
-		prompt = ft_strjoin(">/~", buffer);
+	buffer = ft_strnstr(current_path, home_path, size_current) + size_home;
+	prompt = ft_strjoin(">/~", buffer);
 	if (!prompt)
 		return (NULL);
 	buffer = ft_strjoin(prompt, PROMPT_ARROW);

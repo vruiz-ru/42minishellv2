@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 21:21:54 by aghergut          #+#    #+#             */
-/*   Updated: 2025/09/17 20:44:41 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/04 13:18:27 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	ft_builtins(t_subproc *process)
 
 	cmd = (char *)process->builtins->tokens->content;
 	size = ft_strlen(cmd);
-    if (!ft_strncmp(cmd, "clear", size))
+	if (!ft_strncmp(cmd, "clear", size))
 		ft_clear();
 	else if (!ft_strncmp(cmd, "exit", size) && !ft_exit(process))
 		return (0);	
@@ -46,9 +46,8 @@ int	ft_builtins(t_subproc *process)
 	else if (!ft_strncmp(cmd, "unset", size) && !ft_unset(&process))
 		return (0);
 	else if (is_varformat(cmd) && !ft_mapitem_add(&process->buffer_env, cmd))
-        return (0);
-    else if (!ft_strncmp(cmd, "cd", size) && !ft_cd(process))
 		return (0);
-    // ft_printf("here in builtins");
+	else if (!ft_strncmp(cmd, "cd", size) && !ft_cd(process))
+		return (0);
 	return (1);
 }

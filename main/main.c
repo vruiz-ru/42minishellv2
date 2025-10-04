@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:50:39 by aghergut          #+#    #+#             */
-/*   Updated: 2025/09/17 20:57:44 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/04 13:18:20 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,12 @@ int	main(int argc, char *argv[], char *envp[])
 	while (1)
 	{
 		signal(SIGINT, handle_sigint);
-		// ft_printf("here1");
 		if (!ft_readinput(process))
 			return (0);
-		// ft_printf("here2");
 		if (!ft_builtins(process))
 			return(0);
-		// ft_printf("here3");
 		shell->status = 0;
-		t_list *ptr = process->builtins->tokens;
-		while (ptr)
-		{
-			ft_printf("token -> %s\n", (char *)ptr->content);
-			ptr = ptr->next;
-		}
 		reset_utils(&process);
-		// ft_printf("here4");
 	}
 	return (0);
 }
