@@ -1,20 +1,12 @@
+.-------------------------------------------------------------------------------------------------------------------------------------------------------------.
+| echo noquotes at all \" \\ \$ \' end noquotes "inside dquotes \\ \'\"\$ '$TERM_PROGRAM' end dquotes" 'inside squotes \" \\ \$ "\$TERM_PROGRAM" end squotes' |
+'-------------------------------------------------------------------------------------------------------------------------------------------------------------'
+    -> bash: noquotes at all " \ $ ' end noquotes inside dquotes \ \'"$ 'vscode' end dquotes inside squotes \" \\ \$ "\$TERM_PROGRAM" end squotes
 
-echo \"outside" infirst\"inquoted\"inlast"outside
-echo \"outside"infirst\"inquoted\"inlast"outside  'seco'nd_a'rgument' third_arument
+    -> mine: noquotes at all " \ $ ' end noquotes inside dquotes \ \'"$ 'vscode' end dquotes inside squotes \" \\ \$ "\$TERM_PROGRAM" end squotes
+            |                x    x  x              ||                  x x    put_value                                add\   adding quotes   
 
-
-echo noquotes at the beginning " start doublequotes 'singlequotes' ending doublequotes " 'start simplequotes"doublquotes" endsimplequotes' noquotesatall
-
-1 * 8^1 + 3 * 8^0 + 5 * 8^-1 + 7 * 8^-2 + 6 * 8^-3 + 3 * 8^-4 = ~ 11,74
-
-
-" asdsadas dasd asa'' asdsadsadsa " 'asdasdsada  a dsa"sadasdas" asdsa' asdsadsadad
-
-01234567890123456789012345678901234567890123456789012345678901234567890123456789012
-
-0                                 35
-
-()(((((((((((((((((())))))))))))))))))
+    
 t_list *ptr = process->builtins->tokens;
     while (ptr)
     {
@@ -22,3 +14,5 @@ t_list *ptr = process->builtins->tokens;
         ptr = ptr->next;
     }
 	ft_printf("in readinput after show content\n");
+
+    segfault_reconstruct_tokens

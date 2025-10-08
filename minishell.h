@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 12:49:41 by aghergut          #+#    #+#             */
-/*   Updated: 2025/10/07 11:29:48 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:06:15 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,30 @@ int		ft_cd(t_subproc *process);
 // HANDLERS
 void	handle_sigint(int sig);
 // READINPUT
-int		ft_quote_occurrence(char *str, char ch, int times);
+
+void	pos_aux(char **str, int *idx, int *slash);
+int		quote_pos(char *str, char delim, int times);
+int 	quotes_left(t_list *tokens, char *line_left);
+int 	first_occurrence(t_list *tokens, char *line, char delim);
+char	*clean_line(char *content);
+void 	scan_char(char *content, char **var_name, int *idx);
+void	insert_value(t_subproc *process, char **dest, char *var_name);
+char	*parse_token(t_subproc *process, char *content);
+int 	reconstruct_token(t_subproc *process, char *line, char delim);
+char	*ft_quotes(t_subproc *process, char *line, char delim);
 int		ft_create_tokens(t_subproc *process);
-// int		ft_parse_tokens(t_subproc *process);
 int		ft_readinput(t_subproc *proc);
+// PARSE CONTENT
+// int     ft_parse_tokens(t_subproc *process);
+// int		ft_wildcards(char *str, char *wildcards);
+// char	*ft_cleanline(char *content);
+// void	ft_addvalue(char **env, char **dest, char *var_name);
+// int		ft_within(char **env, char *var_name);
+// void	ft_scanning_quotes(char *content, char **new, int *idx);
+// void	ft_scanning_variable(char *content, char **var_name, int *idx);
+// void	ft_insert(t_subproc *process, char **dest, char *var_name);
+// char	*ft_build_line(t_subproc *process, char *content);
+
+
 
 #endif
