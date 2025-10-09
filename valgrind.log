@@ -1,0 +1,28 @@
+==59434== Memcheck, a memory error detector
+==59434== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==59434== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==59434== Command: ./minishell42
+==59434== Parent PID: 7519
+==59434== 
+==59434== 
+==59434== HEAP SUMMARY:
+==59434==     in use at exit: 232,956 bytes in 235 blocks
+==59434==   total heap usage: 1,080 allocs, 845 frees, 294,023 bytes allocated
+==59434== 
+==59434== 141 bytes in 1 blocks are definitely lost in loss record 23 of 75
+==59434==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==59434==    by 0x10CCD8: ft_addchar (in /home/alexkatz/Documents/GitHub/minishell42/minishell42)
+==59434==    by 0x109736: ft_echo (in /home/alexkatz/Documents/GitHub/minishell42/minishell42)
+==59434==    by 0x1093FC: ft_builtins (in /home/alexkatz/Documents/GitHub/minishell42/minishell42)
+==59434==    by 0x10BB6D: main (in /home/alexkatz/Documents/GitHub/minishell42/minishell42)
+==59434== 
+
+==59434== LEAK SUMMARY:
+==59434==    definitely lost: 141 bytes in 1 blocks
+==59434==    indirectly lost: 0 bytes in 0 blocks
+==59434==      possibly lost: 0 bytes in 0 blocks
+==59434==    still reachable: 232,815 bytes in 234 blocks
+==59434==         suppressed: 0 bytes in 0 blocks
+==59434== 
+==59434== For lists of detected and suppressed errors, rerun with: -s
+==59434== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 19:59:40 by aghergut          #+#    #+#             */
-/*   Updated: 2025/10/04 14:52:23 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:04:41 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,23 +47,26 @@
 				| $$ - print parent process id with getppid(); |
 				'----------------------------------------------'
 				the differences between getpid and getppid:
-                    getpid returns the id of the current instance execution
-                    get ppid returns the id of the whole process of file we are working on
+					getpid returns the id of the current instance execution
+					get ppid returns the id of the whole process of file we are working on
 */
 int	ft_echo(t_subproc *process)
 {
-    t_list  *tokens;
-    char    *content;
-    int     i;
-    
-    i = 0;
-    tokens = process->builtins->tokens;
-    while (tokens)
-    {
-        content = (char *)tokens->content;
-        ft_printf("[%d]token -->> |%s|\n", ++i, content);
-        (void)content;
-        tokens = tokens->next;
-    }
-    return (1);
+	t_list  *tokens;
+	char    *content;
+	char	*res;
+	int		i;
+	
+	tokens = process->builtins->tokens->next;
+	res = NULL;
+	while (tokens)
+	{
+		i = -1;
+		content = (char *)tokens->content;
+		while (content[++i])
+			res = ft_addchar(res, content[i]);
+		tokens = tokens->next;
+	}
+	ft_printf("%s\n",res);
+	return (free(res), 1);
 }

@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:50:39 by aghergut          #+#    #+#             */
-/*   Updated: 2025/10/04 13:18:20 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:00:07 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 void	reset_utils(t_subproc **process)
 {
-	ft_lstclear(&(*process)->builtins->tokens, free);
+	if ((*process)->builtins->tokens)
+		ft_lstclear(&(*process)->builtins->tokens, free);
+	(*process)->builtins->tokens = NULL;
 	(*process)->builtins->double_quotes = false;
 	(*process)->builtins->single_quotes = false;
 	(*process)->builtins->flags = false;

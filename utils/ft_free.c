@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:20:33 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/06 12:23:14 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:01:26 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	free_main(t_main *shell)
 		free(shell->prompt);
 	if (shell->name)
 		free(shell->name);
+	if (shell->home_path)
+		free(shell->home_path);
 	if (shell)
 		free(shell);
 	shell = NULL;

@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:35:16 by aghergut          #+#    #+#             */
-/*   Updated: 2025/10/08 14:01:47 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/09 12:19:16 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,5 @@ int	ft_readinput(t_subproc *process)
 	if (process->line[0] != '\0')
 		add_history(process->line);
 	ft_create_tokens(process);
-	// ft_parse_tokens(process);
 	return (free(process->line), process->line = NULL, 1);
 }

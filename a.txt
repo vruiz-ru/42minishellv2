@@ -1,12 +1,17 @@
 .-------------------------------------------------------------------------------------------------------------------------------------------------------------.
 | echo noquotes at all \" \\ \$ \' end noquotes "inside dquotes \\ \'\"\$ '$TERM_PROGRAM' end dquotes" 'inside squotes \" \\ \$ "\$TERM_PROGRAM" end squotes' |
 '-------------------------------------------------------------------------------------------------------------------------------------------------------------'
-    -> bash: noquotes at all " \ $ ' end noquotes inside dquotes \ \'"$ 'vscode' end dquotes inside squotes \" \\ \$ "\$TERM_PROGRAM" end squotes
-
-    -> mine: noquotes at all " \ $ ' end noquotes inside dquotes \ \'"$ 'vscode' end dquotes inside squotes \" \\ \$ "\$TERM_PROGRAM" end squotes
+    -> bash: noquotes at all " \ $ ' end noquotes inside dquotes \ \'"$ 'xterm-256color' end dquotes inside squotes \" \\ \$ "\$TERM_PROGRAM" end squotes
+    -> mine: noquotes at all " \ $ ' end noquotes inside dquotes \ \'"$ 'xterm-256color' end dquotes inside squotes \" \\ \$ "\$TERM_PROGRAM" end squotes
             |                x    x  x              ||                  x x    put_value                                add\   adding quotes   
 
-    
+create token
+    noquotes at all \" \\ \$ \' end noquotes "inside dquotes \\ \'\"\$ '$TERM_PROGRAM' end dquotes" 'inside squotes \" \\ \$ "\$TERM_PROGRAM" end squotes'
+before cleanline
+
+Hello\ World\ $USER\ `\ "\'\ \\ \*\ \?\ \[\]\ \#\ \&\ \;\ \|\ \<\ >\ \(\)\ \~
+Hello\ World\ $USER\ `\ "\'\ \\ \*\ \?\ \[\]\ \#\ \&\ \;\ \|\ \<\ >\ \(\)\ \~
+               $`"\
 t_list *ptr = process->builtins->tokens;
     while (ptr)
     {
@@ -16,3 +21,292 @@ t_list *ptr = process->builtins->tokens;
 	ft_printf("in readinput after show content\n");
 
     segfault_reconstruct_tokens
+
+
+    chatgpt suggestions:
+
+    #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+/* Replace these with your real process/environment types */
+typedef struct s_subproc {
+    char **local_env;
+    char **buffer_env;
+    /* other fields... */
+} t_subproc;
+
+/* ---------- helpers ---------- */
+
+/* Append single char to dynamic string (returns new pointer or NULL) */
+static char *append_char(char *s, char c)
+{
+    size_t oldlen = s ? strlen(s) : 0;
+    char *n = realloc(s, oldlen + 2); /* +1 for char, +1 for '\0' */
+    if (!n) {
+        free(s);
+        return NULL;
+    }
+    n[oldlen] = c;
+    n[oldlen + 1] = '\0';
+    return n;
+}
+
+/* Append a whole string (can be NULL) to s */
+static char *append_str(char *s, const char *add)
+{
+    if (!add) return s;
+    size_t oldlen = s ? strlen(s) : 0;
+    size_t addlen = strlen(add);
+    char *n = realloc(s, oldlen + addlen + 1);
+    if (!n) { free(s); return NULL; }
+    memcpy(n + oldlen, add, addlen);
+    n[oldlen + addlen] = '\0';
+    return n;
+}
+
+/* Lookup environment value in two env arrays (local first), return newly allocated string or NULL if not found.
+   Caller of get_env_value shouldn't free the returned pointer directly if you want direct ownership; here we return strdup. */
+static char *get_env_value(t_subproc *process, const char *name)
+{
+    int i;
+    size_t name_len;
+    char *val = NULL;
+    if (!name || !*name) return NULL;
+    name_len = strlen(name);
+
+    if (process && process->local_env) {
+        for (i = 0; process->local_env[i]; ++i) {
+            char *eq = strchr(process->local_env[i], '=');
+            if (!eq) continue;
+            if ((size_t)(eq - process->local_env[i]) == name_len &&
+                strncmp(process->local_env[i], name, name_len) == 0) {
+                val = strdup(eq + 1);
+                return val;
+            }
+        }
+    }
+    if (process && process->buffer_env) {
+        for (i = 0; process->buffer_env[i]; ++i) {
+            char *eq = strchr(process->buffer_env[i], '=');
+            if (!eq) continue;
+            if ((size_t)(eq - process->buffer_env[i]) == name_len &&
+                strncmp(process->buffer_env[i], name, name_len) == 0) {
+                val = strdup(eq + 1);
+                return val;
+            }
+        }
+    }
+    return NULL;
+}
+
+/* Return string for special parameters like $? and $$.
+   You should adapt to your shell: here we return placeholder values. */
+static char *expand_special_param(char c)
+{
+    if (c == '?') return strdup("0");   /* last exit status placeholder */
+    if (c == '$') return strdup("12345"); /* pid placeholder */
+    if (c == '#') return strdup("0");   /* number of positional params placeholder */
+    if (c == '@' || c == '*') return strdup(""); /* could be joined args */
+    if (c == '-') return strdup("");    /* shell flags placeholder */
+    return NULL;
+}
+
+/* Is variable name char (after first char) */
+static int is_var_char(int ch)
+{
+    return (isalnum(ch) || ch == '_');
+}
+
+/* ---------- main parse_token implementation ---------- */
+
+char *parse_token(t_subproc *process, const char *input)
+{
+    char *out = NULL;
+    int i = 0;
+    int in_squote = 0;
+    int in_dquote = 0;
+
+    if (!input) return NULL;
+
+    while (input[i]) {
+        char c = input[i];
+
+        /* Single quote handling: everything literal until next single quote */
+        if (!in_dquote && c == '\'' ) {
+            in_squote = !in_squote;
+            i++;
+            continue; /* do not copy the quote char */
+        }
+
+        /* Double quote handling */
+        if (!in_squote && c == '"' ) {
+            in_dquote = !in_dquote;
+            i++;
+            continue; /* do not copy the quote char */
+        }
+
+        /* Backslash handling */
+        if (c == '\\') {
+            if (in_squote) {
+                /* backslash is literal inside single quotes */
+                out = append_char(out, '\\');
+                if (!out) return NULL;
+                i++;
+                continue;
+            }
+            /* outside single quotes: determine whether to escape next char */
+            char next = input[i + 1];
+            if (next == '\0') {
+                /* trailing backslash: treat as literal backslash */
+                out = append_char(out, '\\');
+                if (!out) return NULL;
+                i++;
+                continue;
+            }
+            if (in_dquote) {
+                /* in double quotes only certain chars are escaped */
+                if (next == '"' || next == '\\' || next == '$' || next == '`') {
+                    out = append_char(out, next);
+                    if (!out) return NULL;
+                    i += 2;
+                    continue;
+                } else {
+                    /* backslash remains as-is (both chars) */
+                    out = append_char(out, '\\');
+                    if (!out) return NULL;
+                    i++;
+                    continue;
+                }
+            } else {
+                /* outside any quotes: backslash escapes any next char */
+                out = append_char(out, next);
+                if (!out) return NULL;
+                i += 2;
+                continue;
+            }
+        }
+
+        /* Variable expansion */
+        if (c == '$' && !in_squote) {
+            char next = input[i + 1];
+            if (next == '{') {
+                /* ${VAR} style */
+                int j = i + 2;
+                int start = j;
+                while (input[j] && (is_var_char((unsigned char)input[j]) || (j == start && (isalpha((unsigned char)input[j]) || input[j] == '_')))) j++;
+                /* Allow empty or non-conforming names? We'll accept only well-formed names */
+                if (input[j] == '}') {
+                    size_t namelen = j - start;
+                    if (namelen > 0) {
+                        char *name = strndup(input + start, namelen);
+                        char *val = get_env_value(process, name);
+                        free(name);
+                        if (val) {
+                            out = append_str(out, val);
+                            free(val);
+                            if (!out) return NULL;
+                        }
+                    }
+                    i = j + 1; /* skip closing } */
+                    continue;
+                } else {
+                    /* No closing }, treat '${' literally */
+                    out = append_char(out, '$');
+                    if (!out) return NULL;
+                    out = append_char(out, '{');
+                    if (!out) return NULL;
+                    i += 2;
+                    continue;
+                }
+            } else if (next && (isalpha((unsigned char)next) || next == '_')) {
+                /* $NAME */
+                int j = i + 1;
+                while (input[j] && is_var_char((unsigned char)input[j])) j++;
+                size_t namelen = j - (i + 1);
+                char *name = strndup(input + i + 1, namelen);
+                char *val = get_env_value(process, name);
+                free(name);
+                if (val) {
+                    out = append_str(out, val);
+                    free(val);
+                    if (!out) return NULL;
+                }
+                i = j;
+                continue;
+            } else if (next && isdigit((unsigned char)next)) {
+                /* positional parameter like $1: not implemented: skip or treat empty */
+                /* We'll just skip and not expand (or you could expand from argv) */
+                i += 2;
+                continue;
+            } else if (next) {
+                /* single-char special parameter: $? $$ etc. */
+                char *val = expand_special_param(next);
+                if (val) {
+                    out = append_str(out, val);
+                    free(val);
+                    if (!out) return NULL;
+                }
+                i += 2;
+                continue;
+            } else {
+                /* trailing $ with nothing else -> literal $ */
+                out = append_char(out, '$');
+                if (!out) return NULL;
+                i++;
+                continue;
+            }
+        } /* end variable expansion */
+
+        /* Normal character: copy */
+        out = append_char(out, c);
+        if (!out) return NULL;
+        i++;
+    } /* end while */
+
+    return out;
+}
+
+Integration notes & ownership
+
+    parse_token() returns a malloc-ed string; caller must free() it.
+
+    get_env_value() uses strdup and returns an owned string which parse_token() frees after appending.
+
+    Replace the placeholders in expand_special_param() (like exit status, PID) with real data from your shell environment if you track them.
+
+    If you already have ft_addchar / ft_strjoin_free utilities you prefer, replace append_char / append_str to reuse your helpers.
+
+Tests you should run
+
+    Outside quotes:
+
+        noquotes: \", \$, \\' → should act like escapes.
+
+    Double quotes:
+
+        "a\"b \$C \\d" → should produce a"b $C \d (i.e. \$ -> $ literal? actually inside double-quotes \$ removes backslash and leaves $ — if you want $ to expand then you wouldn't escape it).
+
+    Single quotes:
+
+        'a\"b \$c' → should remain a\"b \$c.
+
+    Variables:
+
+        $HOME, ${HOME}, $?, $$, $1.
+
+    Malformed:
+
+        ${UNFINISHED → should keep ${ and following as literal text (no crash).
+
+If you want, I can:
+
+    adapt this to use your ft_ memory helpers,
+
+    add full support for positional parameters (argv) and real $?/$$,
+
+    emit diagnostics on malformed expansions (e.g. unmatched {),
+
+    or produce a tokenization pipeline (lexer → expander → tokens) that plugs into your existing ft_quotes / reconstruct_token flow.
+
+Which of those do you want next?

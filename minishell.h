@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 12:49:41 by aghergut          #+#    #+#             */
-/*   Updated: 2025/10/08 14:06:15 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:00:19 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,17 @@ typedef struct Subprocess
 int 	init_subproc(t_main *shell, t_subproc **sub);
 int		init_main(t_main **shell, char *name, char *envp[]);
 int		init_builtins(t_builts **builts);
-// UTILS
+// BUILTINS
+int		ft_builtins(t_subproc *process);
+void	ft_clear(void);
+int		ft_exit(t_subproc *process);
+int 	ft_export(t_subproc *process);
+int 	ft_pwd(t_subproc *process);
+int		ft_getenv(t_subproc *process);
+int		ft_unset(t_subproc **process);
+int		ft_echo(t_subproc *process);
+int		ft_cd(t_subproc *process);
+// BUILTINS UTILS
 int 	path_input(t_subproc *process);
 int		invalid_options(char *token);
 void	ft_setpaths(t_subproc *process);
@@ -92,43 +102,19 @@ void	ft_heredoc(t_subproc *process);
 int		ft_reinput(t_subproc *process);
 int		ft_reoutput(t_subproc *process);
 char	*ft_getcwd(void);
-// BUILTINS
-int		ft_builtins(t_subproc *process);
-void	ft_clear(void);
-int		ft_exit(t_subproc *process);
-int 	ft_export(t_subproc *process);
-int 	ft_pwd(t_subproc *process);
-int		ft_getenv(t_subproc *process);
-int		ft_unset(t_subproc **process);
-int		ft_echo(t_subproc *process);
-int		ft_cd(t_subproc *process);
 // HANDLERS
 void	handle_sigint(int sig);
 // READINPUT
-
-void	pos_aux(char **str, int *idx, int *slash);
-int		quote_pos(char *str, char delim, int times);
-int 	quotes_left(t_list *tokens, char *line_left);
-int 	first_occurrence(t_list *tokens, char *line, char delim);
-char	*clean_line(char *content);
+int		ft_readinput(t_subproc *proc);
+// PARSE TOKENS
+char	*clean_line(char *content, char token);
 void 	scan_char(char *content, char **var_name, int *idx);
 void	insert_value(t_subproc *process, char **dest, char *var_name);
-char	*parse_token(t_subproc *process, char *content);
-int 	reconstruct_token(t_subproc *process, char *line, char delim);
-char	*ft_quotes(t_subproc *process, char *line, char delim);
+char	*parse_token(t_subproc *process, char *content, char token);
 int		ft_create_tokens(t_subproc *process);
-int		ft_readinput(t_subproc *proc);
-// PARSE CONTENT
-// int     ft_parse_tokens(t_subproc *process);
-// int		ft_wildcards(char *str, char *wildcards);
-// char	*ft_cleanline(char *content);
-// void	ft_addvalue(char **env, char **dest, char *var_name);
-// int		ft_within(char **env, char *var_name);
-// void	ft_scanning_quotes(char *content, char **new, int *idx);
-// void	ft_scanning_variable(char *content, char **var_name, int *idx);
-// void	ft_insert(t_subproc *process, char **dest, char *var_name);
-// char	*ft_build_line(t_subproc *process, char *content);
-
-
+// QUOTES_UTILS
+int		quote_pos(char *str, char delim, int times);
+int 	quotes_left(t_list *tokens, char *line_left);
+int 	first_occurrence(t_subproc *process, char *line, char delim);
 
 #endif

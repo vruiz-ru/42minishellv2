@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 13:45:40 by aghergut          #+#    #+#             */
-/*   Updated: 2024/10/15 18:09:00 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/10/09 12:35:01 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@ void	ft_lstclear(t_list **lst, void (*del)(void*))
 		while (ptr != NULL)
 		{
 			temp = ptr->next;
-			if (del)
-				del(ptr->content);
-			free(ptr);
+			ft_lstdelone(ptr, del);
 			ptr = temp;
 		}
 		*lst = NULL;
