@@ -45,25 +45,16 @@ static int	check_update(char **map, char *var)
 int ft_export(t_subproc *process)
 {
 	char	*line;
-	char	*arg;
 	bool	done;
-	
+
 	ft_clear_strtok();
 	line = ft_construct_line(process->builtins->tokens);
-	arg = ft_strtok(line, " ");
-	if (!arg)
+	done = false;
+	if (check_update(process->local_env, line))
+		done = true;
+	if (done == false && check_transfer(process, line))
+		done = true;
+	if (done == false && !ft_mapitem_add(&process->local_env, line))
 		return (0);
-	while (arg)
-	{
-		done = false;
-		if (check_update(process->local_env, arg))
-			done = true;
-		if (done == false && check_transfer(process, arg))
-			done = true;
-		if (done == false && !ft_mapitem_add(&process->local_env, arg))
-			return (0);
-		free(arg);
-		arg = ft_strtok(NULL, " ");
-	}
-	return (free(line), free(arg), 1);
+	return (free(line), 1);
 }
