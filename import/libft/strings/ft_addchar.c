@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 13:50:23 by aghergut          #+#    #+#             */
-/*   Updated: 2025/10/09 12:39:03 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 21:53:25 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ char	*ft_addchar(char *str, char ch)
 	}
 	new[i++] = ch;
 	new[i] = '\0';
-	if (str)
-		free(str);
+	free(str);
 	str = NULL;
 	return (new);	
 }

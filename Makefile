@@ -6,7 +6,7 @@
 #    By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/24 13:18:15 by aghergut          #+#    #+#              #
-#    Updated: 2025/11/02 19:42:42 by aghergut         ###   ########.fr        #
+#    Updated: 2025/11/03 21:30:48 by aghergut         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 # LIBFT
 LIBFT = import/libft/
-MAKE_LIBFT = @make -C $(LIBFT) > /dev/null 2>&1
+MAKE_LIBFT = @make -C $(LIBFT) # > /dev/null 2>&1
 CLEAN_LIBFT = @make clean -C $(LIBFT) > /dev/null 2>&1
 FCLEAN_LIBFT = @make fclean -C $(LIBFT) > /dev/null 2>&1
 FLAGS_LIBFT = -L$(LIBFT) -lft
@@ -57,7 +57,7 @@ SRCS1 =	$(BUILTINS_DIR)$(UTILS_DIR)ft_cd_feats.c \
 SRCS2 =	$(BUILTINS_DIR)ft_builtins.c $(BUILTINS_DIR)ft_cd.c \
 		$(BUILTINS_DIR)ft_clear.c $(BUILTINS_DIR)ft_echo.c \
 		$(BUILTINS_DIR)ft_exit.c $(BUILTINS_DIR)ft_export.c \
-		$(BUILTINS_DIR)ft_pwd.c $(BUILTINS_DIR)ft_getenv.c \
+		$(BUILTINS_DIR)ft_pwd.c $(BUILTINS_DIR)ft_env.c \
 		$(BUILTINS_DIR)ft_unset.c
 
 SRCS3 =	$(HANDLERS_DIR)ft_sigint.c
@@ -76,8 +76,9 @@ SRCS6 = $(INPUT_DIR)ft_prompt.c $(INPUT_DIR)ft_readinput.c
 
 SRCS7 =	$(UTILS_DIR)ft_free.c $(UTILS_DIR)ft_init.c \
 		$(UTILS_DIR)ft_clear_strtok.c $(UTILS_DIR)ft_construct.c \
+		$(UTILS_DIR)ft_addspace.c $(UTILS_DIR)ft_safeadd_nodes.c\
 		$(UTILS_DIR)ft_appendre.c $(UTILS_DIR)ft_heredoc.c \
-		$(UTILS_DIR)ft_reinput.c $(UTILS_DIR)ft_reoutput.c 
+		$(UTILS_DIR)ft_reinput.c $(UTILS_DIR)ft_reoutput.c
 		
 SRCS8 =	$(MAIN_DIR)main.c
 

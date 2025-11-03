@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:15:56 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/02 19:36:33 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 16:51:24 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ char	*clean_line(char *content, char token);
 void	scan_char(t_process *process, char *content, char **var_name, int *idx);
 void	insert_value(t_process *process, char **dest, char *var_name);
 //		QUOTE
+char	quote_delimiter(char *line);
 int		quote_pos(char *str, char delim, int times);
-void	add_space(t_list **tokens);
 int 	quotes_left(char *line_left);
 int 	first_occurrence(t_process *process, char *line, char delim);
 // PARSE_TOKENS
-int		ft_inputvar(t_process *process, char *line);
+int		ft_inputvar(t_process *process, char **line);
 int		ft_parse_line(t_process *process);
 char	*ft_parse_token(t_process *process, char *content, char token);
 int		ft_quote(t_process *process, char *line);

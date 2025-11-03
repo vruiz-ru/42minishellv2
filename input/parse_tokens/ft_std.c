@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 08:02:20 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/02 21:00:50 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:53:27 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*get_content(t_process *process, char *line)
 
 int		ft_std(t_process *process, char *line)
 {
-	char    *token;
+	char	*token;
 	char	*node;
 
 	if (ft_strchr(line, '"') || ft_strchr(line, '\''))
@@ -45,10 +45,10 @@ int		ft_std(t_process *process, char *line)
 		node = ft_parse_token(process, token, 'n');
 		if (!node)
 			return (perror("malloc"), exit(EXIT_FAILURE), 0);
-        ft_lstadd_back(&process->tokens, ft_lstnew(node));
+		ft_safeadd_tokens(&process->tokens, &node);
 		token = ft_strtok(NULL, " ");
 		if (token)
-			add_space(&process->tokens);
+			ft_addspace(&process->tokens);
 	}
 	return (1);
 }

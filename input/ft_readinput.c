@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:35:16 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/02 19:47:57 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 18:28:38 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	ft_readinput(t_process *process)
 	{
         perror("malloc");
         return ;
-    }	
+    }
+    ft_putstr_fd("here in readinput\n", 1);
 	process->line = readline(process->prompt->display);
 	if (process->line == NULL || *(process->line) == '\0')
 		return ;

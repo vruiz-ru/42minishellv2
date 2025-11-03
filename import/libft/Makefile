@@ -6,7 +6,7 @@
 #    By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/22 13:11:03 by aghergut          #+#    #+#              #
-#    Updated: 2025/10/07 13:56:52 by aghergut         ###   ########.fr        #
+#    Updated: 2025/11/03 21:30:04 by aghergut         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,7 +62,7 @@ SRCS8 = $(FTPRINTF_DIR)ft_fill.c $(FTPRINTF_DIR)ft_flagadd.c \
 		$(FTPRINTF_DIR)ft_printchar.c $(FTPRINTF_DIR)ft_printstr.c  \
 		$(FTPRINTF_DIR)ft_printint.c  $(FTPRINTF_DIR)ft_printu.c  \
 		$(FTPRINTF_DIR)ft_printpxx.c $(FTPRINTF_DIR)ft_printf.c
-SRCS9 =	$(MAPS_DIR)ft_mapitem_del.c $(MAPS_DIR)ft_mapdup.c \
+SRCS9 =	$(MAPS_DIR)ft_mapitem_del.c $(MAPS_DIR)ft_mapdup.c $(MAPS_DIR)ft_map_utils.c \
 		$(MAPS_DIR)ft_mapfree.c $(MAPS_DIR)ft_mapitem_index.c \
 		$(MAPS_DIR)ft_mapitem_replace.c $(MAPS_DIR)ft_mapsize.c \
 		$(MAPS_DIR)ft_mapitem_add.c $(MAPS_DIR)ft_mapnew.c

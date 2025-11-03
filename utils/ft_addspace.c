@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_addspace.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/27 13:46:10 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/03 19:27:47 by aghergut         ###   ########.fr       */
+/*   Created: 2025/11/03 15:18:47 by aghergut          #+#    #+#             */
+/*   Updated: 2025/11/03 20:57:43 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lists.h"
+#include "../headers/minishell.h"
 
-t_list	*ft_lstnew(void *content)
+void	ft_addspace(t_list **tokens)
 {
-	t_list	*node;
-    
-	node = (t_list *) malloc(sizeof(t_list));
-	if (!node)
-		return (NULL);
-	if (content)
+	char	*to_add;
+
+	if (*tokens == NULL)
+		return ;
+	to_add = ft_strdup(" ");
+	if (!to_add)
 	{
-		node->content = content;
-		node->next = NULL;
-		return (node);
+		perror("malloc");
+		exit(EXIT_FAILURE);
 	}
-	return (free(node), NULL);
+	ft_safeadd_tokens(tokens, &to_add);
 }

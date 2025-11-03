@@ -6,38 +6,16 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:50:39 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/02 22:29:51 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 21:42:44 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-static void	add_last_arg(t_process *process)
-{
-	t_list	*last_node;
-	
-	last_node = NULL;
-	if (process->tokens)
-		last_node = ft_lstlast(process->tokens);
-	if (process->last_arg && *(process->last_arg))
-		free(process->last_arg);
-	if (last_node)
-	{
-		process->last_arg = ft_strdup((char *)last_node->content);
-		if (!process->last_arg)
-		{
-			perror("malloc");
-			exit(EXIT_FAILURE);
-		}
-	}
-		
-}
-
 void	reset_utils(t_process **process)
 {
 	if ((*process)->line)
 		free((*process)->line);
-	add_last_arg(*process);
 	ft_clear_strtok();
 	if ((*process)->tokens)
 		ft_lstclear(&(*process)->tokens, free);

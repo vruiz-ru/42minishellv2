@@ -59,6 +59,8 @@ int     ft_pwd(t_process *process);
 char	*ft_getcwd(void);
 char	*parse_token(t_process *process, char *content, char token);
 
+// LIBFT USED FUNCTIONS
+
 void	ft_bzero(void *s, size_t n)
 {
 	unsigned char	*cast;
@@ -361,7 +363,6 @@ char	*ft_itoa(long value)
 	return (v_str(v_length(value), value, 1));
 }
 
-
 static char	*failed_malloc(void)
 {
 	write(1, "Failed malloc!\n", sizeof("Failed malloc!\n") - 1);
@@ -467,74 +468,6 @@ char	*ft_addchar(char *str, char ch)
 	return (new);	
 }
 
-static void	free_memory(char **s, int pos)
-{
-	while (pos > 0)
-		free(s[--pos]);
-	free(s);
-}
-
-static int	count_arrays(char *str, char c)
-{
-	int	word;
-
-	word = 0;
-	while (*str)
-	{
-		while (*str == c)
-			str++;
-		if (*str)
-			word++;
-		while (*str != c && *str)
-			str++;
-	}
-	return (word);
-}
-
-static char	**assign(char **sp, int pos, char *s, char c)
-{
-	size_t	s_len;
-	size_t	sub_len;
-	size_t	start;
-
-	start = 0;
-	s_len = ft_strlen(s);
-	while (start < s_len)
-	{
-		sub_len = 0;
-		while (s[start] != c && s[start] != 0)
-		{
-			sub_len++;
-			start++;
-		}
-		if ((s[start] == c && sub_len > 0) || start == s_len)
-		{
-			sp[pos] = ft_substr(s, start - sub_len, sub_len);
-			if (sp[pos] == 0)
-				return (free_memory(sp, pos), NULL);
-			pos++;
-		}
-		start++;
-	}
-	return (sp);
-}
-
-char	**ft_split(char *str, char c)
-{
-	char	**splits;
-	int		words;
-
-	if (str == NULL)
-		return (NULL);
-	words = count_arrays(str, c);
-	splits = (char **) ft_calloc(words + 1, sizeof(char *));
-	if (!splits)
-		return (0);
-	if (!*str)
-		return (splits);
-	return (assign(splits, 0, str, c));
-}
-
 void	*ft_memset(void *str, int c, size_t n)
 {
 	unsigned char	*c_str;
@@ -549,6 +482,8 @@ void	*ft_memset(void *str, int c, size_t n)
 	}
 	return (str = c_str);
 }
+
+// LISTS FUNCTIONS
 
 void	ft_lstadd_back(t_list **lst, t_list *new_node)
 {
@@ -644,44 +579,77 @@ void	ft_lstclear(t_list **lst, void (*del)(void*))
 	}
 }
 
-void	ft_mapfree(char **map)
+// MAPS FUNCTIONS
+void	free_partial(char **map, size_t count)
 {
-	int	i;
-
 	if (!map)
-		return ;
-	i = -1;
-	while (map[++i])
-		free(map[i]);
+		return;
+	while (count >= 0)
+	{
+		count--;
+		free(map[count]);
+	}
 	free(map);
 }
 
-char	**ft_mapnew(char *item)
+char	**create_new(char **map, char *add_last)
 {
-	char	**map;
+	char    **new_map;
+	int		i;
 
-	if (!item)
+	new_map = malloc((ft_mapsize(map) + 2) * sizeof(char *));
+	if (!new_map)
 		return (NULL);
-	map = malloc(2 * sizeof(char *));
-	if (!map)
-		return (NULL);
-	map[0] = ft_strdup(item);
-	if (!map[0])
-		return (free(map), NULL);
-	map[1] = NULL;
-	return (map);
+	i = 0;
+	while (map[i])
+	{
+		new_map[i] = ft_strdup(map[i]);
+		if (!new_map[i])
+			return (free_partial(new_map, i), NULL);
+		i++;
+	}
+	new_map[i] = ft_strdup(add_last);
+	if (new_map[i] == NULL)
+		return (free_partial(new_map, i), NULL);
+	new_map[i + 1] = NULL;
+	return (new_map);
 }
 
-size_t	ft_mapsize(char **map)
+int	copy_elements(char **map, char **new_map, size_t skip)
 {
 	size_t	i;
-	
+	size_t	j;
+
 	i = 0;
-	if (!map || !*map)
-		return (0);
+	j = 0;
 	while (map[i] != NULL)
+	{
+		if (i == skip)
+		{
+			i++;
+			continue;
+		}
+		new_map[j] = ft_strdup(map[i]);
+		if (!new_map[j])
+		{
+			free_partial(new_map, j);
+			return (0);
+		}
+		j++;
 		i++;
-	return (i);
+	}
+	new_map[j] = NULL;
+	return (1);
+}
+
+int	right_length(char *item)
+{
+	char	*ptr;
+	
+	ptr = ft_strchr(item, '=');
+	if (ptr)
+		return (ptr - item);
+	return (ft_strlen(item));
 }
 
 char	**ft_mapdup(char **map)
@@ -696,51 +664,33 @@ char	**ft_mapdup(char **map)
 	dup = (char **)malloc((length + 1) * sizeof(char *));
 	if (!dup)
 		return (NULL);
-	i = -1;
-	while (map[++i])
+	i = 0;
+	while (map[i])
 	{
 		dup[i] = ft_strdup(map[i]);
 		if (!dup[i])
-		{
-			while (i-- > 0)
-				free(dup[i]);
-			return (free(dup), NULL);
-		}
+            return (free_partial(dup, i), NULL);
+        i++;
 	}
 	dup[i] = NULL;
 	return (dup);
 }
 
-void	free_partial(char **map, size_t from_index)
+void	ft_mapfree(char **map)
 {
+	int	i;
+
 	if (!map)
-		return;
-	while (from_index > 0)
-		free(map[--from_index]);
+		return ;
+	i = 0;
+	while (map[i])
+    {
+        free(map[i]);
+        i++;
+    }
 	free(map);
 }
 
-char	**create_new(char **map, char *add_last)
-{
-	char    **new_map;
-	int		i;
-
-	new_map = malloc((ft_mapsize(map) + 2) * sizeof(char *));
-	if (!new_map)
-		return (NULL);
-	i = -1;
-	while (map[++i])
-	{
-		new_map[i] = ft_strdup(map[i]);
-		if (!new_map[i])
-			return (free_partial(new_map, i), NULL);
-	}
-	new_map[i] = ft_strdup(add_last);
-	if (new_map[i] == NULL)
-		return (free_partial(new_map, i), NULL);
-	new_map[++i] = NULL;
-	return (new_map);
-}
 
 int	ft_mapitem_add(char ***map_ref, char *item)
 {
@@ -767,34 +717,6 @@ int	ft_mapitem_add(char ***map_ref, char *item)
 	return (0);
 }
 
-int	copy_elements(char **map, char **new_map, size_t skip)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	j = 0;
-	while (map[i] != NULL)
-	{
-		if (i == skip)
-		{
-			i++;
-			continue;
-		}
-		new_map[j] = ft_strdup(map[i]);
-		if (!new_map[j])
-		{
-			free_partial(new_map, j);
-			return (0);
-		}
-		j++;
-		i++;
-
-	}
-	new_map[j] = NULL;
-	return (1);
-}
-
 int	ft_mapitem_del(char ***map_ref, size_t del_idx)
 {
 	char	**new_map;
@@ -811,29 +733,27 @@ int	ft_mapitem_del(char ***map_ref, size_t del_idx)
 	if (!new_map)
 		return (0);
 	if (!copy_elements(temp, new_map, del_idx))
-		return (0);
+		return (ft_mapfree(new_map), 0);
 	ft_mapfree(temp);
 	*map_ref = new_map;
 	return (1);
 }
 
+
 int  ft_mapitem_index(char **map, char *str)
 {
-	char	*value;
+	size_t  mv_len;
+	size_t	sv_len;
 	size_t  idx;
-	size_t  n;
 	
 	if (!map || !*map || !str || !*str)
 		return (-1);
-	value = ft_strchr(str, '=');
-	if (value)
-		n = value - str;
-	else
-		n = ft_strlen(str);
+	sv_len = right_length(str);
 	idx = 0;
 	while (map[idx])
-	{		
-		if (!ft_strncmp(map[idx], str, n) && map[idx][n] == '=')
+	{
+		mv_len = right_length(map[idx]);
+		if (mv_len == sv_len && !ft_strncmp(map[idx], str, mv_len))
 			return (idx);
 		idx++;
 	}
@@ -842,15 +762,221 @@ int  ft_mapitem_index(char **map, char *str)
 
 int	ft_mapitem_replace(char ***map, char *item, size_t idx)
 {
+	char    *temp;
+	
 	if (!map || !*map || ft_mapsize(*map) <= idx)
 		return (0);
-	if ((*map)[idx] != NULL)
-		free((*map)[idx]);
-	(*map)[idx] = ft_strdup(item);
-	if (!(*map)[idx])
+	temp = ft_strdup(item);
+	if (!temp)
 		return (0);
+	if ((*map)[idx])
+		free((*map)[idx]);
+	(*map)[idx] = temp;
 	return (1);
 }
+
+char	**ft_mapnew(char *item)
+{
+	char	**map;
+
+	if (!item)
+		return (NULL);
+	map = malloc(2 * sizeof(char *));
+	if (!map)
+		return (NULL);
+	map[0] = ft_strdup(item);
+	if (!map[0])
+		return (free(map), NULL);
+	map[1] = NULL;
+	return (map);
+}
+
+
+size_t	ft_mapsize(char **map)
+{
+	size_t	i;
+	
+	i = 0;
+	if (!map || !*map)
+		return (0);
+	while (map[i] != NULL)
+		i++;
+	return (i);
+}
+
+
+// UTILS
+
+void	ft_addspace(t_list **tokens)
+{
+	char	*to_add;
+
+	if (*tokens == NULL)
+		return ;
+	to_add = ft_strdup(" ");
+	if (!to_add)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	ft_lstadd_back(tokens, ft_lstnew(to_add));
+}
+
+void	ft_clear_strtok(void)
+{
+	char	*buffer;
+
+	buffer = ft_strtok(NULL, " ");
+	if (!buffer)
+		return ;
+	while (buffer)
+	{
+		free(buffer);
+		buffer = ft_strtok(NULL, " ");
+	}
+	return ;
+}
+
+static int	static_variable(char *str)
+{
+	if (ft_strchr(str, '='))
+		return (1);
+	return (0);	
+}
+
+static char	*copy_content(char *dst, char *src)
+{
+	int		i;
+
+	i = 0;
+	if (!src)
+		return (NULL);
+	while (src[i])
+	{
+		dst = ft_addchar(dst, src[i]);
+		if (dst == NULL)
+			return (NULL);
+		i++;
+	}
+	return (dst);
+}
+
+char	*ft_construct(t_list *tokens, char *str)
+{
+	t_list	*args;
+	char	*content;
+
+	args = tokens;
+	if (!static_variable(str))
+		args = args->next;
+	if (str)
+		free(str);
+	str = NULL;
+	while (args)
+	{
+		content = (char *)args->content;
+		str = copy_content(str, content);
+		args = args->next;
+	}
+	return (str);
+}
+
+void	free_process(t_process *proc)
+{
+	if (proc->envs && proc->envs->parent_env)
+		free(proc->envs->parent_env);
+	if (proc->envs && proc->envs->static_env)
+		free(proc->envs->static_env);
+	if (proc->envs)
+		free(proc->envs);
+	if (proc->prompt && proc->prompt->shell_name)
+		free(proc->prompt->shell_name);
+	if (proc->prompt && proc->prompt->display)
+		free(proc->prompt->display);
+	if (proc->prompt && proc->prompt->home_path)
+		free(proc->prompt->home_path);
+	if (proc->prompt && proc->prompt->current_wd)
+		free(proc->prompt->current_wd);
+	if (proc->prompt && proc->prompt->last_wd)
+		free(proc->prompt->last_wd);
+	if (proc->prompt)
+		free(proc->prompt);
+	if (proc->line)
+		free(proc->line);
+	if (proc->tokens)
+		ft_lstclear(&proc->tokens, free);
+	if (proc->last_arg)
+		free(proc->last_arg);
+}
+
+static t_process	*init(void)
+{
+	t_process	*process;
+	
+	process = malloc(sizeof(t_process));
+	if (!process)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	ft_memset(process, 0, sizeof(t_process));
+	process->envs = malloc(sizeof(t_envs));
+	process->prompt = malloc(sizeof(t_prompt));
+	if (!process->envs && !process->prompt)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	ft_memset(process->envs, 0, sizeof(t_envs));
+	ft_memset(process->prompt, 0, sizeof(t_envs));
+	return (process);
+}
+
+t_process	*init_child(t_process *parent)
+{
+	t_process	*child;
+	
+	child = init();
+	if (!child)
+		return (NULL);
+	child->envs->parent_env = ft_mapdup(parent->envs->parent_env);
+	if (!child->envs->parent_env)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	child->prompt->current_wd = ft_strdup(parent->prompt->current_wd);
+	if (!child->prompt->current_wd)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	child->prompt->last_wd = ft_strdup(child->prompt->current_wd);
+	if (!child->prompt->last_wd)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	child->last_arg = ft_strdup(" ");
+	if (!child->last_arg)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	child->pid = getpid();
+	return (child);
+}
+
+int	init_parent(t_process **parent, char *name, char *envp[])
+{
+	*parent = init();
+	if (!*parent)
+		return (0);
+	(*parent)->envs->parent_env = ft_mapdup(envp);
+	if (!(*parent)->envs->parent_env)
+		return (perror("malloc"), exit(EXIT_FAILURE), 0);
+	(*parent)->prompt->shell_name = ft_strdup(name);
+	if (!(*parent)->prompt->shell_name)
+		return (perror("malloc"), exit(EXIT_FAILURE), 0);
+	(*parent)->prompt->home_path = ft_getcwd();
+	if (!(*parent)->prompt->home_path)
+		return (perror("malloc"), exit(EXIT_FAILURE), 0);
+	(*parent)->prompt->current_wd = ft_getcwd();
+	if (!(*parent)->prompt->current_wd)
+		return (perror("malloc"), exit(EXIT_FAILURE), 0);
+	(*parent)->prompt->last_wd = ft_getcwd();
+	if (!(*parent)->prompt->last_wd)
+		return (perror("malloc"), exit(EXIT_FAILURE), 0);
+	(*parent)->pid  = getpid();
+	(*parent)->last_arg = ft_strdup(" ");
+	if (!(*parent)->last_arg)
+		return (perror("malloc"), exit(EXIT_FAILURE), 0);
+	return (1);
+}
+
+// HANDLER CTRL+C
 
 void	handle_sigint(int sig) 
 {
@@ -862,6 +988,8 @@ void	handle_sigint(int sig)
 		rl_redisplay();	
 	}
 }
+
+// BUILTINS UTILS FUNCTIONS
 
 int	dash_feature(t_process *process)
 {
@@ -1041,239 +1169,49 @@ int path_input(t_process *process)
 	return (0);
 }
 
-void	ft_clear_strtok(void)
-{
-	char	*buffer;
-
-	buffer = ft_strtok(NULL, " ");
-	if (!buffer)
-		return ;
-	while (buffer)
-	{
-		free(buffer);
-		buffer = ft_strtok(NULL, " ");
-	}
-	return ;
-}
-
-static int	static_variable(char *str)
-{
-	if (ft_strchr(str, '='))
-		return (1);
-	return (0);	
-}
-
-static char	*copy_content(char *dst, char *src)
-{
-	int		i;
-
-	i = 0;
-	if (!src)
-		return (NULL);
-	while (src[i])
-	{
-		dst = ft_addchar(dst, src[i]);
-		if (dst == NULL)
-			return (NULL);
-		i++;
-	}
-	return (dst);
-}
-
-char	*ft_construct_line(t_list *tokens, char *str)
-{
-	t_list	*args;
-	char	*content;
-
-	args = tokens;
-	if (!static_variable(str))
-		args = args->next;
-	if (str)
-		free(str);
-	str = NULL;
-	while (args)
-	{
-		content = (char *)args->content;
-		str = copy_content(str, content);
-		args = args->next;
-	}
-	return (str);
-}
-
-void	free_process(t_process *proc)
-{
-	if (proc->envs && proc->envs->parent_env)
-		free(proc->envs->parent_env);
-	if (proc->envs && proc->envs->static_env)
-		free(proc->envs->static_env);
-	if (proc->envs)
-		free(proc->envs);
-	if (proc->prompt && proc->prompt->shell_name)
-		free(proc->prompt->shell_name);
-	if (proc->prompt && proc->prompt->display)
-		free(proc->prompt->display);
-	if (proc->prompt && proc->prompt->home_path)
-		free(proc->prompt->home_path);
-	if (proc->prompt && proc->prompt->current_wd)
-		free(proc->prompt->current_wd);
-	if (proc->prompt && proc->prompt->last_wd)
-		free(proc->prompt->last_wd);
-	if (proc->prompt)
-		free(proc->prompt);
-	if (proc->line)
-		free(proc->line);
-	if (proc->tokens)
-		ft_lstclear(&proc->tokens, free);
-	if (proc->last_arg)
-		free(proc->last_arg);
-}
-
 char	*ft_getcwd(void)
 {
 	char	cwd[4096];
 	char	*res;
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("getcwd");
-		return (NULL);
-	}
+		return (perror("getcwd"), exit(EXIT_FAILURE), NULL);
 	res = ft_strdup(cwd);
 	if (!res)
-		return (NULL);
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
 	return (res);
 }
 
+
 char	*ft_getvar(char **envp, char *var_name)
 {
-	char	**split;
 	char	*value;
+	int		name_length;
 	int		i;
 
 	i = 0;
-	split = NULL;
 	value = NULL;
 	while (envp[i])
 	{
-		split = ft_split(envp[i], '=');
-		if (!ft_strncmp(split[0], var_name, ft_strlen(var_name)))
+		name_length = ft_strchr(envp[i], '=') - envp[i];
+		if (!ft_strncmp(envp[i], var_name, name_length))
 		{
-			if (split[1])
-				value = ft_strdup(split[1]);
+			if (envp[i][name_length + 2])
+			{
+				value = ft_strdup(envp[i] + name_length + 2);
+				if (!value)
+					return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+			}
 			else
 				break ;
-			ft_mapfree(split);
 			return (value);
 		}
-		ft_mapfree(split);
-		split = NULL;
 		i++;
 	}
 	return (NULL);
 }
 
-static t_process	*init(void)
-{
-	t_process	*process;
-	
-	process = malloc(sizeof(t_process));
-	if (!process)
-		return (perror("malloc"), NULL);
-	ft_memset(process, 0, sizeof(t_process));
-	process->envs = malloc(sizeof(t_envs));
-	process->prompt = malloc(sizeof(t_prompt));
-	if (!process->envs && !process->prompt)
-		return (perror("malloc"), NULL);
-	ft_memset(process->envs, 0, sizeof(t_envs));
-	ft_memset(process->prompt, 0, sizeof(t_envs));
-	return (process);
-}
-
-t_process	*init_child(t_process *parent)
-{
-	t_process	*child;
-	
-	child = init();
-	if (!child)
-		return (NULL);
-	child->envs->parent_env = ft_mapdup(parent->envs->parent_env);
-	if (!child->envs->parent_env)
-		return (perror("malloc"), NULL);
-	child->prompt->current_wd = ft_strdup(parent->prompt->current_wd);
-	if (!child->prompt->current_wd)
-		return (perror("malloc"), NULL);
-	child->prompt->last_wd = ft_strdup(child->prompt->current_wd);
-	if (!child->prompt->last_wd)
-		return (perror("malloc"), NULL);
-	child->last_arg = ft_strdup(" ");
-	if (!child->last_arg)
-		return (perror("malloc"), NULL);
-	child->pid = getpid();
-	return (child);
-}
-
-int	init_parent(t_process **parent, char *name, char *envp[])
-{
-	*parent = init();
-	if (!*parent)
-		return (0);
-	(*parent)->envs->parent_env = ft_mapdup(envp);
-	if (!(*parent)->envs->parent_env)
-		return (perror("malloc"), 0);
-	(*parent)->prompt->shell_name = ft_strdup(name);
-	if (!(*parent)->prompt->shell_name)
-		return (perror("malloc"), 0);
-	(*parent)->prompt->home_path = ft_getcwd();
-	if (!(*parent)->prompt->home_path)
-		return (perror("malloc"), 0);
-	(*parent)->prompt->current_wd = ft_getcwd();
-	if (!(*parent)->prompt->current_wd)
-		return (perror("malloc"), 0);
-	(*parent)->prompt->last_wd = ft_getcwd();
-	if (!(*parent)->prompt->last_wd)
-		return (perror("malloc"), 0);
-	(*parent)->pid  = getpid();
-	(*parent)->last_arg = ft_strdup(" ");
-	if (!(*parent)->last_arg)
-		return (perror("malloc"), 0);
-	return (1);
-}
-
-int	ft_isvar(char *token)
-{
-	int	i;
-
-	i = 0;
-	while (token[i] && (ft_isalnum(token[i]) || token[i] == '_'))
-		i++;
-	if (token[i] == '=')
-		return (1);
-	return (0);
-}
-
-char	*ft_prompt(t_process *process)
-{
-	char	*current_path;
-	char	*home_path;
-	char	*buffer;
-	char	*prompt;
-	size_t	size_current;
-	size_t  size_home;
-	
-	current_path = process->prompt->current_wd;
-	home_path = process->prompt->home_path;
-	size_current = ft_strlen(current_path);
-	size_home = ft_strlen(home_path);
-	if (!ft_strncmp(current_path, home_path, size_current))
-		return (ft_strjoin(">/~", PROMPT_ARROW));
-	buffer = ft_strnstr(current_path, home_path, size_current) + size_home;
-	prompt = ft_strjoin(">/~", buffer);
-	if (!prompt)
-		return (NULL);
-	buffer = ft_strjoin(prompt, PROMPT_ARROW);
-	ft_putstr_fd("test prompt after return\n", 1);
-	return (free(prompt), buffer);
-}
+// BUILTINS FUNCTIONS
 
 static int  ft_home(t_process *process)
 {
@@ -1292,7 +1230,7 @@ int ft_cd(t_process *process)
 	char	*feature;
 	int		size;
 
-	ptr = process->tokens->next;
+    ptr = process->tokens->next;
 	if (ptr == NULL)
 		return(ft_home(process));
 	feature = (char *)ptr->content;
@@ -1316,16 +1254,16 @@ int ft_cd(t_process *process)
 
 void	ft_clear(void)
 {
-	printf("%s", CLEAR);
+	ft_printf("%s", CLEAR);
 }
 
 int	ft_echo(t_process *process)
 {
 	char	*res;
 	
-    res = NULL;
-	res = ft_construct_line(process->tokens, res);
-	printf("%s\n",res);
+	res = NULL;
+    res = ft_construct(process->tokens, res);
+	ft_printf("%s\n",res);
 	return (free(res), 1);
 }
 
@@ -1339,64 +1277,82 @@ int	ft_exit(t_process *process)
 	return (1);
 }
 
-static int	check_transfer(t_process *process, char *var)
-{
-	char	*get_var;
-	int		idx;
 
-	idx = ft_mapitem_index(process->envs->static_env, var);
-	if (idx < 0)
-		return (0);
-	get_var = ft_strdup(process->envs->static_env[idx]);
-	if (!get_var)
-		return (0);
-	if (!ft_mapitem_del(&process->envs->static_env, idx))
-		return (free(get_var), 0);
-	if (!ft_mapitem_add(&process->envs->parent_env, get_var))
-		return (free(get_var), 0);
-	return (1);
-}
-
-static int	check_update(char **map, char *var)
+static void	update(char ***map, char *var)
 {
 	int 	env_idx;
 	
-	env_idx = ft_mapitem_index(map, var);
+	env_idx = ft_mapitem_index(*map, var);
 	if (env_idx < 0)
-		return (0);
-	if (!ft_mapitem_replace(&map, var, env_idx))
-		return (0);
-	return (1);
+		return ;
+	if (!ft_mapitem_replace(map, var, env_idx))
+		return ;
+	return ;
+}
+
+static void	transfer(t_process *process, char *var)
+{
+	char	*get_var;
+	int		idx;
+	
+	idx = ft_mapitem_index(process->envs->static_env, var);
+	if (idx < 0)
+		return ;
+	get_var = ft_strdup(process->envs->static_env[idx]);
+	if (!get_var)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	if (!ft_mapitem_add(&process->envs->parent_env, get_var))
+	{
+		free(get_var);
+		return ;
+	}
+	ft_mapitem_del(&process->envs->static_env, idx);
+	free(get_var);
+	return ;
 }
 
 int ft_export(t_process *process)
 {
+	char	**local;
 	char	*line;
-	bool	done;
+	int		idx;
 
-	ft_clear_strtok();
-	line = ft_construct_line(process->tokens);
-	done = false;
-	if (check_update(process->envs->parent_env, line))
-		done = true;
-	if (done == false && check_transfer(process, line))
-		done = true;
-	if (done == false && !ft_mapitem_add(&process->envs->parent_env, line))
-		return (0);
+	local = process->envs->static_env;
+	line = ft_construct(process->tokens, NULL);
+	idx = ft_mapitem_index(local, line);
+	if (!ft_strchr(line, '='))
+	{
+		if (idx < 0)
+			return (1);
+		if (ft_mapitem_index(process->envs->parent_env, local[idx]) < 0)
+		{
+			if (!ft_mapitem_add(&process->envs->parent_env, local[idx]))
+				return (perror("malloc"), exit(EXIT_FAILURE), 0);
+		}
+		return (free(line), 1);
+	}
+	update(&process->envs->parent_env, line);
+	update(&process->envs->static_env, line);
+	if (ft_mapitem_index(process->envs->parent_env, line) < 0 && idx < 0 && \
+		!ft_mapitem_add(&process->envs->parent_env, line))
+		return (perror("malloc"), exit(EXIT_FAILURE), 0);
+	transfer(process, line);
 	return (free(line), 1);
 }
 
-int	ft_getenv(t_process *process)
+int	ft_env(t_process *process)
 {
 	char    **ptr;
-	
-	ft_putstr_fd("why never here??\n", 1);
+
 	if (!process || !*process->envs->parent_env)
 		return (0);
 	ptr = process->envs->parent_env;
 	while (*ptr)
 	{
-		printf("%s\n", *ptr);
+		ft_printf("%s\n", *ptr);
 		ptr++;
 	}
 	return (1);
@@ -1415,7 +1371,7 @@ int ft_pwd(t_process *process)
 	dir_path = ft_strnstr(haystack, needle, ft_strlen(haystack));
 	if (!dir_path)
 		return (0);
-	printf("%s\n", dir_path);
+	ft_printf("%s\n", dir_path);
 	free(haystack);
 	return (1);
 }
@@ -1458,60 +1414,7 @@ int	ft_unset(t_process **process)
 	return (1);
 }
 
-static int token_exist(t_list *tokens)
-{
-	if (tokens == NULL)
-		return (0);
-	return (1);
-}
-
-int	ft_builtins(t_process *process)
-{
-	char    *cmd;
-	int		size;
-	
-	if (!token_exist(process->tokens))
-		return (0);
-	cmd = (char *)process->tokens->content;
-	ft_putstr_fd("here in cmd\n", 1);
-	size = ft_strlen(cmd);
-	if (!ft_strncmp(cmd, "clear", size))
-		return (ft_clear(), 1);
-	else if (!ft_strncmp(cmd, "exit", size))
-		return (ft_exit(process));
-	else if (!ft_strncmp(cmd, "export", size))
-		return (ft_export(process));
-	else if (!ft_strncmp(cmd, "pwd", size))
-		return (ft_pwd(process));
-	else if (!ft_strncmp(cmd, "env", size))
-		return (ft_getenv(process));
-	else if (!ft_strncmp(cmd, "echo", size))
-		return (ft_echo(process));
-	else if (!ft_strncmp(cmd, "unset", size))
-		return (ft_unset(&process));
-	else if (!ft_strncmp(cmd, "cd", size))
-		return (ft_cd(process));
-	return (0);
-}
-
-int ft_special_vars(t_process *proc, char **var_name, char ch)
-{
-	proc->is_special = false;
-	if (ch == '$')
-		*var_name = ft_itoa(proc->pid);
-	else if (ch == '?')
-		*var_name = ft_itoa(proc->exit_status);
-	else if (ch == '0')
-		*var_name = ft_strdup(proc->prompt->home_path);
-	else if (ch == '_')
-		*var_name = ft_strdup(proc->last_arg);
-	if (*var_name)
-	{
-		proc->is_special = true;
-		return (1);
-	}
-	return (0);
-}
+// INPUT PARSE UTILS
 
 static void	assign_value(char **env, char **dest, char *var_name)
 {
@@ -1520,29 +1423,40 @@ static void	assign_value(char **env, char **dest, char *var_name)
 	int		size;
 	
 	idx = 0;
-	while (env[idx])
+	while (env && env[idx])
 	{
-		size = ft_strchr(env[idx], '=') - env[idx];
-		if (!ft_strncmp(env[idx], var_name, size) && env[idx][size] == '=')
+		size = -1;
+		if (ft_strchr(env[idx], '='))
+			size = ft_strchr(env[idx], '=') - env[idx];
+		if (size >= 0 && !ft_strncmp(env[idx], var_name, size) && \
+			env[idx][size] == '=')
 		{
 			value = ft_strdup(ft_strchr(env[idx], '=') + 1);
 			*dest = ft_strjoin_free(*dest, value);
+			if (!value || !*dest)
+			{
+				perror("malloc");
+				exit(EXIT_FAILURE);
+			}
 			break ;
 		}
 		idx++;
 	}
 }
 
-static int	is_within(char **env, char *var_name)
+int	already_exists(char **env, char *var_name)
 {
 	int	idx;
 	int size;
 	
 	idx = 0;
-	while (env[idx])
+
+    while (env && env[idx])
 	{
-		size = ft_strchr(env[idx], '=') - env[idx];
-		if (!ft_strncmp(env[idx], var_name, size))
+        size = -1;
+        if (ft_strchr(env[idx], '='))
+		    size = ft_strchr(env[idx], '=') - env[idx];
+		if (size >= 0 && !ft_strncmp(env[idx], var_name, size))
 			return (1);
 		idx++;
 	}
@@ -1553,30 +1467,28 @@ char	*clean_line(char *content, char token)
 {
 	char    *seq;
 	char	*new;
-	bool	found;
-	int		i;
+	int     i;
 
-	i = -1;
+	i = 0;
 	new = NULL;
 	seq = "`\"\\";
 	if (token == 'n')
 		seq = " tn`\"'\\*?[]#&;|<>()~";    
-	while (content[++i] != '\0')
+	while (content[i] != '\0')
 	{
-		found = false;
 		if (content[i] == '\\' && ft_strchr(seq, content[i + 1]))
 		{
 			i++;
 			new = ft_addchar(new, content[i]);
-			found = true;		
 		}
-		if (found == false)
+		else
 			new = ft_addchar(new, content[i]);
+		i++;
 	}
 	return (free(content), new);
 }
 
-void scan_char(t_process *process, char *content, char **var_name, int *idx)
+void    scan_char(t_process *process, char *content, char **var_name, int *idx)
 {
 	char    *stop;
 
@@ -1589,7 +1501,7 @@ void scan_char(t_process *process, char *content, char **var_name, int *idx)
 	else if (content[*idx] == '$')
 	{
 		(*idx)++;
-		if (ft_special_vars(process, var_name, content[*idx]))
+		if (special_variable(process, var_name, content[*idx]))
 			return ;
 		while (content[*idx] && !ft_strchr(stop, content[*idx]))
 		{
@@ -1607,10 +1519,10 @@ void	insert_value(t_process *process, char **dest, char *var_name)
 
 	process_env = process->envs->parent_env;
 	static_env = process->envs->static_env;
-	if (is_within(process_env, var_name))
-		assign_value(process_env, dest, var_name);
-	else if (is_within(static_env, var_name))
+	if (already_exists(static_env, var_name))
 		assign_value(static_env, dest, var_name);
+	else if (already_exists(process_env, var_name))
+		assign_value(process_env, dest, var_name);
 }
 
 static void	quote_pos_aux(char **str, int *idx, int *slash)
@@ -1650,31 +1562,12 @@ int	quote_pos(char *str, char delim, int times)
 	return (quote_idx);
 }
 
-int quotes_left(t_list *tokens, char *line_left)
+int quotes_left(char *line_left)
 {
-	char    *space;
-	char    *temp;
-	
 	if (!line_left || !*line_left)
 		return (0);
 	if (ft_strchr(line_left, '\'') || ft_strchr(line_left, '"'))
 		return (1);
-	if (line_left && *line_left == ' ')
-	{
-		space = ft_strdup(" ");
-		temp = ft_strdup(line_left);
-		if (!space || !temp)
-			return (perror("malloc"), 0);
-		ft_lstadd_back(&tokens, ft_lstnew(space));
-		ft_lstadd_back(&tokens, ft_lstnew(temp));
-	}
-	else
-	{
-		temp = ft_strdup(line_left);
-		if (!temp)
-			return (perror("malloc"), 0);
-		ft_lstadd_back(&tokens, ft_lstnew(temp));
-	}
 	return (0);
 }
 
@@ -1690,44 +1583,276 @@ int first_occurrence(t_process *process, char *line, char delim)
 	{
 		chunk = ft_substr(line, 0, idx);
 		if (!chunk)
-			return(perror("malloc"), 0);
-		chunk = parse_token(process, chunk, 'n');
+			return(perror("malloc"), exit(EXIT_FAILURE), 0);
+		chunk = ft_parse_token(process, chunk, 'n');
 		ft_lstadd_back(&process->tokens, ft_lstnew(chunk));
 	}
 	return (idx);
 }
 
+char	quote_delimiter(char *line)
+{
+	int	dquote;
+	int	squote;
+
+	dquote = quote_pos(line, '"', 1);
+	squote = quote_pos(line, '\'', 1);
+	if (dquote >= 0 && (squote < 0 || (squote >= 0 && dquote < squote)))
+		return ('"');
+	else if (squote >= 0)
+		return ('\'');	
+	return (0);
+}
+
+int add_variable(char ***map, char *item)
+{
+    size_t idx;
+
+    if (!item)
+        return (0);
+    if (already_exists(*map, item))
+    {
+        idx = ft_mapitem_index(*map, item);
+        if (!ft_mapitem_replace(map, item, idx))
+            return (0);
+    }
+    if (!ft_mapitem_add(map, item))
+        return (0);
+    return (1);
+}
+
+int	contains_variable(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
+		i++;
+	if (line[i] == '=')
+		return (1);
+	return (0);
+}
+
+int special_variable(t_process *proc, char **var_name, char ch)
+
+static char	*safe_value(char *line)
+{
+	char	*value;
+	int		idx_line;
+	bool	dq;
+	bool	sq;
+	size_t	len;
+	
+	idx_line = 0;
+	dq = false;
+	sq = false;
+	while (line[idx_line])
+	{
+		if (line[idx_line] == ' ' && !dq && !sq)
+			break;
+		else if (line[idx_line] == '"' && !sq)
+			dq = !dq;
+		else if (line[idx_line] == '\'' && !dq)
+			sq = !sq;
+		idx_line++;
+	}
+	len = idx_line;
+	value = ft_substr(line, 0, len);
+	if(!value)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	return(value);
+}
+
+static char	*construct_variable(char *name, char *value)
+{
+	char	*variable;
+
+	variable = NULL;
+	variable = ft_strdup(name);
+	if (!variable)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	if (!ft_strchr(value, '='))
+		variable = ft_addchar(variable, '=');
+	if (!variable)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	variable = ft_strjoin_free(variable, value);
+	if (!variable)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	return (variable);
+}
+
+static void	trimmer(char **line, char *delim)
+{
+	char	*res;
+	char	*line_from_delim;
+	int		line_len;
+	int		from_idx;
+
+	res = NULL;
+	line_len = ft_strlen(*line);
+	line_from_delim = ft_strnstr(*line, delim, line_len);
+	from_idx = line_len - ft_strlen(line_from_delim);
+	from_idx += ft_strlen(delim);
+	if ((*line)[from_idx])
+	{
+		res = ft_strdup(*line + from_idx);
+		if (!res)
+		{
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+	}
+	free(*line);
+	*line = res;	
+}
+
+static int	add_to_process_env(t_process *process, char *name, char *value)
+{
+	char	*var;
+	int		idx;
+
+	var = construct_variable(name, value);
+	idx = ft_mapitem_index(*&process->envs->static_env, var);
+	if (idx >= 0 && !ft_mapitem_replace(&process->envs->static_env, var, idx))
+		return (0);
+	else if (!ft_mapitem_add(&process->envs->static_env, var))
+		return (0);
+	return (free(var), free(name), 1);
+}
+
+int	ft_inputvar(t_process *process, char **line)
+{
+	char	*name;
+	char	*value;
+
+	name = ft_strtok(*line, "=");
+	value = safe_value(ft_strchr(*line, '='));
+	process->is_variable = true;
+	if (!ft_std(process, value) && !ft_quote(process, value))
+		return (0);
+	trimmer(line, value);
+	value = ft_construct(process->tokens, value);
+	if (!add_to_process_env(process, name, value))
+		return (0);
+	ft_lstclear(&process->tokens, free);
+	process->tokens = NULL;
+	process->is_variable = false;
+	ft_clear_strtok();
+	return (1);
+}
+
+int	ft_parse_line(t_process *process)
+{
+	char	*cmd;
+	char    *ptr_line;
+
+	if (contains_variable(process->line))
+	{
+        ft_putstr_fd("here in parse line1\n", 1);
+		if (!ft_inputvar(process, &process->line))
+			return (0);
+        ft_putstr_fd("here in parse line2\n", 1);
+	}
+	ptr_line = process->line;
+	cmd = ft_strtok(ptr_line, " ");
+	ft_lstadd_back(&process->tokens, ft_lstnew(cmd));
+	if (!ft_strchr(ptr_line, ' '))
+		return (1);
+	if (!ft_std(process, ptr_line) && !ft_quote(process, ptr_line))
+		return (0);
+	return (1);
+}
+
+static int	parse_aux(t_process *process, char **res, char **var_name)
+{
+	if (process->is_special == false)
+	{
+		insert_value(process, res, *var_name);
+		free(*var_name);
+		*var_name = NULL;
+	}
+	else
+	{
+		*res = ft_strjoin_free(*res, *var_name);
+		*var_name = NULL;
+	}
+	if (!*res)
+		return (0);
+	return (1);
+}
+
+char	*ft_parse_token(t_process *process, char *content, char token)
+{
+	char	*res;
+	char	*var_name;
+	int		i;
+
+	if (!content || !*content)
+		return (NULL);
+	content = clean_line(content, token);
+	res = NULL;
+	i = 0;
+	while (content[i] != '\0')
+	{
+		var_name = NULL;
+		scan_char(process, content, &var_name, &i);
+		if (var_name == NULL)
+		{
+			res = ft_addchar(res, content[i]);
+			i++;
+		}
+		else if (!parse_aux(process, &res, &var_name))
+            return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+			
+	}
+	return (free(content), res);	
+}
+
 static int reconstruct_token(t_process *process, char *line, char delim)
 {
-	t_list	**tokens;
 	char	*res;
 	int		start_idx;
 	int		end_idx;
 
-	tokens = &process->tokens;
 	start_idx = first_occurrence(process, line, delim);
 	if (start_idx < 0)
 		return (-1);
-	end_idx = quote_pos(line, delim, 2);
-	res = ft_substr(line, start_idx + 1, end_idx - (start_idx + 1));
+	start_idx += 1;
+	end_idx = quote_pos(line, delim, 2) - start_idx;
+	res = ft_substr(line, start_idx, end_idx);
 	if (!res)
-		return (perror("malloc"), 0);
+		return (perror("malloc"), exit(EXIT_FAILURE), 0);
 	if (delim == '"')
-		res = parse_token(process, res, 'd');
-	ft_lstadd_back(tokens, ft_lstnew(res));
+		res = ft_parse_token(process, res, 'd');
+	ft_lstadd_back(&process->tokens, ft_lstnew(res));
 	return (1);
 }
 
-static char	*normal_token(t_process *process, char *line)
+static char	*standard_token(t_process *process, char *line)
 {
-	if (*line && line)
+	char    *added;
+	char    *line_left;
+	size_t	next;
+	
+	added = ft_strtok(line, " ");
+	if (!added)
+		return (NULL);
+	next = ft_strlen(added) + 1;
+	added = ft_parse_token(process, added, 'n');
+	if (!added)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	ft_lstadd_back(&process->tokens, ft_lstnew(added));
+	if (ft_strchr(line, ' '))
 	{
-		line = parse_token(process, line, 'n');
-		if (!line)
-			return (perror("malloc"), NULL);
-		ft_lstadd_back(&process->tokens, ft_lstnew(ft_strdup(line)));
+			line_left = ft_strdup(line + next);
+			if (!line_left)
+				return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+			ft_addspace(&process->tokens);
+			return (free(line), line_left);
 	}
-	return (line);
+	else
+		free(line);
+	return (line = NULL, NULL);
 }
 
 static char	*quotes_token(t_process *process, char *line, char delim)
@@ -1749,196 +1874,103 @@ static char	*quotes_token(t_process *process, char *line, char delim)
 	{
 		line_left = ft_substr(line, paired_delim + 1, indexes_left);
 		if (!line_left)
-			return (perror("malloc"), NULL);
+			return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+		if (line_left[0] == ' ')
+			ft_addspace(&process->tokens);
 	}
-	if (quotes_left(process->tokens, line_left))
-		return (free(line), line_left);
-	return (free(line), free(line_left), NULL);
+	return (free(line), line_left);
 }
 
-int	ft_quotes(t_process *process, char *line)
+int	ft_quote(t_process *process, char *line)
 {
 	char	*line_args;
-	int		dquote_idx;
-	int		squote_idx;
+    char    delimiter;
 
-	if (ft_strchr(line, ' '))
+    if (ft_strchr(line, ' ') && process->is_variable == false)
 		line_args = ft_strdup(ft_strchr(line, ' ') + 1);
 	else
 		line_args = ft_strdup(line);
 	if (!line_args)
-		return (perror("malloc"), 0);
-	while (line_args)
+		return (perror("malloc"), exit(EXIT_FAILURE), 0);
+    ft_clear_strtok();
+    while (line_args && *line_args)
 	{
-		dquote_idx = quote_pos(line_args, '"', 1);
-		squote_idx = quote_pos(line_args, '\'', 1);
-		if (dquote_idx >= 0 && (squote_idx < 0 || \
-			(squote_idx >= 0 && dquote_idx < squote_idx)))
-			line_args = quotes_token(process, line_args, '"');
-		else if (squote_idx >= 0)
-			line_args = quotes_token(process, line_args, '\'');
-		else
-			line_args = normal_token(process, line_args);
-	}
+		delimiter = quote_delimiter(line_args);
+        if (delimiter == 0)
+            line_args = standard_token(process, line_args);
+        else
+            line_args = quotes_token(process, line_args, delimiter);
+	}		
 	return (1);
 }
 
-static void	add_space(t_list **tokens, char *token)
+static char	*get_content(t_process *process, char *line)
 {
-	char	*to_add;
+	char	*content;
 
-	if (token == NULL)
-		return ;
-	to_add = ft_strdup(" ");
-	if (!to_add)
+	content = NULL;
+	if (process->is_variable)
+	{
+		ft_clear_strtok();
+		content = ft_strtok(line, "=");
+	}
+	else
+		content = ft_strtok(NULL, " ");
+	if (!content)
 	{
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
-	ft_lstadd_back(tokens, ft_lstnew(to_add));
+	return (content);
 }
 
-int		ft_nonquotes(t_process *process, char *line)
+int		ft_std(t_process *process, char *line)
 {
 	char    *token;
 	char	*node;
 
 	if (ft_strchr(line, '"') || ft_strchr(line, '\''))
 		return (0);
-    if (process->is_variable)
-    {
-        ft_clear_strtok();
-        token = ft_strtok(line, "=");
-    }
-    else
-	    token = ft_strtok(NULL, " ");
-	if (!token)
-		return (perror("malloc"), 0);
+	token = get_content(process, line);
 	while (token)
 	{
-		node = parse_token(process, token, 'n');
+		node = ft_parse_token(process, token, 'n');
 		if (!node)
-			return (perror("malloc"), 0);
-		ft_lstadd_back(&process->tokens, ft_lstnew(node));
+			return (perror("malloc"), exit(EXIT_FAILURE), 0);
+        ft_lstadd_back(&process->tokens, ft_lstnew(node));
 		token = ft_strtok(NULL, " ");
 		if (token)
-			add_space(&process->tokens);
+			ft_addspace(&process->tokens);
 	}
 	return (1);
 }
-static char	*safe_value(char *line)
+
+char	*ft_prompt(t_process *process)
 {
-	char	*value;
-	size_t	len;
+	char	*current_path;
+	char	*home_path;
+	char	*buffer;
+	char	*prompt;
+	size_t	size_current;
+	size_t  size_home;
 	
-	if (ft_strchr(line, ' ') - line)
-		len = ft_strchr(line, ' ') - line;
-	else
-		len = ft_strlen(line);
-	value = ft_substr(line, 0, len);
-	if (!value)
-		return (perror("malloc"), NULL);
-	return(value);
-}
-
-static int	var_token(t_process *process, char *line)
-{
-	char	**static_map;
-	char	*var;
-	char	*name;
-	char	*value;
-	int		idx;
-
-	static_map = process->envs->static_env;
-	name = ft_strtok(line, "=");
-	value = safe_value(ft_strchr(line, '='));
-	process->is_variable = true;
-	if (!ft_nonquotes(process, value) && !ft_quotes(process, value))
-		return (0);
-	value = ft_construct_line(process->tokens, value);
-	var = ft_strjoin_free(name, value);
-	idx = ft_mapitem_index(static_map, var);
-	if (idx >= 0 && !ft_mapitem_replace(&process->envs->static_env, var, idx))
-		return (0);
-	else if (!ft_mapitem_add(&process->envs->static_env, var))
-		return (0);
-	ft_lstclear(&process->tokens, free);
-	process->tokens = NULL;
-	free(var);
-	process->is_variable = false;
-	return (1);
-}
-
-static int	parse_aux(t_process *process, char **res, char **var_name)
-{
-	if (process->is_special == false)
+	current_path = process->prompt->current_wd;
+	home_path = process->prompt->home_path;
+	size_current = ft_strlen(current_path);
+	size_home = ft_strlen(home_path);
+	if (!ft_strncmp(current_path, home_path, size_current))
 	{
-		insert_value(process, res, *var_name);
-		free(*var_name);
-		*var_name = NULL;
+		prompt = ft_strjoin(">/~", PROMPT_ARROW);
+		if (!prompt)
+			return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+		return (prompt); 
 	}
-	else
-	{
-		*res = ft_strjoin_free(*res, *var_name);
-		*var_name = NULL;
-	}
-	if (!res)
-		return (0);
-	return (1);
-}
-
-char	*parse_token(t_process *process, char *content, char token)
-{
-	char	*res;
-	char	*var_name;
-	int		i;
-
-	if (!content || !*content)
-		return (NULL);
-	content = clean_line(content, token);
-	res = NULL;
-	i = 0;
-	while (content[i] != '\0')
-	{
-		var_name = NULL;
-		scan_char(process, content, &var_name, &i);
-		if (var_name == NULL)
-		{
-			res = ft_addchar(res, content[i]);
-			i++;
-		}
-		else if (!parse_aux(process, &res, &var_name))
-			return (perror("malloc"), NULL);
-	}
-	return (free(content), res);	
-}
-
-int	ft_create_tokens(t_process *process)
-{
-	char	*cmd;
-	char    *ptr_line;
-
-	ptr_line = process->line;
-	if (ft_isvar(ptr_line))
-	{
-		if (!var_token(process, ptr_line))
-			return (0);
-		if (ft_strchr(ptr_line, ' '))
-		{
-			ptr_line = ft_strchr(ptr_line, ' ');
-			while (*ptr_line == ' ')
-				ptr_line++;
-		}
-		else
-			return (1);
-	}
-	cmd = ft_strtok(ptr_line, " ");
-	ft_lstadd_back(&process->tokens, ft_lstnew(cmd));
-	if (!ft_strchr(ptr_line, ' '))
-		return (1);
-	if (!ft_nonquotes(process, ptr_line) && !ft_quotes(process, ptr_line))
-		return (0);
-	return (1);
+	buffer = ft_strnstr(current_path, home_path, size_current) + size_home;
+	prompt = ft_strjoin(">/~", buffer);
+	buffer = ft_strjoin(prompt, PROMPT_ARROW);
+	if (!prompt || !buffer)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	return (free(prompt), buffer);
 }
 
 void	ft_readinput(t_process *process)
@@ -1946,15 +1978,18 @@ void	ft_readinput(t_process *process)
 	process->prompt->display = ft_prompt(process);
 	if (process->prompt->display == NULL)
 	{
-		perror("malloc");
-		return ;
-	}	
+        perror("malloc");
+        return ;
+    }
+    ft_putstr_fd("here in readinput\n", 1);
 	process->line = readline(process->prompt->display);
 	if (process->line == NULL || *(process->line) == '\0')
 		return ;
 	add_history(process->line);
-	ft_create_tokens(process);
+	ft_parse_line(process);
 }
+
+// MAIN FUNCTIONS
 
 static void	add_last_arg(t_process *process)
 {
@@ -1966,15 +2001,23 @@ static void	add_last_arg(t_process *process)
 	if (process->last_arg && *(process->last_arg))
 		free(process->last_arg);
 	if (last_node)
+	{
 		process->last_arg = ft_strdup((char *)last_node->content);
+		if (!process->last_arg)
+		{
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+	}
+		
 }
 
 void	reset_utils(t_process **process)
 {
 	if ((*process)->line)
 		free((*process)->line);
-	ft_clear_strtok();
 	add_last_arg(*process);
+	ft_clear_strtok();
 	if ((*process)->tokens)
 		ft_lstclear(&(*process)->tokens, free);
 	(*process)->tokens = NULL;
@@ -1994,10 +2037,10 @@ int	main(int argc, char *argv[], char *envp[])
 		return (0);
 	while (1)
 	{
-		signal(SIGINT, handle_sigint);
+		signal(SIGINT, ft_sigint);
 		ft_readinput(process);
-		if (process->is_variable == false && process->tokens && !ft_builtins(process))
-			printf("%s: command not found\n", (char *)process->tokens->content);
+		if (process->tokens && !ft_builtins(process))
+			ft_printf("%s: command not found\n", (char *)process->tokens->content);
 		reset_utils(&process);
 	}
 	return (0);

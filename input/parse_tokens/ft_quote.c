@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 08:02:00 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/02 21:29:38 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:52:15 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ static int reconstruct_token(t_process *process, char *line, char delim)
 		return (perror("malloc"), exit(EXIT_FAILURE), 0);
 	if (delim == '"')
 		res = ft_parse_token(process, res, 'd');
-	ft_lstadd_back(&process->tokens, ft_lstnew(res));
+	ft_safeadd_tokens(&process->tokens, &res);
 	return (1);
 }
 
-static char	*normal_token(t_process *process, char *line)
+static char	*standard_token(t_process *process, char *line)
 {
 	char    *added;
 	char    *line_left;
@@ -45,13 +45,13 @@ static char	*normal_token(t_process *process, char *line)
 	added = ft_parse_token(process, added, 'n');
 	if (!added)
 		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-	ft_lstadd_back(&process->tokens, ft_lstnew(added));
+	ft_safeadd_tokens(&process->tokens, &added);
 	if (ft_strchr(line, ' '))
 	{
 			line_left = ft_strdup(line + next);
 			if (!line_left)
 				return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-			add_space(&process->tokens);
+			ft_addspace(&process->tokens);
 			return (free(line), line_left);
 	}
 	else
@@ -80,7 +80,7 @@ static char	*quotes_token(t_process *process, char *line, char delim)
 		if (!line_left)
 			return (perror("malloc"), exit(EXIT_FAILURE), NULL);
 		if (line_left[0] == ' ')
-			add_space(&process->tokens);
+			ft_addspace(&process->tokens);
 	}
 	return (free(line), line_left);
 }
@@ -88,8 +88,7 @@ static char	*quotes_token(t_process *process, char *line, char delim)
 int	ft_quote(t_process *process, char *line)
 {
 	char	*line_args;
-	int		dquote_idx;
-	int		squote_idx;
+    char    delimiter;
 
     if (ft_strchr(line, ' ') && process->is_variable == false)
 		line_args = ft_strdup(ft_strchr(line, ' ') + 1);
@@ -97,17 +96,14 @@ int	ft_quote(t_process *process, char *line)
 		line_args = ft_strdup(line);
 	if (!line_args)
 		return (perror("malloc"), exit(EXIT_FAILURE), 0);
-	while (line_args && *line_args)
+    ft_clear_strtok();
+    while (line_args && *line_args)
 	{
-		dquote_idx = quote_pos(line_args, '"', 1);
-		squote_idx = quote_pos(line_args, '\'', 1);
-		if (dquote_idx >= 0 && (squote_idx < 0 || \
-			(squote_idx >= 0 && dquote_idx < squote_idx)))
-			line_args = quotes_token(process, line_args, '"');
-		else if (squote_idx >= 0)
-			line_args = quotes_token(process, line_args, '\'');
-		else
-			line_args = normal_token(process, line_args);
+		delimiter = quote_delimiter(line_args);
+        if (delimiter == 0)
+            line_args = standard_token(process, line_args);
+        else
+            line_args = quotes_token(process, line_args, delimiter);
 	}		
 	return (1);
 }

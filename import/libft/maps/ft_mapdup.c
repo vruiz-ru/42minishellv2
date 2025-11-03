@@ -6,12 +6,11 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 18:41:48 by aghergut          #+#    #+#             */
-/*   Updated: 2025/10/28 19:15:04 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 22:03:29 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "maps.h"
-#include <stdio.h>
 
 char	**ft_mapdup(char **map)
 {
@@ -25,16 +24,13 @@ char	**ft_mapdup(char **map)
 	dup = (char **)malloc((length + 1) * sizeof(char *));
 	if (!dup)
 		return (NULL);
-	i = -1;
-	while (map[++i])
+	i = 0;
+	while (map[i])
 	{
 		dup[i] = ft_strdup(map[i]);
 		if (!dup[i])
-		{
-			while (i-- > 0)
-				free(dup[i]);
-			return (free(dup), NULL);
-		}
+            return (free_partial(dup, i),  free(dup), NULL);
+        i++;
 	}
 	dup[i] = NULL;
 	return (dup);

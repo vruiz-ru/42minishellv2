@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 18:45:50 by aghergut          #+#    #+#             */
-/*   Updated: 2025/08/02 20:20:31 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 21:34:20 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@
 #include <limits.h>
 #include "../strings/strings.h"
 
+// UTILS
+void	free_partial(char **map, size_t count);
+char	**create_new(char **map, char *add_last);
+int	    copy_elements(char **map, char **new_map, size_t skip);
+int		right_length(char *item);
+// FUNCTIONS
 size_t	ft_mapsize(char **map);
 char	**ft_mapdup(char **map);
 void	ft_mapfree(char **map);

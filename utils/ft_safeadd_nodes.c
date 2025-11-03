@@ -1,29 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_safeadd_nodes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/27 13:46:10 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/03 19:27:47 by aghergut         ###   ########.fr       */
+/*   Created: 2025/11/03 20:40:35 by aghergut          #+#    #+#             */
+/*   Updated: 2025/11/03 20:58:42 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lists.h"
+#include "../headers/minishell.h"
 
-t_list	*ft_lstnew(void *content)
+void	ft_safeadd_tokens(t_list **tokens, char **token)
 {
-	t_list	*node;
-    
-	node = (t_list *) malloc(sizeof(t_list));
-	if (!node)
-		return (NULL);
-	if (content)
+	char	*ptr;
+	char	*to_list;
+
+	ptr = *token;
+	if (!ptr || !*ptr)
 	{
-		node->content = content;
-		node->next = NULL;
-		return (node);
+		if (ptr)
+			free(ptr);
+		*token = NULL;
+		return ;
 	}
-	return (free(node), NULL);
+	to_list = ft_strdup(ptr);
+	if (!to_list)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	ft_lstadd_back(tokens, ft_lstnew(to_list));
+	free(ptr);
+	*token = NULL;
 }
