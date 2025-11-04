@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:32:12 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/02 19:02:35 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 23:03:15 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static t_process	*init(void)
 	if (!process->envs && !process->prompt)
 		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
 	ft_memset(process->envs, 0, sizeof(t_envs));
-	ft_memset(process->prompt, 0, sizeof(t_envs));
+	ft_memset(process->prompt, 0, sizeof(t_prompt));
 	return (process);
 }
 

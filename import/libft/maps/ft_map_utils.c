@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 21:15:01 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/03 22:26:16 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 23:06:11 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	free_partial(char **map, size_t count)
 {
 	if (!map)
 		return;
-	while (count >= 0)
+	while (count > 0)
 	{
 		count--;
 		free(map[count]);
@@ -62,10 +62,7 @@ int	copy_elements(char **map, char **new_map, size_t skip)
 		}
 		new_map[j] = ft_strdup(map[i]);
 		if (!new_map[j])
-		{
-			free_partial(new_map, j);
-			return (0);
-		}
+			return (free_partial(new_map, j), free(new_map), 0);
 		j++;
 		i++;
 	}

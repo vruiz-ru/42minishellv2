@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 19:51:21 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/03 22:17:34 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 22:50:25 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ static void	transfer(t_process *process, char *var)
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
-	if (!ft_mapitem_add(&process->envs->parent_env, get_var))
+	if (ft_mapitem_index(process->envs->parent_env, get_var) < 0 && \
+		!ft_mapitem_add(&process->envs->parent_env, get_var))
 	{
 		free(get_var);
 		return ;

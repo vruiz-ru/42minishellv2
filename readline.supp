@@ -1142,3 +1142,97 @@
    fun:ft_readinput
    fun:main
 }
+
+# Suppressions targeting specific reachable blocks found in user's Valgrind output
+
+{
+   lib_leak_rl_locale_init
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:_rl_init_locale
+   fun:_rl_reset_locale
+   fun:rl_initialize
+   fun:readline
+   fun:ft_readinput
+}
+
+{
+   lib_leak_rl_prompt_expand
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:xrealloc
+   fun:rl_expand_prompt
+   fun:rl_set_prompt
+   fun:readline
+   fun:ft_readinput
+}
+
+{
+   lib_leak_rl_termio_init_1
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:_rl_init_terminal_io
+   fun:rl_initialize
+   fun:readline
+   fun:ft_readinput
+}
+
+{
+   lib_leak_rl_region_color
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:_rl_reset_region_color
+   fun:_rl_init_terminal_io
+   fun:rl_initialize
+   fun:readline
+   fun:ft_readinput
+}
+
+{
+   lib_leak_tinfo_setup_term
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:calloc
+   fun:_nc_setupterm
+   fun:tgetent_sp
+   fun:_rl_init_terminal_io
+   fun:rl_initialize
+   fun:readline
+   fun:ft_readinput
+}
+
+{
+   lib_leak_tinfo_read_file
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:_nc_doalloc
+   fun:_nc_read_termtype
+   fun:_nc_read_file_entry
+   fun:_nc_read_entry2
+   fun:_nc_setupterm
+   fun:tgetent_sp
+   fun:_rl_init_terminal_io
+   fun:rl_initialize
+   fun:readline
+}
+
+{
+   lib_leak_rl_prompt_expand_small_buffer
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:xrealloc
+   fun:rl_expand_prompt
+   fun:rl_set_prompt
+   fun:readline
+   fun:ft_readinput
+   fun:main
+}

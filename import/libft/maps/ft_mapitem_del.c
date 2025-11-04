@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:16:51 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/03 21:16:49 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/03 23:18:50 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int	ft_mapitem_del(char ***map_ref, size_t del_idx)
 	if (!new_map)
 		return (0);
 	if (!copy_elements(temp, new_map, del_idx))
-		return (ft_mapfree(new_map), 0);
-	ft_mapfree(temp);
+		return (ft_mapfree(&new_map), 0);
+	ft_mapfree(map_ref);
 	*map_ref = new_map;
 	return (1);
 }
