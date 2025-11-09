@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:32:12 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/03 23:03:15 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/09 14:31:04 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,9 @@ t_process	*init_child(t_process *parent)
 	child->prompt->last_wd = ft_strdup(child->prompt->current_wd);
 	if (!child->prompt->last_wd)
 		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-	child->last_arg = ft_strdup(" ");
-	if (!child->last_arg)
-		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
 	child->pid = getpid();
+    child->forks -= 1;
+    child->status = 0;
 	return (child);
 }
 
@@ -72,9 +71,8 @@ int	init_parent(t_process **parent, char *name, char *envp[])
 	(*parent)->prompt->last_wd = ft_getcwd();
 	if (!(*parent)->prompt->last_wd)
 		return (perror("malloc"), exit(EXIT_FAILURE), 0);
+    (*parent)->forks = 1;
 	(*parent)->pid  = getpid();
-	(*parent)->last_arg = ft_strdup(" ");
-	if (!(*parent)->last_arg)
-		return (perror("malloc"), exit(EXIT_FAILURE), 0);
+    (*parent)->status = 0;
 	return (1);
 }

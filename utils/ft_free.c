@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 12:20:33 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/04 13:19:14 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/05 22:15:41 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ void	free_process(t_process *proc)
 		free(proc->line);
 	if (proc->tokens)
 		ft_lstclear(&proc->tokens, free);
-	if (proc->last_arg)
-		free(proc->last_arg);
 	if (proc)
 		free(proc);
 	proc = NULL;

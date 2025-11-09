@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:15:56 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/03 16:51:24 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/09 17:57:30 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ void	ft_readinput(t_process *process);
 int		already_exists(char **env, char *var_name);
 int		add_variable(char ***map, char *item);
 int		contains_variable(char *token);
-int 	special_variable(t_process *proc, char **var_name, char ch);
+int 	ft_specialvars(t_process *proc, char **var_name, char ch);
+int 	return_value(t_process *process, char *line);
 //      PARSE
 char	*clean_line(char *content, char token);
 void	scan_char(t_process *process, char *content, char **var_name, int *idx);

@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:11:10 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/02 18:45:27 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/09 13:52:02 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 #include "../import/libft/lists/lists.h"
 #include <stdbool.h>
 
-typedef struct Environment_utils
+typedef struct	Environment_utils
 {
 	char	**parent_env;
 	char	**static_env;
 }	t_envs;
 
-typedef struct Prompt_utils
+typedef struct	Prompt_utils
 {
 	char	*display;
 	char	*shell_name;
@@ -38,8 +38,8 @@ typedef struct Process_utils
 	t_list		*tokens;
 	pid_t		pid;
 	char		*line;
-	char		*last_arg;
-	int			exit_status;
+	int			status;
+    int         forks;
 	bool		is_special;
 	bool        is_variable;
 }   t_process;

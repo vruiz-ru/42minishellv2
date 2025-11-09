@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 12:49:41 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/03 20:48:04 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/09 14:36:41 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,14 @@
 #include "../builtins/builtins.h"
 
 #include <signal.h>
+#include <sys/wait.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 // HANDLERS
 void		ft_sigint(int sig);
+// PROCESSES
+int			ft_fork_process(t_process *process, int(*built_f)(t_process *));
 // UTILS
 void	    ft_clear_strtok(void);
 int			init_parent(t_process **parent, char *name, char *envp[]);

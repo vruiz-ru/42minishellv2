@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 17:54:08 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/03 22:35:00 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/09 17:59:26 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ int	ft_inputvar(t_process *process, char **line)
 	char	*name;
 	char	*value;
 
+	if (*(*line) == '$' && return_value(process, *line + 1))
+		return (1);
 	name = ft_strtok(*line, "=");
 	value = safe_value(ft_strchr(*line, '='));
 	process->is_variable = true;

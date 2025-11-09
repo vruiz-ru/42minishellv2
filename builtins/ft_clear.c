@@ -6,13 +6,15 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:37:42 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/02 18:56:44 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/09 13:40:13 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-void	ft_clear(void)
+int	ft_clear(t_process *process)
 {
+    (void)process;
 	ft_printf("%s", CLEAR);
+    return (1);
 }

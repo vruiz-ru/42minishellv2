@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:50:39 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/03 21:42:44 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/09 19:37:48 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		signal(SIGINT, ft_sigint);
 		ft_readinput(process);
-		if (process->tokens && !ft_builtins(process))
-			ft_printf("%s: command not found\n", (char *)process->tokens->content);
+		ft_exit(process);
+		ft_fork_process(process, ft_builtins);
 		reset_utils(&process);
 	}
 	return (0);
@@ -245,8 +245,6 @@ Your program has to implement:
 					- if the variable exists, just change the value, if not, create a new one
 					- for the sake of robustness, the name of variable should be as the others from env, if not, print a message	
 	✅VII.	clear command:	Clear screen (printf("\033[H\033[J"))
-	🚫VIII. 	 which command:	Shows the path of the argument. Ex. which ls -> /usr/bin/ls
-				* we want to look into a TOKENIZED PATH (the path of everything)
 	✅IX.		 export ->	transfer a shell variable in env variable making available to child process
 					->	if you are entering into a subshell (name of shell and should be entering into a child process)
 					the variable exported its written into memory and coudl be available for child process, if not exported

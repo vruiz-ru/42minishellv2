@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:47:46 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/02 19:50:59 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/09 16:54:01 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int		invalid_options(char *token);
 int 	path_input(t_process *process);
 char	*ft_getcwd(void);
 char	*ft_getvar(char **envp, char *var_name);
+int	    ft_isbuiltin(t_process *process);
 // COMMANDS
 int		ft_unset(t_process **process);
 int		ft_pwd(t_process *process);
@@ -41,7 +42,7 @@ int 	ft_export(t_process *process);
 int		ft_exit(t_process *process);
 int		ft_echo(t_process *process);
 int 	ft_cd(t_process *process);
-void	ft_clear(void);
+int		ft_clear(t_process *process);
 int		ft_builtins(t_process *process);
 
 #endif

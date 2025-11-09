@@ -6,56 +6,52 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 11:19:55 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/02 21:43:25 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/09 19:32:54 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../input.h"
 
-static void	assign_value(char **env, char **dest, char *var_name)
+static int	assign_value(char **env, char **dest, int idx)
 {
 	char	*value;
-	int		idx;
-	int		size;
 	
-	idx = 0;
-	while (env && env[idx])
+	value = ft_strdup(ft_strchr(env[idx], '=') + 1);
+	if (!value)
 	{
-		size = -1;
-		if (ft_strchr(env[idx], '='))
-			size = ft_strchr(env[idx], '=') - env[idx];
-		if (size >= 0 && !ft_strncmp(env[idx], var_name, size) && \
-			env[idx][size] == '=')
-		{
-			value = ft_strdup(ft_strchr(env[idx], '=') + 1);
-			*dest = ft_strjoin_free(*dest, value);
-			if (!value || !*dest)
-			{
 				perror("malloc");
 				exit(EXIT_FAILURE);
-			}
-			break ;
-		}
-		idx++;
+				return (0);
 	}
+	*dest = ft_strjoin_free(*dest, value);
+	if (!*dest)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+		return (0);
+	}
+	return (1);
 }
 
 int	already_exists(char **env, char *var_name)
 {
 	int	idx;
-	int size;
+	int len_invar;
+	int	len_cmpvar;
 	
 	idx = 0;
+	len_cmpvar = ft_strlen(var_name);
 	while (env && env[idx])
 	{
-        size = -1;
-        if (ft_strchr(env[idx], '='))
-		    size = ft_strchr(env[idx], '=') - env[idx];
-		if (size >= 0 && !ft_strncmp(env[idx], var_name, size))
-			return (1);
+		len_invar = -1;
+		if (ft_strchr(env[idx], '='))
+			len_invar = ft_strchr(env[idx], '=') - env[idx];
+		if (len_invar && len_invar == len_cmpvar && \
+			!ft_strncmp(env[idx], var_name, len_invar))
+				return (idx);	
 		idx++;
 	}
-	return (0);
+	return (-1);
 }
 
 char	*clean_line(char *content, char token)
@@ -96,8 +92,11 @@ void    scan_char(t_process *process, char *content, char **var_name, int *idx)
 	else if (content[*idx] == '$')
 	{
 		(*idx)++;
-		if (special_variable(process, var_name, content[*idx]))
-			return ;
+		if (ft_specialvars(process, var_name, content[*idx]))
+		{
+			(*idx)++;
+			return ;   
+		}
 		while (content[*idx] && !ft_strchr(stop, content[*idx]))
 		{
 			*var_name = ft_addchar(*var_name, content[*idx]);
@@ -111,11 +110,14 @@ void	insert_value(t_process *process, char **dest, char *var_name)
 {
 	char	**process_env;
 	char	**static_env;
+	int		founded;
 
 	process_env = process->envs->parent_env;
 	static_env = process->envs->static_env;
-	if (already_exists(static_env, var_name))
-		assign_value(static_env, dest, var_name);
-	else if (already_exists(process_env, var_name))
-		assign_value(process_env, dest, var_name);
+	founded = already_exists(static_env, var_name);
+	if (founded >= 0 && assign_value(static_env, dest, founded))
+		return ;
+	founded = already_exists(process_env, var_name);
+	if (founded >= 0 && assign_value(process_env, dest, founded))
+		return ;
 }

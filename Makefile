@@ -49,6 +49,7 @@ UTILS_DIR = utils/
 INPUT_DIR = input/
 MAIN_DIR = main/
 PARSE_TOKENS_DIR = $(INPUT_DIR)parse_tokens/
+PROCESS_DIR = process/
 
 OBJS_BUILTINS = $(BUILTINS_DIR)objs/
 OBJS_BUILTINS_UTILS = $(BUILTINS_DIR)$(UTILS_DIR)objs/
@@ -57,13 +58,15 @@ OBJS_UTILS = $(UTILS_DIR)objs/
 OBJS_INPUT = $(INPUT_DIR)objs/
 OBJS_PARSE_TOKENS = $(PARSE_TOKENS_DIR)objs/
 OBJS_PARSE_TOKENS_UTILS = $(PARSE_TOKENS_DIR)$(UTILS_DIR)objs/
+OBJS_PROCESS = $(PROCESS_DIR)objs/
 OBJS_MAIN = $(MAIN_DIR)objs/
 
 # SOURCES
 SRCS1 = $(BUILTINS_DIR)$(UTILS_DIR)ft_cd_feats.c \
         $(BUILTINS_DIR)$(UTILS_DIR)ft_cd_utils.c \
         $(BUILTINS_DIR)$(UTILS_DIR)ft_getcwd.c \
-        $(BUILTINS_DIR)$(UTILS_DIR)ft_getvar.c
+        $(BUILTINS_DIR)$(UTILS_DIR)ft_getvar.c \
+		$(BUILTINS_DIR)$(UTILS_DIR)ft_isbuiltin.c
 
 SRCS2 = $(BUILTINS_DIR)ft_builtins.c $(BUILTINS_DIR)ft_cd.c \
         $(BUILTINS_DIR)ft_clear.c $(BUILTINS_DIR)ft_echo.c \
@@ -75,7 +78,8 @@ SRCS3 = $(HANDLERS_DIR)ft_sigint.c
 
 SRCS4 = $(INPUT_DIR)$(PARSE_TOKENS_DIR)$(UTILS_DIR)ft_inputvar_utils.c \
         $(INPUT_DIR)$(PARSE_TOKENS_DIR)$(UTILS_DIR)ft_parse_utils.c \
-        $(INPUT_DIR)$(PARSE_TOKENS_DIR)$(UTILS_DIR)ft_quote_utils.c
+        $(INPUT_DIR)$(PARSE_TOKENS_DIR)$(UTILS_DIR)ft_quote_utils.c \
+		$(INPUT_DIR)$(PARSE_TOKENS_DIR)$(UTILS_DIR)ft_specialvars.c
 
 SRCS5 = $(INPUT_DIR)$(PARSE_TOKENS_DIR)ft_inputvar.c \
         $(INPUT_DIR)$(PARSE_TOKENS_DIR)ft_parse_line.c \
@@ -85,13 +89,15 @@ SRCS5 = $(INPUT_DIR)$(PARSE_TOKENS_DIR)ft_inputvar.c \
 
 SRCS6 = $(INPUT_DIR)ft_prompt.c $(INPUT_DIR)ft_readinput.c 
 
-SRCS7 = $(UTILS_DIR)ft_free.c $(UTILS_DIR)ft_init.c \
+SRCS7 = $(PROCESS_DIR)ft_fork_process.c
+
+SRCS8 = $(UTILS_DIR)ft_free.c $(UTILS_DIR)ft_init.c \
         $(UTILS_DIR)ft_clear_strtok.c $(UTILS_DIR)ft_construct.c \
         $(UTILS_DIR)ft_addspace.c $(UTILS_DIR)ft_safeadd_nodes.c\
         $(UTILS_DIR)ft_appendre.c $(UTILS_DIR)ft_heredoc.c \
         $(UTILS_DIR)ft_reinput.c $(UTILS_DIR)ft_reoutput.c
         
-SRCS8 = $(MAIN_DIR)main.c
+SRCS9 = $(MAIN_DIR)main.c
 
 # OBJECTS
 OBJS =  $(SRCS1:$(BUILTINS_DIR)$(UTILS_DIR)%.c=$(OBJS_BUILTINS_UTILS)%.o) \
@@ -100,8 +106,9 @@ OBJS =  $(SRCS1:$(BUILTINS_DIR)$(UTILS_DIR)%.c=$(OBJS_BUILTINS_UTILS)%.o) \
         $(SRCS4:$(INPUT_DIR)$(PARSE_TOKENS_DIR)$(UTILS_DIR)%.c=$(OBJS_PARSE_TOKENS_UTILS)%.o) \
         $(SRCS5:$(INPUT_DIR)$(PARSE_TOKENS_DIR)%.c=$(OBJS_PARSE_TOKENS)%.o) \
         $(SRCS6:$(INPUT_DIR)%.c=$(OBJS_INPUT)%.o) \
-        $(SRCS7:$(UTILS_DIR)%.c=$(OBJS_UTILS)%.o) \
-        $(SRCS8:$(MAIN_DIR)%.c=$(OBJS_MAIN)%.o) 
+        $(SRCS7:$(PROCESS_DIR)%.c=$(OBJS_PROCESS)%.o) \
+		$(SRCS8:$(UTILS_DIR)%.c=$(OBJS_UTILS)%.o) \
+        $(SRCS9:$(MAIN_DIR)%.c=$(OBJS_MAIN)%.o) 
 
 all: $(NAME)
 
@@ -132,6 +139,10 @@ $(OBJS_PARSE_TOKENS)%.o: $(PARSE_TOKENS_DIR)%.c
 
 $(OBJS_INPUT)%.o: $(INPUT_DIR)%.c
 	@mkdir -p $(OBJS_INPUT)
+	@$(CC) $(CFLAGS) $(INCLUDES) $(ASAN_FLAGS)-c $< -o $@
+
+$(OBJS_PROCESS)%.o: $(PROCESS_DIR)%.c
+	@mkdir -p $(OBJS_PROCESS)
 	@$(CC) $(CFLAGS) $(INCLUDES) $(ASAN_FLAGS)-c $< -o $@
 
 $(OBJS_UTILS)%.o: $(UTILS_DIR)%.c

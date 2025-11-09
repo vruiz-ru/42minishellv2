@@ -6,7 +6,7 @@
 /*   By: aghergut <aghergut@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 19:59:40 by aghergut          #+#    #+#             */
-/*   Updated: 2025/11/02 19:35:38 by aghergut         ###   ########.fr       */
+/*   Updated: 2025/11/09 16:55:38 by aghergut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	ft_echo(t_process *process)
 	char	*res;
 	
 	res = NULL;
-    res = ft_construct(process->tokens, res);
+	res = ft_construct(process->tokens, res);
 	ft_printf("%s\n",res);
 	return (free(res), 1);
 }
