@@ -59,10 +59,12 @@ int quotes_left(char *line_left)
 	return (0);
 }
 
-int first_occurrence(t_process *process, char *line, char delim)
+int	first_occurrence(t_process *process, char *line, char delim)
 {
 	char	*chunk;
-	int 	idx;
+	char	*token;
+	char	*parsed;
+	int		idx;
 
 	idx = quote_pos(line, delim, 1);
 	if (idx < 0)
@@ -71,9 +73,18 @@ int first_occurrence(t_process *process, char *line, char delim)
 	{
 		chunk = ft_substr(line, 0, idx);
 		if (!chunk)
-			return(perror("malloc"), exit(EXIT_FAILURE), 0);
-		chunk = ft_parse_token(process, chunk, 'n');
-		ft_safeadd_tokens(&process->tokens, &chunk);
+			return (perror("malloc"), exit(EXIT_FAILURE), 0);
+		
+		// Troceamos el bloque previo por espacios
+		token = ft_strtok(chunk, " ");
+		while (token)
+		{
+			parsed = ft_parse_token(process, token, 'n');
+			ft_safeadd_tokens(&process->tokens, &parsed);
+			ft_addspace(&process->tokens); // Añadimos separador
+			token = ft_strtok(NULL, " ");
+		}
+		free(chunk);
 	}
 	return (idx);
 }

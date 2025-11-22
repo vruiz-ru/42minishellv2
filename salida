@@ -1,7 +1,1 @@
-NAME = minishell42
-all: $(NAME)
-$(NAME): $(OBJS)
-	@$(CC) $(OBJS) $(LIBRARIES) $(INCLUDES) $(ASAN_FLAGS) -o $(NAME)
-	@echo "$(GREEN)Compiled successfully: $(NAME)$(RESET)"
-	@rm -f $(NAME)
-	@echo "$(GREEN)Executable $(NAME) removed$(RESET)"
+-rw-r--r--  1 vruiz-ru 2019   6131 Nov 22 13:59 Makefile
