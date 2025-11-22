@@ -23,26 +23,27 @@
 
 // BUITLINS/UTILS
 //      CD
-int		dash_feature(t_process *process);
-int		up_feature(t_process *process);
-int		home_feature(t_process *process);
-int		back_feature(t_process *process);
-int		root_feature(t_process *process);
+int		dash_feature(t_process *process, t_cmd *cmd);
+int		up_feature(t_process *process, t_cmd *cmd);
+int		home_feature(t_process *process, t_cmd *cmd);
+int		back_feature(t_process *process, t_cmd *cmd);
+int		root_feature(t_process *process, t_cmd *cmd);
 void	ft_setpaths(t_process *process);
 int		invalid_options(char *token);
-int 	path_input(t_process *process);
+int 	path_input(t_process *process, t_cmd *cmd);
 char	*ft_getcwd(void);
 char	*ft_getvar(char **envp, char *var_name);
-int	    ft_isbuiltin(t_process *process);
+int ft_isbuiltin(t_cmd *cmd);
+int ft_is_parent_builtin(t_cmd *cmd);
 // COMMANDS
-int		ft_unset(t_process **process);
-int		ft_pwd(t_process *process);
-int		ft_env(t_process *process);
-int 	ft_export(t_process *process);
-int		ft_exit(t_process *process);
-int		ft_echo(t_process *process);
-int 	ft_cd(t_process *process);
-int		ft_clear(t_process *process);
-int		ft_builtins(t_process *process);
+int     ft_builtins(t_process *process, t_cmd *cmd); // <--- CAMBIO
+int     ft_echo(t_process *process, t_cmd *cmd);     // <--- CAMBIO
+int     ft_cd(t_process *process, t_cmd *cmd);       // <--- CAMBIO
+int     ft_pwd(t_process *process, t_cmd *cmd);      // <--- CAMBIO
+int     ft_env(t_process *process, t_cmd *cmd);      // <--- CAMBIO
+int     ft_export(t_process *process, t_cmd *cmd);   // <--- CAMBIO
+int     ft_unset(t_process *process, t_cmd *cmd);    // <--- CAMBIO
+int     ft_exit(t_process *process, t_cmd *cmd);     // <--- CAMBIO
+int     ft_clear(t_process *process, t_cmd *cmd);	// <--- CAMBIO	
 
 #endif

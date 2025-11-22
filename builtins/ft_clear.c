@@ -12,9 +12,10 @@
 
 #include "builtins.h"
 
-int	ft_clear(t_process *process)
+int	ft_clear(t_process *process, t_cmd *cmd)
 {
     (void)process;
+	(void)cmd;
 	ft_printf("%s", CLEAR);
     return (1);
 }

@@ -1,0 +1,7 @@
+NAME = minishell42
+all: $(NAME)
+$(NAME): $(OBJS)
+	@$(CC) $(OBJS) $(LIBRARIES) $(INCLUDES) $(ASAN_FLAGS) -o $(NAME)
+	@echo "$(GREEN)Compiled successfully: $(NAME)$(RESET)"
+	@rm -f $(NAME)
+	@echo "$(GREEN)Executable $(NAME) removed$(RESET)"

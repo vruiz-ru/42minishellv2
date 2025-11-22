@@ -29,6 +29,9 @@ void		ft_sigint(int sig);
 // PROCESSES
 //int			ft_fork_process(t_process *process, int(*built_f)(t_process *));
 int			ft_fork_process(t_process *process);
+void    config_pipes(t_cmd *cmd, int *pipefd, int prev_fd);
+void    apply_redirections(t_cmd *cmd);
+void    close_fds(t_cmd *cmd, int prev_fd);
 // UTILS
 void	    ft_clear_strtok(void);
 int			init_parent(t_process **parent, char *name, char *envp[]);
@@ -44,4 +47,6 @@ void    open_file(t_cmd *cmd, char *symbol, char *file);
 int			ft_tokens_to_cmds(t_process *process);
 char *ft_get_cmd_path(char *cmd, char **envp);
 void ft_free_array(char **arr);
+void ft_free_cmds(t_cmd *cmds);
+
 #endif

@@ -49,7 +49,7 @@
 				the differences between getpid and getppid:
 					getpid returns the id of the current instance execution
 					get ppid returns the id of the whole process of file we are working on
-*/
+
 int	ft_echo(t_process *process)
 {
 	char	*res;
@@ -58,4 +58,57 @@ int	ft_echo(t_process *process)
 	res = ft_construct(process->tokens, res);
 	ft_printf("%s\n",res);
 	return (free(res), 1);
+}*/
+
+// Función auxiliar para imprimir el array de argumentos
+static void print_args(char **args, int i)
+{
+    while (args[i])
+    {
+        ft_putstr_fd(args[i], 1);
+        if (args[i + 1]) // Si hay más argumentos, imprime espacio
+            write(1, " ", 1);
+        i++;
+    }
+}
+
+// Detecta si el flag es válido (ej: -n, -nnnn, pero no -n-n o -na)
+static int is_n_flag(char *arg)
+{
+    int i;
+
+    if (!arg || ft_strncmp(arg, "-n", 2) != 0)
+        return (0);
+    i = 2;
+    while (arg[i])
+    {
+        if (arg[i] != 'n')
+            return (0);
+        i++;
+    }
+    return (1);
+}
+
+int ft_echo(t_process *process, t_cmd *cmd)
+{
+    int i;
+    int n_option;
+
+    (void)process; // No lo necesitamos en echo
+    i = 1;
+    n_option = 0;
+    
+    // Saltamos todos los flags -n válidos consecutivos (echo -n -n -n hola)
+    while (cmd->args[i] && is_n_flag(cmd->args[i]))
+    {
+        n_option = 1;
+        i++;
+    }
+    
+    print_args(cmd->args, i);
+    
+    if (!n_option)
+        write(1, "\n", 1);
+        
+    return (1); // Retornamos 1 para decir "ejecutado con éxito"
 }

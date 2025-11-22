@@ -12,28 +12,34 @@
 
 #include "builtins.h"
 
-int	ft_builtins(t_process *process)
+int ft_builtins(t_process *process, t_cmd *cmd)
 {
-	char    *cmd;
-	int		size;
-	
-	if (!process->tokens)
-		return (0);
-	cmd = (char *)process->tokens->content;
-	size = ft_strlen(cmd);
-	if (!ft_strncmp(cmd, "clear", size))
-		return (ft_clear(process), 1);
-	else if (!ft_strncmp(cmd, "export", size))
-		return (ft_export(process));
-	else if (!ft_strncmp(cmd, "pwd", size))
-		return (ft_pwd(process));
-	else if (!ft_strncmp(cmd, "env", size))
-		return (ft_env(process));
-	else if (!ft_strncmp(cmd, "echo", size))
-		return (ft_echo(process));
-	else if (!ft_strncmp(cmd, "unset", size))
-		return (ft_unset(&process));
-	else if (!ft_strncmp(cmd, "cd", size))
-		return (ft_cd(process));
-	return (0);
+    char *program;
+    int  len;
+
+    if (!cmd || !cmd->args || !cmd->args[0])
+        return (0);
+    
+    program = cmd->args[0];
+    len = ft_strlen(program);
+
+    // Comparamos con strncmp asegurando que la longitud coincide
+    if (!ft_strncmp(program, "echo", len) && len == 4)
+        return (ft_echo(process, cmd));
+    if (!ft_strncmp(program, "cd", len) && len == 2)
+        return (ft_cd(process, cmd));
+    if (!ft_strncmp(program, "pwd", len) && len == 3)
+        return (ft_pwd(process, cmd));
+    if (!ft_strncmp(program, "export", len) && len == 6)
+        return (ft_export(process, cmd));
+    if (!ft_strncmp(program, "unset", len) && len == 5)
+        return (ft_unset(process, cmd));
+    if (!ft_strncmp(program, "env", len) && len == 3)
+        return (ft_env(process, cmd));
+    if (!ft_strncmp(program, "exit", len) && len == 4)
+        return (ft_exit(process, cmd));
+    if (!ft_strncmp(program, "clear", len) && len == 5)
+        return (ft_clear(process, cmd));
+        
+    return (0); // No era un builtin
 }

@@ -49,12 +49,13 @@ static void	transfer(t_process *process, char *var)
 	return ;
 }
 
-int ft_export(t_process *process)
+int ft_export(t_process *process, t_cmd *cmd)
 {
 	char	**local;
 	char	*line;
 	int		idx;
 
+	(void)cmd;
 	local = process->envs->static_env;
 	line = ft_construct(process->tokens, NULL);
 	idx = ft_mapitem_index(local, line);

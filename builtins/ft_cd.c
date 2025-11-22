@@ -52,39 +52,39 @@ On success, zero is returned.  On error, -1 is returned, and  errno  is
 
 static int  ft_home(t_process *process)
 {
-	char    *home_path;
-
-	home_path = process->prompt->home_path;
-	if (chdir(home_path) != 0)
-		ft_putstr_fd("cd: Failed returning to home path!", 1);
-	ft_setpaths(process);
-	return (1);
+    if (chdir(process->prompt->home_path) != 0)
+        ft_putstr_fd("cd: Failed returning to home path\n", 2);
+    ft_setpaths(process);
+    return (1);
 }
 
-int ft_cd(t_process *process)
+int ft_cd(t_process *process, t_cmd *cmd)
 {
-	t_list	*ptr;
-	char	*feature;
-	int		size;
+    char    *arg;
 
-    ptr = process->tokens->next;
-	if (ptr == NULL)
-		return(ft_home(process));
-	feature = (char *)ptr->content;
-	size = ft_strlen(feature);
-	if (invalid_options(feature))
-		return (ft_putstr_fd("cd: invalid options\n", 1), 1);
-	if (path_input(process))
-		return (1);
-	if (!ft_strncmp(feature, "..", size) || ft_strnstr(feature, "../", 3))
-		return (up_feature(process));
-	if (ft_strnstr(feature, "~/", 2) || feature[0] == '~')
-		return (home_feature(process));
-	if (!ft_strncmp("-", feature, size))
-		return (back_feature(process));
-	if (feature[0] == '/')
-		return (root_feature(process));
-	if (!ft_strncmp("--", feature, size))
-		return (dash_feature(process));
-	return (1);
+    // 1. Si no hay argumentos ("cd"), vamos a casa
+    if (!cmd->args[1])
+        return (ft_home(process));
+    
+    arg = cmd->args[1];
+
+    // 2. Revisar opciones inválidas (comienzan por - pero no son - o --)
+    if (invalid_options(arg))
+        return (ft_putstr_fd("cd: invalid options\n", 2), 1);
+
+    // 3. Features específicas
+    if (!ft_strncmp(arg, "..", 2))
+        return (up_feature(process, cmd));
+        
+    if (arg[0] == '~')
+        return (home_feature(process, cmd));
+        
+    if (!ft_strncmp(arg, "-", 2) && !arg[1])
+        return (back_feature(process, cmd));
+        
+    if (!ft_strncmp(arg, "--", 3)) // Solo -- sin nada más
+        return (dash_feature(process, cmd));
+
+    // 4. Si no es feature, es un path normal o root
+    return (path_input(process, cmd));
 }

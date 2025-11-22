@@ -12,10 +12,11 @@
 
 #include "builtins.h"
 
-int	ft_env(t_process *process)
+int	ft_env(t_process *process, t_cmd *cmd)
 {
 	char    **ptr;
 
+	(void)cmd;
 	if (!process || !*process->envs->parent_env)
 		return (0);
 	ptr = process->envs->parent_env;

@@ -42,10 +42,21 @@ void	reset_utils(t_process **process)
 {
 	if ((*process)->line)
 		free((*process)->line);
-	ft_clear_strtok();
+	
+	ft_clear_strtok(); // Tu limpieza de tokens antigua
+	
 	if ((*process)->tokens)
 		ft_lstclear(&(*process)->tokens, free);
 	(*process)->tokens = NULL;
+
+	// <--- NUEVO: Limpieza de la estructura de comandos
+	if ((*process)->commands)
+	{
+		ft_free_cmds((*process)->commands);
+		(*process)->commands = NULL;
+	}
+	// ------------------------------------------------
+
 	if ((*process)->prompt->display)
 		free((*process)->prompt->display);
 	(*process)->prompt->display = NULL;
@@ -53,7 +64,7 @@ void	reset_utils(t_process **process)
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	t_process  	*process;
+	t_process	*process;
 
 	if (argc > 2)
 		return (0);
@@ -63,28 +74,28 @@ int	main(int argc, char *argv[], char *envp[])
 	while (1)
 	{
 		signal(SIGINT, ft_sigint);
-		// 1. Leer y crear tokens (esto ya lo tenías)
-        ft_readinput(process); 
-
-        // 2. Comprobar si hay algo escrito antes de seguir
-        if (process->tokens) 
-        {
-            // --- ZONA DE PRUEBAS (NUEVO) ---
-            
-            // A. Convertimos la lista plana en "bolsas" t_cmd
-            ft_tokens_to_cmds(process); 
-
-            // B. Imprimimos para ver si ha funcionado
-            print_commands_debug(process);
-            
-            // -------------------------------
-        }
-
-		ft_exit(process);
-        
-        // 3. COMENTA ESTA LÍNEA DE MOMENTO PARA QUE NO FALLE AL EJECUTAR
-		//ft_fork_process(process, ft_builtins);
-		ft_fork_process(process);
+		ft_readinput(process);
+		if (process->tokens)
+		{
+			ft_tokens_to_cmds(process);
+			
+			// --- LÓGICA NUEVA ---
+			// 1. Si es un builtin de padre (cd, exit...) Y no tiene pipes (|)
+			if (process->commands && !process->commands->next && \
+				ft_is_parent_builtin(process->commands))
+			{
+				// Ejecutamos directamente en el padre (persistente)
+				ft_builtins(process, process->commands);
+			}
+			else
+			{
+				// 2. Si no, al ejecutor de hijos (forks/pipes)
+				ft_fork_process(process);
+			}
+		}
+		
+		// ft_exit(process); <--- ¡BORRA ESTA LÍNEA! Ya no sirve y da error.
+		
 		reset_utils(&process);
 	}
 	return (0);

@@ -28,6 +28,34 @@ void	free_env_items(char ***map)
 	ptr = NULL;
 	*map = ptr;
 }
+void	ft_free_cmds(t_cmd *cmds)
+{
+	t_cmd	*tmp;
+	int		i;
+
+	while (cmds)
+	{
+		tmp = cmds->next;
+		// 1. Liberar argumentos (array de strings)
+		if (cmds->args)
+		{
+			i = 0;
+			while (cmds->args[i])
+			{
+				free(cmds->args[i]);
+				i++;
+			}
+			free(cmds->args);
+		}
+		// 2. Liberar ruta si la buscaste y guardaste (opcional según tu implementación)
+		if (cmds->path)
+			free(cmds->path);
+		
+		// 3. Liberar la estructura en sí
+		free(cmds);
+		cmds = tmp;
+	}
+}
 
 void	free_process(t_process *proc)
 {

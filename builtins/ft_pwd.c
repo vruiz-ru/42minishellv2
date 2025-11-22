@@ -12,12 +12,13 @@
 
 #include "builtins.h"
 
-int ft_pwd(t_process *process)
+int ft_pwd(t_process *process, t_cmd *cmd)
 {
 	char	*dir_path;
 	char	*haystack;
 	char	*needle;
 
+	(void)cmd;
 	haystack = ft_getcwd();
 	needle = process->prompt->shell_name;
 	if (needle[0] == '.' && needle[1] == '/')

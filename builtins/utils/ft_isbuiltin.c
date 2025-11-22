@@ -12,22 +12,33 @@
 
 #include "../builtins.h"
 
-int	ft_isbuiltin(t_process *process)
+/* Comprueba si es CUALQUIER builtin (para el hijo) */
+int	ft_isbuiltin(t_cmd *cmd)
 {
-	char	*cmd;
-	int size;
+	char	*p;
 
-	if (!process->tokens)
+	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
-	cmd = (char *)process->tokens->content;
-	size = ft_strlen(cmd);
-	if (!ft_strncmp(cmd, "clear", size) || \
-		!ft_strncmp(cmd, "export", size) || \
-		!ft_strncmp(cmd, "pwd", size) || \
-		!ft_strncmp(cmd, "env", size) || \
-		!ft_strncmp(cmd, "echo", size) || \
-		!ft_strncmp(cmd, "unset", size) || \
-		!ft_strncmp(cmd, "cd", size))
+	p = cmd->args[0];
+	if (!ft_strncmp(p, "echo", 5) || !ft_strncmp(p, "cd", 3) || \
+		!ft_strncmp(p, "pwd", 4) || !ft_strncmp(p, "export", 7) || \
+		!ft_strncmp(p, "unset", 6) || !ft_strncmp(p, "env", 4) || \
+		!ft_strncmp(p, "exit", 5) || !ft_strncmp(p, "clear", 6))
+		return (1);
+	return (0);
+}
+
+/* Comprueba si es un builtin que debe correr en el PADRE (para persistir) */
+int	ft_is_parent_builtin(t_cmd *cmd)
+{
+	char	*p;
+
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (0);
+	p = cmd->args[0];
+	// Solo estos modifican el entorno o el estado del shell padre
+	if (!ft_strncmp(p, "cd", 3) || !ft_strncmp(p, "export", 7) || \
+		!ft_strncmp(p, "unset", 6) || !ft_strncmp(p, "exit", 5))
 		return (1);
 	return (0);
 }

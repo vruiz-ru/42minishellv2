@@ -12,6 +12,9 @@
 
 #include "builtins.h"
 
+/* mini/builtins/ft_unset.c */
+#include "builtins.h"
+
 static int	remove_var(char ***env, char *var_name)
 {
 	size_t	i;
@@ -21,6 +24,7 @@ static int	remove_var(char ***env, char *var_name)
 	len = ft_strlen(var_name);
 	while ((*env)[i])
 	{
+		// Buscamos la variable. Debe coincidir el nombre y tener un '=' justo después
 		if (!ft_strncmp((*env)[i], var_name, len) && (*env)[i][len] == '=')
 		{
 			if (ft_mapitem_del(env, i))
@@ -32,20 +36,21 @@ static int	remove_var(char ***env, char *var_name)
 	return (0);
 }
 
-int	ft_unset(t_process **process)
+int	ft_unset(t_process *process, t_cmd *cmd)
 {
-	t_list	*ptr;
-	char	*var_name;
-	
+	int	i;
 
-	if (!process || !(*process)->envs->parent_env)
+	// Ya no necesitamos el doble puntero (**process)
+	if (!process || !process->envs->parent_env)
 		return (0);
-	ptr = (*process)->tokens->next;
-	while (ptr)
+
+	// Empezamos en 1 porque args[0] es "unset"
+	i = 1;
+	while (cmd->args[i])
 	{
-		var_name = (char *)ptr->content;
-		remove_var(&(*process)->envs->parent_env, var_name);
-		ptr = ptr->next;
+		// Pasamos la dirección de parent_env (&) para poder modificar el array
+		remove_var(&process->envs->parent_env, cmd->args[i]);
+		i++;
 	}
 	return (1);
 }

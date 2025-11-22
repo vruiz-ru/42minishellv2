@@ -92,7 +92,8 @@ SRCS5 = $(INPUT_DIR)$(PARSE_TOKENS_DIR)ft_inputvar.c \
 SRCS6 = $(INPUT_DIR)ft_prompt.c $(INPUT_DIR)ft_readinput.c 
 
 SRCS7 = $(PROCESS_DIR)ft_fork_process.c \
-		$(PROCESS_DIR)ft_exec_utils.c
+		$(PROCESS_DIR)ft_exec_utils.c \
+		$(PROCESS_DIR)ft_pipe_utils.c
 
 SRCS8 = $(UTILS_DIR)ft_free.c $(UTILS_DIR)ft_init.c \
         $(UTILS_DIR)ft_clear_strtok.c $(UTILS_DIR)ft_construct.c \
