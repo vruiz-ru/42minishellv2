@@ -34,30 +34,36 @@ Edge Cases:
 
 */
 
+extern int	g_signal_status;
+
+/* Handler especial solo para Heredoc: Cierra STDIN para desbloquear readline */
+static void	heredoc_sigint(int sig)
+{
+	(void)sig;
+	g_signal_status = 130;
+	write(STDOUT_FILENO, "\n", 1);
+	close(STDIN_FILENO); // <--- El truco maestro
+}
+
 static void	write_to_tmp(int fd, char *line)
 {
 	ft_putstr_fd(line, fd);
 	ft_putstr_fd("\n", fd);
 	free(line);
 }
-
-/* Bucle principal del heredoc */
-int	ft_heredoc(char *delimiter)
+static int	process_heredoc_loop(int fd, char *delimiter)
 {
-	int		fd;
 	char	*line;
 
-	// 1. Abrir archivo temporal oculto para escribir
-	fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd < 0)
-		return (perror("heredoc open"), -1);
-	
 	while (1)
 	{
-		line = readline("> "); // Prompt secundario
-		if (!line) // Si el usuario pulsa Ctrl+D (EOF)
+		line = readline("> ");
+		if (!line)
+		{
+			if (g_signal_status == 130)
+				return (1);
 			break ;
-		// Si la línea es EXACTAMENTE el delimitador, paramos
+		}
 		if (!ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1))
 		{
 			free(line);
@@ -65,13 +71,32 @@ int	ft_heredoc(char *delimiter)
 		}
 		write_to_tmp(fd, line);
 	}
+	return (0);
+}
+/* Función principal limpia y modular */
+int	ft_heredoc(char *delimiter)
+{
+	int		fd;
+	int		stdin_backup;
+	int		status;
+
+	stdin_backup = dup(STDIN_FILENO);
+	if (stdin_backup < 0)
+		return (-1);
+	fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd < 0)
+		return (close(stdin_backup), perror("heredoc open"), -1);
+	signal(SIGINT, heredoc_sigint);
+	status = process_heredoc_loop(fd, delimiter);
+	dup2(stdin_backup, STDIN_FILENO);
+	close(stdin_backup);
 	close(fd);
-	
-	// 2. Abrir el mismo archivo para lectura y devolver ese FD
+	if (status == 1)
+	{
+		unlink(".heredoc_tmp");
+		return (-1);
+	}
 	fd = open(".heredoc_tmp", O_RDONLY);
-	
-	// 3. Borrar el archivo del sistema (el FD sigue abierto para nosotros)
-	unlink(".heredoc_tmp"); 
-	
+	unlink(".heredoc_tmp");
 	return (fd);
 }

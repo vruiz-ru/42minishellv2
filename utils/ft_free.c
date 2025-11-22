@@ -41,16 +41,17 @@ void	ft_free_cmds(t_cmd *cmds)
 		{
 			i = 0;
 			while (cmds->args[i])
-			{
-				free(cmds->args[i]);
-				i++;
-			}
+				free(cmds->args[i++]);
 			free(cmds->args);
 		}
 		// 2. Liberar ruta si la buscaste y guardaste (opcional según tu implementación)
 		if (cmds->path)
 			free(cmds->path);
-		
+		// CERRAR FDS Y EVITAR LEAKS
+		if (cmds->fd_in > 2)
+			close(cmds->fd_in);
+		if (cmds->fd_out > 2)
+			close(cmds->fd_out);	
 		// 3. Liberar la estructura en sí
 		free(cmds);
 		cmds = tmp;

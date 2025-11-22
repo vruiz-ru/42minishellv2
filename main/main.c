@@ -89,7 +89,14 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			ft_tokens_to_cmds(process);
 			
-			// --- LÓGICA NUEVA ---
+			// Si se pulsó Ctrl+C durante el heredoc (parsing), cancelamos todo.
+			if (g_signal_status == 130)
+			{
+				process->status = 130;
+				g_signal_status = 0; // Reset para la próxima
+				// NO EJECUTAMOS NADA, el bucle while(1) continuará y hará reset_utils
+			}
+			else
 			// 1. Si es un builtin de padre (cd, exit...) Y no tiene pipes (|)
 			if (process->commands && !process->commands->next && \
 				ft_is_parent_builtin(process->commands))
@@ -103,9 +110,7 @@ int	main(int argc, char *argv[], char *envp[])
 				ft_fork_process(process);
 			}
 		}
-		
-		// ft_exit(process); <--- ¡BORRA ESTA LÍNEA! Ya no sirve y da error.
-		
+
 		reset_utils(&process);
 	}
 	return (0);
