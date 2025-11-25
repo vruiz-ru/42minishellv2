@@ -37,8 +37,37 @@ static void	update_env_str(t_process *proc, char *key, char *value)
 	free(full_str);
 }
 
+/* Lógica para 'cd ..' cuando el directorio ha sido borrado */
+void	update_logical_parent(t_process *process)
+{
+	char	*current;
+	char	*last_slash;
+	char	*new_path;
+
+	current = process->prompt->current_wd;
+	if (!current)
+		return ;
+	last_slash = ft_strrchr(current, '/');
+	if (!last_slash || last_slash == current)
+	{
+		if (ft_strlen(current) > 1)
+			new_path = ft_strdup("/");
+		else
+			return ;
+	}
+	else
+		new_path = ft_substr(current, 0, last_slash - current);
+	if (new_path)
+	{
+		free(process->prompt->current_wd);
+		process->prompt->current_wd = new_path;
+	}
+}
+
 void	ft_setpaths(t_process *process)
 {
+	char	*physical_cwd;
+
 	// 1. Actualizar la estructura interna (Prompt)
 	if (process->prompt->last_wd)
 		free(process->prompt->last_wd);
@@ -49,12 +78,13 @@ void	ft_setpaths(t_process *process)
 	else
 		process->prompt->last_wd = ft_strdup("");
 
-	if (process->prompt->current_wd)
-		free(process->prompt->current_wd);
-	
-	// Obtenemos el nuevo path actual desde el sistema
-	process->prompt->current_wd = ft_getcwd();
-
+	physical_cwd = ft_getcwd();
+	if (physical_cwd)
+	{
+		if (process->prompt->current_wd)
+			free(process->prompt->current_wd);
+		process->prompt->current_wd = physical_cwd;
+	}
 	// 2. Sincronizar las variables de entorno REALES (Lo nuevo)
 	// Actualizamos OLDPWD con el valor antiguo que acabamos de guardar
 	update_env_str(process, "OLDPWD=", process->prompt->last_wd);

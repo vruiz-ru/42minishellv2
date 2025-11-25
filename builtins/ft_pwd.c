@@ -14,19 +14,28 @@
 
 int	ft_pwd(t_process *process, t_cmd *cmd)
 {
-	char	*cwd;
+	(void)cmd;
 
-	(void)process;
-	(void)cmd; // El subject dice "pwd sin opciones", ignoramos args.
-
-	cwd = ft_getcwd();
-	if (!cwd)
-		return (1); // Hubo un error obteniendo la ruta
-	// 2. La imprimimos tal cual, sin filtros ni búsquedas
-	ft_printf("%s\n", cwd);
-	// 3. Liberamos y éxito
-	free(cwd);
-	return (0);
+	// ESTRATEGIA BASH (Lógica):
+	// Si tenemos una ruta guardada en nuestra estructura, la usamos.
+	// Esto permite que 'pwd' funcione incluso si el directorio ha sido borrado.
+	if (process->prompt->current_wd)
+	{
+		ft_printf("%s\n", process->prompt->current_wd);
+		return (0);
+	}
+	
+	// FALLBACK (Física):
+	// Solo si por algún motivo extraño no tenemos ruta guardada, preguntamos al sistema.
+	char *cwd = ft_getcwd();
+	if (cwd)
+	{
+		ft_printf("%s\n", cwd);
+		free(cwd);
+		return (0);
+	}
+	
+	return (1);
 }
 /*
 int ft_pwd(t_process *process, t_cmd *cmd)

@@ -29,6 +29,7 @@ int		home_feature(t_process *process, t_cmd *cmd);
 int		back_feature(t_process *process, t_cmd *cmd);
 int		root_feature(t_process *process, t_cmd *cmd);
 void	ft_setpaths(t_process *process);
+void    update_logical_parent(t_process *process);
 int		invalid_options(char *token);
 int 	path_input(t_process *process, t_cmd *cmd);
 char	*ft_getcwd(void);
