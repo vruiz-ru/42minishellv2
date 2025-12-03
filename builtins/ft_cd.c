@@ -50,12 +50,33 @@ On success, zero is returned.  On error, -1 is returned, and  errno  is
 
 */
 
-static int  ft_home(t_process *process)
+static int	ft_home(t_process *process)
 {
-    if (chdir(process->prompt->home_path) != 0)
-        ft_putstr_fd("cd: Failed returning to home path\n", 2);
-    ft_setpaths(process);
-    return (0);
+	char	*home_path;
+
+	// 1. Búsqueda dinámica: Leemos el entorno ACTUAL
+	home_path = ft_getvar(process->envs->parent_env, "HOME");
+	
+	// 2. Si no existe (unset HOME), error de Bash
+	if (!home_path)
+	{
+		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+		return (1);
+	}
+
+	// 3. Intentamos movernos
+	if (chdir(home_path) != 0)
+	{
+		ft_putstr_fd("minishell: cd: ", 2);
+		perror(home_path); // Ojo: perror usa errno, que lo setea chdir
+		free(home_path);
+		return (1);
+	}
+	
+	// 4. Actualizamos y limpiamos
+	ft_setpaths(process);
+	free(home_path);
+	return (0);
 }
 
 int ft_cd(t_process *process, t_cmd *cmd)

@@ -93,15 +93,8 @@ int	init_parent(t_process **parent, char *name, char *envp[])
 	if (!(*parent)->prompt->shell_name)
 		return (perror("malloc"), exit(EXIT_FAILURE), 0);
 
-	// 2. CORRECCIÓN: Buscamos HOME en el entorno real
+	// CORRECCIÓN: Si HOME no existe, se queda NULL. No usamos getcwd().
 	(*parent)->prompt->home_path = ft_getvar((*parent)->envs->parent_env, "HOME");
-	
-	// Si no existe HOME (unset HOME), usamos el directorio actual como fallback
-	if (!(*parent)->prompt->home_path)
-		(*parent)->prompt->home_path = ft_getcwd();
-	
-	if (!(*parent)->prompt->home_path)
-		return (perror("malloc"), exit(EXIT_FAILURE), 0);
 
 	// 3. El directorio actual e inicial (PWD/OLDPWD) sí es getcwd()
 	(*parent)->prompt->current_wd = ft_getcwd();

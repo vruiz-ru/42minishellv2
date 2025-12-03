@@ -70,3 +70,20 @@ char *ft_get_cmd_path(char *cmd, char **envp)
     ft_free_array(paths);
     return (NULL); // No lo encontramos
 }
+
+/* Función para imprimir error completo de una sola vez y salir */
+void	cmd_not_found(char *cmd)
+{
+	char	*msg;
+	char	*tmp;
+
+	// Construimos: "minishell: " + cmd + ": command not found\n"
+	tmp = ft_strjoin("minishell: ", cmd);
+	msg = ft_strjoin(tmp, ": command not found\n");
+	free(tmp);
+	
+	// Escribimos todo junto (Atómico)
+	ft_putstr_fd(msg, 2);
+	free(msg);
+	exit(127);
+}

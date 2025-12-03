@@ -34,6 +34,7 @@ int			ft_fork_process(t_process *process);
 void    config_pipes(t_cmd *cmd, int *pipefd, int prev_fd);
 void    apply_redirections(t_cmd *cmd);
 void    close_fds(t_cmd *cmd, int prev_fd);
+void cmd_not_found(char *cmd);
 // UTILS
 void	    ft_clear_strtok(void);
 int			init_parent(t_process **parent, char *name, char *envp[]);

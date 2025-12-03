@@ -12,31 +12,48 @@
 
 #include "input.h"
 
-static char *get_display_path(t_process *process)
+/* Auxiliar: Intenta sustituir el inicio de la ruta por ~ */
+static char	*try_home_replacement(char *current, char *home)
+{
+	size_t	len;
+
+	len = ft_strlen(home);
+	// Verificamos si la ruta empieza exactamente por HOME
+	if (ft_strncmp(current, home, len) == 0)
+	{
+		// Caso 1: Estás exactamente en home (/home/user -> ~)
+		if (current[len] == '\0')
+			return (ft_strdup(HOME));
+		// Caso 2: Estás en una subcarpeta (/home/user/Desktop -> ~/Desktop)
+		if (current[len] == '/')
+			return (ft_strjoin(HOME, current + len));
+	}
+	return (NULL);
+}
+
+/* Función principal acortada y limpia */
+static char	*get_display_path(t_process *process)
 {
 	char	*current;
 	char	*home;
-	char	*buffer;
-	char	*temp;
-	char	*final;
-	size_t	size_current;
-	size_t  size_home;
+	char	*result;
 
 	current = process->prompt->current_wd;
 	home = process->prompt->home_path;
-	size_current = ft_strlen(current);
-	size_home = ft_strlen(home);
-	if (size_current == size_home && !ft_strncmp(current, home, size_current))
-		return (ft_strdup(HOME));
-	temp = ft_strnstr(current, home, size_current);
-	if (temp != NULL && temp == current)
+	
+	// SEGURIDAD: Si no sabemos dónde estamos, evitamos Segfault
+	if (!current)
+		return (ft_strdup("?"));
+	
+	// Si tenemos HOME válido, intentamos usar la notación ~
+	if (home && *home)
 	{
-		buffer = temp + size_home;
-		if (!buffer || !*buffer)
-			return (ft_strdup(HOME));
-		final = ft_strjoin(HOME, buffer);
-		return (final);
+		result = try_home_replacement(current, home);
+		if (result)
+			return (result);
 	}
+	
+	// Si no coincide o no hay HOME, devolvemos la ruta absoluta tal cual
 	return (ft_strdup(current));
 }
 

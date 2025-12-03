@@ -47,6 +47,10 @@ int	quote_pos(char *str, char delim, int times)
 			break;
 		idx++;
 	}
+	// <--- FIX CRÍTICO: Si no encontramos las 'times' ocurrencias, fallamos
+	if (occurrence < times)
+		return (-1);
+	// ---------------------------------------------------------------------
 	return (quote_idx);
 }
 
@@ -65,17 +69,22 @@ int	first_occurrence(t_process *process, char *line, char delim)
 	char	*token;
 	char	*parsed;
 	int		idx;
+	int     len;
 
 	idx = quote_pos(line, delim, 1);
 	if (idx < 0)
 		return (-1);
 	if (idx > 0)
 	{
-		chunk = ft_substr(line, 0, idx);
+		len = idx;
+		// CORRECCIÓN: Usamos la función externa para recortar el $ si es $'
+		if (check_ansi_quote(line, idx, delim))
+			len = idx - 1;
+
+		chunk = ft_substr(line, 0, len);
 		if (!chunk)
 			return (perror("malloc"), exit(EXIT_FAILURE), 0);
 		
-		// Troceamos el bloque previo por espacios
 		token = ft_strtok(chunk, " ");
 		while (token)
 		{
@@ -91,14 +100,26 @@ int	first_occurrence(t_process *process, char *line, char delim)
 
 char	quote_delimiter(char *line)
 {
-	int	dquote;
-	int	squote;
+	int	d_start;
+	int	s_start;
+	int	d_end;
+	int	s_end;
 
-	dquote = quote_pos(line, '"', 1);
-	squote = quote_pos(line, '\'', 1);
-	if (dquote >= 0 && (squote < 0 || (squote >= 0 && dquote < squote)))
+	d_start = quote_pos(line, '"', 1);
+	s_start = quote_pos(line, '\'', 1);
+	d_end = -1;
+	s_end = -1;
+	if (d_start >= 0)
+		d_end = quote_pos(line, '"', 2);
+	if (s_start >= 0)
+		s_end = quote_pos(line, '\'', 2);
+	if (d_end == -1)
+		d_start = -1;
+	if (s_end == -1)
+		s_start = -1;
+	if (d_start >= 0 && (s_start < 0 || d_start < s_start))
 		return ('"');
-	else if (squote >= 0)
-		return ('\'');	
+	if (s_start >= 0)
+		return ('\'');
 	return (0);
 }

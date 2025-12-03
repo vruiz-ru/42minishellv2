@@ -25,7 +25,13 @@ static int	parse_aux(t_process *process, char **res, char **var_name)
 		*res = ft_strjoin_free(*res, *var_name);
 		*var_name = NULL;
 	}
+	
+	// <--- FIX CRÍTICO: Si la variable no existe, res es NULL.
+	// Esto NO es un error, es una cadena vacía.
 	if (!*res)
+		*res = ft_strdup(""); // Asignamos vacío para continuar
+	
+	if (!*res) // Si falla el strdup, entonces sí es error
 		return (0);
 	return (1);
 }

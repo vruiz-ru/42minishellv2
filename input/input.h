@@ -36,6 +36,8 @@ int 	return_value(t_process *process, char *line);
 char	*clean_line(char *content, char token);
 void	scan_char(t_process *process, char *content, char **var_name, int *idx);
 void	insert_value(t_process *process, char **dest, char *var_name);
+int		is_var_start(char c);
+int     check_ansi_quote(char *line, int idx, char delim);
 //		QUOTE
 char	quote_delimiter(char *line);
 int		quote_pos(char *str, char delim, int times);

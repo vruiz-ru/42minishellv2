@@ -32,31 +32,47 @@ static int reconstruct_token(t_process *process, char *line, char delim)
 	return (1);
 }
 
+/* FUNCIÓN CORREGIDA: Calcula el avance real saltando espacios */
 static char	*standard_token(t_process *process, char *line)
 {
-	char    *added;
-	char    *line_left;
-	size_t	next;
+	char	*added;
+	char	*line_left;
+	int		i;
+	int		len;
+
+	// 1. Saltar espacios iniciales para saber dónde empieza el token real
+	i = 0;
+	while (line[i] == ' ')
+		i++;
 	
-	added = ft_strtok(line, " ");
-	if (!added)
-		return (NULL);
-	next = ft_strlen(added) + 1;
-	added = ft_parse_token(process, added, 'n');
+	// 2. Calcular longitud del token (hasta el siguiente espacio o fin)
+	len = 0;
+	while (line[i + len] && line[i + len] != ' ')
+		len++;
+	
+	// 3. Extraer el token
+	added = ft_substr(line, i, len);
 	if (!added)
 		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	
+	// 4. Parsearlo y añadirlo
+	added = ft_parse_token(process, added, 'n');
+	if (!added)
+		return (free(line), NULL);
 	ft_safeadd_tokens(&process->tokens, &added);
-	if (ft_strchr(line, ' '))
+
+	// 5. Calcular el resto de la línea
+	if (line[i + len])
 	{
-			line_left = ft_strdup(line + next);
-			if (!line_left)
-				return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-			ft_addspace(&process->tokens);
-			return (free(line), line_left);
-	}
-	else
+		line_left = ft_strdup(line + i + len);
+		if (!line_left)
+			return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+		ft_addspace(&process->tokens);
 		free(line);
-	return (line = NULL, NULL);
+		return (line_left);
+	}
+	free(line);
+	return (NULL);
 }
 
 static char	*quotes_token(t_process *process, char *line, char delim)

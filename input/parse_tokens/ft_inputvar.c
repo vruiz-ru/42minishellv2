@@ -104,8 +104,21 @@ int	ft_inputvar(t_process *process, char **line)
 	char	*name;
 	char	*value;
 
-	if (*(*line) == '$' && return_value(process, *line + 1))
-		return (1);
+	// CASO 1: Es una variable ($VAR)
+	if (*(*line) == '$')
+	{
+		// Intentamos expandirla
+		if (return_value(process, *line + 1))
+			return (1); // Se encontró y se añadió
+		
+		// <--- FIX: Si NO se encontró, es una variable vacía.
+		// Retornamos 1 (éxito) para que el parser continúe sin añadir nada,
+		// en lugar de caer al código de abajo y crashear.
+		return (1); 
+	}
+
+	// CASO 2: Es una asignación (VAR=VAL)
+	// Solo llegamos aquí si NO empezaba por $
 	name = ft_strtok(*line, "=");
 	value = safe_value(ft_strchr(*line, '='));
 	process->is_variable = true;

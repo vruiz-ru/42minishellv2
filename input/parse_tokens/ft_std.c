@@ -24,11 +24,11 @@ static char	*get_content(t_process *process, char *line)
 	}
 	else
 		content = ft_strtok(NULL, " ");
-	if (!content)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
+	
+	// <--- FIX: Eliminamos el check de error aquí.
+	// Si content es NULL, puede ser fin de línea, no necesariamente error de malloc.
+	// ft_strtok ya imprime "Failed malloc!" internamente si falla de verdad.
+	
 	return (content);
 }
 

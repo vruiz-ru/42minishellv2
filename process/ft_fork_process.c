@@ -22,13 +22,14 @@ static void	ft_execute_external(t_process *process, t_cmd *cmd)
 	path = ft_get_cmd_path(cmd->args[0], process->envs->parent_env);
 	if (!path)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd->args[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
-		exit(127);
+		// <--- CAMBIO: Usamos la función atómica
+		cmd_not_found(cmd->args[0]);
+		// ------------------------------------
 	}
 	if (execve(path, cmd->args, process->envs->parent_env) == -1)
 	{
+		// Nota: perror suele ser bastante atómico, pero si quieres
+		// podrías hacer una función similar para este caso también.
 		ft_putstr_fd("minishell: ", 2);
 		perror(cmd->args[0]);
 		free(path);

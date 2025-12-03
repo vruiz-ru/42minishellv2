@@ -19,9 +19,9 @@ static int	assign_value(char **env, char **dest, int idx)
 	value = ft_strdup(ft_strchr(env[idx], '=') + 1);
 	if (!value)
 	{
-				perror("malloc");
-				exit(EXIT_FAILURE);
-				return (0);
+		perror("malloc");
+		exit(EXIT_FAILURE);
+		return (0);
 	}
 	*dest = ft_strjoin_free(*dest, value);
 	if (!*dest)
@@ -56,15 +56,19 @@ int	already_exists(char **env, char *var_name)
 
 char	*clean_line(char *content, char token)
 {
-	char    *seq;
+	char	*seq;
 	char	*new;
-	int     i;
+	int		i;
 
 	i = 0;
 	new = NULL;
-	seq = "`\"\\";
+	seq = "`\"\\"; // Default para comillas dobles
+	
+	// CAMBIO CRÍTICO: En modo normal ('n'), no escapamos NADA.
+	// El subject dice "no interpretar \", así que vaciamos seq.
 	if (token == 'n')
-		seq = " tn`\"'\\*?[]#&;|<>()~";    
+		seq = ""; 
+	
 	while (content[i] != '\0')
 	{
 		if (content[i] == '\\' && ft_strchr(seq, content[i + 1]))
@@ -79,9 +83,9 @@ char	*clean_line(char *content, char token)
 	return (free(content), new);
 }
 
-void    scan_char(t_process *process, char *content, char **var_name, int *idx)
+void	scan_char(t_process *process, char *content, char **var_name, int *idx)
 {
-	char    *stop;
+	char	*stop;
 
 	stop = " \t\n/.,:-+=?!@#^&*()[]{}'\"\\|<>;~";
 	if (content[*idx] == '\\' && content[*idx + 1] == '$')
@@ -89,7 +93,7 @@ void    scan_char(t_process *process, char *content, char **var_name, int *idx)
 		(*idx)++;
 		return ;
 	}
-	else if (content[*idx] == '$')
+	else if (content[*idx] == '$' && is_var_start(content[*idx + 1]))
 	{
 		(*idx)++;
 		if (ft_specialvars(process, var_name, content[*idx]))
