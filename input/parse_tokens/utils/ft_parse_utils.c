@@ -93,7 +93,8 @@ void	scan_char(t_process *process, char *content, char **var_name, int *idx)
 		(*idx)++;
 		return ;
 	}
-	else if (content[*idx] == '$' && is_var_start(content[*idx + 1]))
+	// CORRECCIÓN: Añadimos check !process->in_heredoc
+	else if (content[*idx] == '$' && !process->in_heredoc && is_var_start(content[*idx + 1]))
 	{
 		(*idx)++;
 		if (ft_specialvars(process, var_name, content[*idx]))

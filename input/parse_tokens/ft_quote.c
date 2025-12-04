@@ -12,27 +12,39 @@
 
 #include "../input.h"
 
-static int reconstruct_token(t_process *process, char *line, char delim)
+static int	reconstruct_token(t_process *process, char *line, char delim)
 {
 	char	*res;
 	int		start_idx;
 	int		end_idx;
 
+	// 1. Procesamos lo que hay ANTES de las comillas (ej: "<< ")
 	start_idx = first_occurrence(process, line, delim);
 	if (start_idx < 0)
 		return (-1);
+	
+	// <--- FIX MAESTRO:
+	// Justo después de procesar el pre-texto, comprobamos si añadimos un "<<"
+	// Si es así, activamos in_heredoc INMEDIATAMENTE para la parte entre comillas.
+	if (check_heredoc_trigger(process->tokens))
+		process->in_heredoc = true;
+	// -----------------
+
 	start_idx += 1;
 	end_idx = quote_pos(line, delim, 2) - start_idx;
 	res = ft_substr(line, start_idx, end_idx);
 	if (!res)
 		return (perror("malloc"), exit(EXIT_FAILURE), 0);
+	
+	// 2. Procesamos lo que hay DENTRO de las comillas (ej: "$HOME")
+	// Como in_heredoc ya está actualizado, si es true, NO expandirá.
 	if (delim == '"')
 		res = ft_parse_token(process, res, 'd');
+	
 	ft_safeadd_tokens(&process->tokens, &res);
 	return (1);
 }
 
-/* FUNCIÓN CORREGIDA: Calcula el avance real saltando espacios */
 static char	*standard_token(t_process *process, char *line)
 {
 	char	*added;
@@ -40,28 +52,19 @@ static char	*standard_token(t_process *process, char *line)
 	int		i;
 	int		len;
 
-	// 1. Saltar espacios iniciales para saber dónde empieza el token real
 	i = 0;
 	while (line[i] == ' ')
 		i++;
-	
-	// 2. Calcular longitud del token (hasta el siguiente espacio o fin)
 	len = 0;
 	while (line[i + len] && line[i + len] != ' ')
 		len++;
-	
-	// 3. Extraer el token
 	added = ft_substr(line, i, len);
 	if (!added)
 		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-	
-	// 4. Parsearlo y añadirlo
 	added = ft_parse_token(process, added, 'n');
 	if (!added)
 		return (free(line), NULL);
 	ft_safeadd_tokens(&process->tokens, &added);
-
-	// 5. Calcular el resto de la línea
 	if (line[i + len])
 	{
 		line_left = ft_strdup(line + i + len);
@@ -71,8 +74,7 @@ static char	*standard_token(t_process *process, char *line)
 		free(line);
 		return (line_left);
 	}
-	free(line);
-	return (NULL);
+	return (free(line), NULL);
 }
 
 static char	*quotes_token(t_process *process, char *line, char delim)
@@ -81,7 +83,7 @@ static char	*quotes_token(t_process *process, char *line, char delim)
 	int		indexes_left;
 	int		last_index;
 	int		paired_delim;
-	
+
 	line_left = NULL;
 	if (reconstruct_token(process, line, delim) < 0)
 		return (NULL);
@@ -101,25 +103,41 @@ static char	*quotes_token(t_process *process, char *line, char delim)
 	return (free(line), line_left);
 }
 
+static char	*process_next_token(t_process *process, char *line, int next_hd)
+{
+	char	delim;
+
+	delim = quote_delimiter(line);
+	if (delim == 0)
+	{
+		process->in_heredoc = false;
+		return (standard_token(process, line));
+	}
+	if (next_hd)
+		process->in_heredoc = true;
+	else
+		process->in_heredoc = false;
+	return (quotes_token(process, line, delim));
+}
+
 int	ft_quote(t_process *process, char *line)
 {
 	char	*line_args;
-    char    delimiter;
+	int		next_is_heredoc;
 
-    if (ft_strchr(line, ' ') && process->is_variable == false)
+	if (ft_strchr(line, ' ') && process->is_variable == false)
 		line_args = ft_strdup(ft_strchr(line, ' ') + 1);
 	else
 		line_args = ft_strdup(line);
 	if (!line_args)
 		return (perror("malloc"), exit(EXIT_FAILURE), 0);
-    ft_clear_strtok();
-    while (line_args && *line_args)
+	ft_clear_strtok();
+	next_is_heredoc = 0;
+	while (line_args && *line_args)
 	{
-		delimiter = quote_delimiter(line_args);
-        if (delimiter == 0)
-            line_args = standard_token(process, line_args);
-        else
-            line_args = quotes_token(process, line_args, delimiter);
-	}		
+		line_args = process_next_token(process, line_args, next_is_heredoc);
+		process->in_heredoc = false;
+		next_is_heredoc = check_heredoc_trigger(process->tokens);
+	}
 	return (1);
 }

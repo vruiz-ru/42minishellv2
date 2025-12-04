@@ -54,6 +54,7 @@ typedef struct Process_utils
     int         forks;
     bool        is_special;
     bool        is_variable;
+	bool        in_heredoc;
 }   t_process;
 
 #endif

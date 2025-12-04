@@ -32,13 +32,18 @@ static char	*get_content(t_process *process, char *line)
 	return (content);
 }
 
-int		ft_std(t_process *process, char *line)
+int	ft_std(t_process *process, char *line)
 {
 	char	*token;
 	char	*node;
 
 	if (ft_strchr(line, '"') || ft_strchr(line, '\''))
 		return (0);
+	
+	// En ft_std NO tocamos process->in_heredoc.
+	// Por defecto es false (inicializado), así que las variables SE EXPANDEN.
+	// Esto es correcto para << $HOME (sin comillas).
+	
 	token = get_content(process, line);
 	while (token)
 	{
