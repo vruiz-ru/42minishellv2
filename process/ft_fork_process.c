@@ -13,27 +13,32 @@
 #include "../headers/minishell.h"
 #include "../builtins/builtins.h"
 #include <errno.h>
+#include <sys/stat.h>
 
 /* 1. Ejecuta comando externo */
 static void	ft_execute_external(t_process *process, t_cmd *cmd)
 {
 	char	*path;
+	struct stat sb; // [NUEVO] Estructura para chequear si es directorio
 
 	path = ft_get_cmd_path(cmd->args[0], process->envs->parent_env);
 	if (!path)
-	{
-		// <--- CAMBIO: Usamos la función atómica
+	
 		cmd_not_found(cmd->args[0]);
-		// ------------------------------------
-	}
 	if (execve(path, cmd->args, process->envs->parent_env) == -1)
 	{
-		// Nota: perror suele ser bastante atómico, pero si quieres
-		// podrías hacer una función similar para este caso también.
 		ft_putstr_fd("minishell: ", 2);
+		// Verificamos explícitamente si es un directorio
+        if (stat(path, &sb) == 0 && S_ISDIR(sb.st_mode))
+        {
+            ft_putstr_fd(cmd->args[0], 2);
+            ft_putstr_fd(": Is a directory\n", 2);
+            free(path);
+            exit(126);
+        }
 		perror(cmd->args[0]);
 		free(path);
-		if (errno == EACCES || errno == EISDIR)
+		if (errno == EACCES)
 			exit(126);
 		exit(1);
 	}
@@ -59,12 +64,14 @@ static void child_process(t_process *proc, t_cmd *cmd, int *pipefd, int prev)
     }
 }
 /* 3. Espera a los hijos y gestiona señales (Nueva función extraída) */
-static void	wait_children(t_process *process)
+//Modifica la firma de wait_children para recibir el last_pid
+static void	wait_children(t_process *process, int last_pid)
 {
 	int	status;
 
-	while (waitpid(-1, &status, 0) > 0)
-		;
+	// Esperamos específicamente al último comando para coger SU status
+    waitpid(last_pid, &status, 0);
+	// Guardamos ese status (es el que importa para $?)
 	if (WIFEXITED(status))
 		process->status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
@@ -82,6 +89,8 @@ static void	wait_children(t_process *process)
 		else
 			process->status = 128 + WTERMSIG(status);
 	}
+	// Ahora esperamos al resto de zombis (los otros comandos del pipe)
+    while (wait(NULL) > 0);
 }
 
 /* 4. Bucle principal */
@@ -90,6 +99,7 @@ int	ft_fork_process(t_process *process)
 	t_cmd	*cmd;
 	int		pipefd[2];
 	int		prev_fd;
+	pid_t last_pid = 0; // [NUEVO] Variable para guardar el PID
 
 	cmd = process->commands;
 	prev_fd = 0;
@@ -99,6 +109,7 @@ int	ft_fork_process(t_process *process)
 		if (cmd->next && pipe(pipefd) == -1)
 			return (perror("pipe"), 0);
 		child_process(process, cmd, pipefd, prev_fd);
+		last_pid = process->pid; // [NUEVO] Actualizamos en cada vuelta. Al final quedará el último.
 		close_fds(cmd, prev_fd);
 		if (cmd->next)
 		{
@@ -107,7 +118,9 @@ int	ft_fork_process(t_process *process)
 		}
 		cmd = cmd->next;
 	}
-	wait_children(process);
+	if (prev_fd != 0)
+    	close(prev_fd);
+	wait_children(process, last_pid);
 	signal(SIGINT, ft_sigint);
 	return (1);
 }
