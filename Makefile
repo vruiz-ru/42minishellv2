@@ -18,7 +18,7 @@ GREEN = \033[0;92m
 RED = \033[38;5;160m
 RESET = \033[0m
 
-NAME = minishell42
+NAME = minishell
 
 CC = cc 
 CFLAGS = -Wall -Wextra -Werror
