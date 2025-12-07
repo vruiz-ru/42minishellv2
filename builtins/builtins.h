@@ -34,7 +34,6 @@ int		invalid_options(char *token);
 int 	path_input(t_process *process, t_cmd *cmd);
 char	*ft_getcwd(void);
 char	*ft_getvar(char **envp, char *var_name);
-int ft_isbuiltin(t_cmd *cmd);
 int ft_is_parent_builtin(t_cmd *cmd);
 // COMMANDS
 int     ft_builtins(t_process *process, t_cmd *cmd); // <--- CAMBIO

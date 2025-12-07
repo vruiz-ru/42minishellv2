@@ -12,23 +12,6 @@
 
 #include "../../input.h"
 
-int add_variable(char ***map, char *item)
-{
-	size_t idx;
-
-	if (!item)
-		return (0);
-	if (already_exists(*map, item))
-	{
-		idx = ft_mapitem_index(*map, item);
-		if (!ft_mapitem_replace(map, item, idx))
-			return (0);
-	}
-	if (!ft_mapitem_add(map, item))
-		return (0);
-	return (1);
-}
-
 int	contains_variable(char *line)
 {
 	int	i;

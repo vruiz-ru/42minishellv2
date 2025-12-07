@@ -38,7 +38,6 @@ void cmd_not_found(char *cmd);
 // UTILS
 void	    ft_clear_strtok(void);
 int			init_parent(t_process **parent, char *name, char *envp[]);
-t_process	*init_child(t_process *parent);
 char	    *ft_construct(t_list *tokens, char *str);
 void	    free_process(t_process *proc);
 void		ft_addspace(t_list **tokens);

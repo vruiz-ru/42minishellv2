@@ -28,7 +28,6 @@ void	ft_readinput(t_process *process);
 // PARSE_TOKENS/UTILS
 //		INPUTVAR
 int		already_exists(char **env, char *var_name);
-int		add_variable(char ***map, char *item);
 int		contains_variable(char *token);
 int 	ft_specialvars(t_process *proc, char **var_name, char ch);
 int 	return_value(t_process *process, char *line);
@@ -42,7 +41,6 @@ int     check_heredoc_trigger(t_list *tokens);
 //		QUOTE
 char	quote_delimiter(char *line);
 int		quote_pos(char *str, char delim, int times);
-int 	quotes_left(char *line_left);
 int 	first_occurrence(t_process *process, char *line, char delim);
 // PARSE_TOKENS
 int		ft_inputvar(t_process *process, char **line);

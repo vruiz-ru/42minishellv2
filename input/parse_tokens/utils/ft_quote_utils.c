@@ -54,15 +54,6 @@ int	quote_pos(char *str, char delim, int times)
 	return (quote_idx);
 }
 
-int quotes_left(char *line_left)
-{
-	if (!line_left || !*line_left)
-		return (0);
-	if (ft_strchr(line_left, '\'') || ft_strchr(line_left, '"'))
-		return (1);
-	return (0);
-}
-
 int	first_occurrence(t_process *process, char *line, char delim)
 {
 	char	*chunk;

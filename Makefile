@@ -99,9 +99,7 @@ SRCS7 = $(PROCESS_DIR)ft_fork_process.c \
 SRCS8 = $(UTILS_DIR)ft_free.c $(UTILS_DIR)ft_init.c \
         $(UTILS_DIR)ft_clear_strtok.c $(UTILS_DIR)ft_construct.c \
         $(UTILS_DIR)ft_addspace.c $(UTILS_DIR)ft_safeadd_nodes.c\
-        $(UTILS_DIR)ft_appendre.c $(UTILS_DIR)ft_heredoc.c \
-        $(UTILS_DIR)ft_reinput.c $(UTILS_DIR)ft_reoutput.c \
-		$(UTILS_DIR)ft_io_utils.c
+        $(UTILS_DIR)ft_heredoc.c $(UTILS_DIR)ft_io_utils.c
         
 SRCS9 = $(MAIN_DIR)main.c
 

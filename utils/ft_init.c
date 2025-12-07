@@ -29,27 +29,6 @@ static t_process	*init(void)
 	return (process);
 }
 
-t_process	*init_child(t_process *parent)
-{
-	t_process	*child;
-	
-	child = init();
-	if (!child)
-		return (NULL);
-	child->envs->parent_env = ft_mapdup(parent->envs->parent_env);
-	if (!child->envs->parent_env)
-		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-	child->prompt->current_wd = ft_strdup(parent->prompt->current_wd);
-	if (!child->prompt->current_wd)
-		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-	child->prompt->last_wd = ft_strdup(child->prompt->current_wd);
-	if (!child->prompt->last_wd)
-		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-	child->pid = getpid();
-    child->forks -= 1;
-    child->status = 0;
-	return (child);
-}
 /* Nueva función para incrementar SHLVL */
 static void	increment_shell_level(t_process *proc)
 {
