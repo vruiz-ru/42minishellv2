@@ -14,6 +14,7 @@
 
 int g_signal_status = 0;
 
+/*
 void print_commands_debug(t_process *p)
 {
     t_cmd *c = p->commands;
@@ -37,7 +38,7 @@ void print_commands_debug(t_process *p)
         c = c->next;
     }
     printf("\n");
-}
+}*/
 
 void	reset_utils(t_process **process)
 {

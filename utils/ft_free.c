@@ -12,6 +12,22 @@
 
 #include "../headers/minishell.h"
 
+// Función auxiliar para borrar un nodo de redirección
+void	del_redir(void *content)
+{
+	t_io	*io;
+
+	io = (t_io *)content;
+	if (io->path)
+		free(io->path);
+    // Si es un heredoc abierto, deberíamos cerrarlo aquí para evitar leaks
+    if (io->type == IO_HEREDOC && io->fd != -1)
+	{
+        close(io->fd);
+	}
+	free(io);
+}
+
 void	free_env_items(char ***map)
 {
 	char	**ptr;
@@ -48,10 +64,14 @@ void	ft_free_cmds(t_cmd *cmds)
 		if (cmds->path)
 			free(cmds->path);
 		// CERRAR FDS Y EVITAR LEAKS
-		if (cmds->fd_in > 2)
-			close(cmds->fd_in);
-		if (cmds->fd_out > 2)
-			close(cmds->fd_out);	
+		//if (cmds->fd_in > 2)
+		//	close(cmds->fd_in);
+		//if (cmds->fd_out > 2)
+		//	close(cmds->fd_out);	
+		// [AÑADIR] Liberar la lista de redirecciones
+        if (cmds->redirs)
+            ft_lstclear(&cmds->redirs, del_redir);
+
 		// 3. Liberar la estructura en sí
 		free(cmds);
 		cmds = tmp;

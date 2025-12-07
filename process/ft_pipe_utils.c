@@ -33,7 +33,8 @@ void	config_pipes(t_cmd *cmd, int *pipefd, int prev_fd)
 /* 2. Aplica redirecciones de archivo (<, >, >>) */
 /* NOTA BASH: Las redirecciones tienen prioridad sobre los pipes.
       Si un comando tiene '>', escribirá en el archivo, no en el pipe. */
-void	apply_redirections(t_cmd *cmd)
+/*
+	  void	apply_redirections(t_cmd *cmd)
 {
 	if (cmd->fd_in != 0)
 	{
@@ -47,15 +48,19 @@ void	apply_redirections(t_cmd *cmd)
 		dup2(cmd->fd_out, STDOUT_FILENO);
 		close(cmd->fd_out);
 	}
-}
+}*/
 
 /* 3. Cierra los FDs en el proceso padre para evitar leaks */
 void	close_fds(t_cmd *cmd, int prev_fd)
 {
+    (void)cmd; // Ya no usamos 'cmd' aquí, solo 'prev_fd'
+    
 	if (prev_fd != 0)
 		close(prev_fd);
-	if (cmd->fd_in != 0)
-		close(cmd->fd_in);
-	if (cmd->fd_out != 1)
-		close(cmd->fd_out);
+        
+    // [ELIMINAR] Todo lo referente a cmd->fd_in y cmd->fd_out
+	// if (cmd->fd_in != 0)
+	// 	close(cmd->fd_in);
+	// if (cmd->fd_out != 1)
+	// 	close(cmd->fd_out);
 }

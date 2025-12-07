@@ -22,8 +22,7 @@ t_cmd	*ft_new_cmd(void)
 		return (NULL);
 	cmd->args = NULL;
 	cmd->path = NULL;
-	cmd->fd_in = 0;
-	cmd->fd_out = 1;
+	cmd->redirs = NULL;
 	cmd->next = NULL;
 	return (cmd);
 }
@@ -41,8 +40,8 @@ int	is_redir(char *str)
 		return (1);
 	return (0);
 }
-
-/* Abre el archivo correspondiente o lanza el heredoc */
+/*
+ Abre el archivo correspondiente o lanza el heredoc 
 void	open_file(t_cmd *cmd, char *symbol, char *file)
 {
     // CASO HEREDOC (<<)
@@ -71,4 +70,4 @@ void	open_file(t_cmd *cmd, char *symbol, char *file)
 		else
 			cmd->fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	}
-}
+}*/

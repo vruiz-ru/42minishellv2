@@ -93,13 +93,15 @@ SRCS6 = $(INPUT_DIR)ft_prompt.c $(INPUT_DIR)ft_readinput.c
 
 SRCS7 = $(PROCESS_DIR)ft_fork_process.c \
 		$(PROCESS_DIR)ft_exec_utils.c \
-		$(PROCESS_DIR)ft_pipe_utils.c
+		$(PROCESS_DIR)ft_pipe_utils.c \
+		$(PROCESS_DIR)ft_exec_redirs.c
 
 SRCS8 = $(UTILS_DIR)ft_free.c $(UTILS_DIR)ft_init.c \
         $(UTILS_DIR)ft_clear_strtok.c $(UTILS_DIR)ft_construct.c \
         $(UTILS_DIR)ft_addspace.c $(UTILS_DIR)ft_safeadd_nodes.c\
         $(UTILS_DIR)ft_appendre.c $(UTILS_DIR)ft_heredoc.c \
-        $(UTILS_DIR)ft_reinput.c $(UTILS_DIR)ft_reoutput.c
+        $(UTILS_DIR)ft_reinput.c $(UTILS_DIR)ft_reoutput.c \
+		$(UTILS_DIR)ft_io_utils.c
         
 SRCS9 = $(MAIN_DIR)main.c
 

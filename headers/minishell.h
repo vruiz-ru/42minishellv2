@@ -46,7 +46,9 @@ void		ft_safeadd_tokens(t_list **tokens, char **token);
 // En mini/headers/minishell.h
 t_cmd   *ft_new_cmd(void);
 int     is_redir(char *str);
-void    open_file(t_cmd *cmd, char *symbol, char *file);
+void    ft_add_io(t_cmd *cmd, t_io_type type, char *path, int fd);
+int     ft_apply_redirs(t_cmd *cmd);
+//void    open_file(t_cmd *cmd, char *symbol, char *file);
 int			ft_tokens_to_cmds(t_process *process);
 char *ft_get_cmd_path(char *cmd, char **envp);
 void ft_free_array(char **arr);

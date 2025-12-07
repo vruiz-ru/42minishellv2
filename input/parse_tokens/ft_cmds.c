@@ -12,6 +12,25 @@
 
 #include "../../headers/minishell.h"
 
+
+static void parse_redir(t_cmd *node, char *redir, char *file)
+{
+    int heredoc_fd;
+
+    if (!ft_strncmp(redir, "<<", 3))
+    {
+        // El heredoc es el único que ejecutamos YA para capturar el input
+        heredoc_fd = ft_heredoc(file);
+        ft_add_io(node, IO_HEREDOC, NULL, heredoc_fd);
+    }
+    else if (!ft_strncmp(redir, ">>", 3))
+        ft_add_io(node, IO_APPEND, file, -1);
+    else if (!ft_strncmp(redir, "<", 2))
+        ft_add_io(node, IO_IN, file, -1);
+    else if (!ft_strncmp(redir, ">", 2))
+        ft_add_io(node, IO_OUT, file, -1);
+}
+
 static int	count_args(t_list *tokens)
 {
 	int		i;
@@ -35,6 +54,7 @@ static int	count_args(t_list *tokens)
 	return (i);
 }
 
+// Versión final de fill_cmd: Solo parsea argumentos y registra redirecciones
 static void	fill_cmd(t_cmd *node, t_list **tokens)
 {
 	int		i;
@@ -46,14 +66,22 @@ static void	fill_cmd(t_cmd *node, t_list **tokens)
 		str = (char *)(*tokens)->content;
 		if (is_redir(str))
 		{
-			*tokens = (*tokens)->next;
+			*tokens = (*tokens)->next; // Saltamos el símbolo (<, >>...)
+            
+			// Saltamos espacios hasta encontrar el archivo
 			while (*tokens && !ft_strncmp((*tokens)->content, " ", 2))
 				*tokens = (*tokens)->next;
+            
 			if (*tokens)
-				open_file(node, str, (char *)(*tokens)->content);
+                // Registramos la redirección para que la abra el HIJO más tarde
+				parse_redir(node, str, (char *)(*tokens)->content);
 		}
-		else if (ft_strncmp(str, " ", 2) != 0)
+		else if (ft_strncmp(str, " ", 2) != 0) // Si no es espacio ni redirección
+		{
+            // Añadimos el argumento tal cual (sin concatenación especial)
 			node->args[i++] = ft_strdup(str);
+		}
+		
 		if (*tokens)
 			*tokens = (*tokens)->next;
 	}

@@ -56,7 +56,9 @@ static void child_process(t_process *proc, t_cmd *cmd, int *pipefd, int prev)
         signal(SIGQUIT, SIG_DFL);
 
         config_pipes(cmd, pipefd, prev);
-        apply_redirections(cmd);
+       // apply_redirections(cmd);
+		if (ft_apply_redirs(cmd) != 0) 
+            exit(1);
         int ret = ft_builtins(proc, cmd);
 		if (ret != -1) // Si era un builtin (retorno != -1)
     		exit(ret); // Salimos con SU código (0 o 1), no con 0 inventado
