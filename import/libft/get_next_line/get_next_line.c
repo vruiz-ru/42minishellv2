@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
- 
+
 static int	ft_append_nodes(t_list **lst, int fd, int *reading)
 {
 	char	*line;

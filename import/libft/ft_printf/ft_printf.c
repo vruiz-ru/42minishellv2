@@ -34,14 +34,14 @@ static int	ft_parse_values(va_list *args, t_flags *flags, char type)
 
 static int	ft_parse_main(va_list *args, t_flags *flags, const char *format)
 {
-	int		width;
+	int	width;
 
 	width = 0;
 	while (*format)
 	{
 		if (*format == '%' && *(++format))
 		{
-            ft_memset(flags, 0, sizeof(t_flags));
+			ft_memset(flags, 0, sizeof(t_flags));
 			format = ft_flagadd(args, flags, format);
 			width += ft_parse_values(args, flags, *format);
 		}
@@ -57,9 +57,9 @@ static int	ft_parse_main(va_list *args, t_flags *flags, const char *format)
 
 int	ft_printf(const char *format, ...)
 {
-	va_list		pv;
-	t_flags		*flags;
-	int			width;
+	va_list	pv;
+	t_flags	*flags;
+	int		width;
 
 	flags = malloc(sizeof(t_flags));
 	if (!flags)

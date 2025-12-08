@@ -29,6 +29,7 @@ static void	write_to_tmp(int fd, char *line)
 	ft_putstr_fd("\n", fd);
 	free(line);
 }
+
 static int	process_heredoc_loop(int fd, char *delimiter)
 {
 	char	*line;

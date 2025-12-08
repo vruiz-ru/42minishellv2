@@ -15,7 +15,7 @@
 void	free_partial(char **map, size_t count)
 {
 	if (!map)
-		return;
+		return ;
 	while (count > 0)
 	{
 		count--;
@@ -25,7 +25,7 @@ void	free_partial(char **map, size_t count)
 
 char	**create_new(char **map, char *add_last)
 {
-	char    **new_map;
+	char	**new_map;
 	int		i;
 
 	new_map = malloc((ft_mapsize(map) + 2) * sizeof(char *));
@@ -41,7 +41,7 @@ char	**create_new(char **map, char *add_last)
 	}
 	new_map[i] = ft_strdup(add_last);
 	if (new_map[i] == NULL)
-		return (free_partial(new_map, i),  free(new_map), NULL);
+		return (free_partial(new_map, i), free(new_map), NULL);
 	new_map[i + 1] = NULL;
 	return (new_map);
 }
@@ -58,7 +58,7 @@ int	copy_elements(char **map, char **new_map, size_t skip)
 		if (i == skip)
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		new_map[j] = ft_strdup(map[i]);
 		if (!new_map[j])
@@ -73,7 +73,7 @@ int	copy_elements(char **map, char **new_map, size_t skip)
 int	right_length(char *item)
 {
 	char	*ptr;
-	
+
 	ptr = ft_strchr(item, '=');
 	if (ptr)
 		return (ptr - item);

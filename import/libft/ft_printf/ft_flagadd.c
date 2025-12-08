@@ -40,7 +40,7 @@ static const char	*ft_addleft(va_list *args, t_flags *flags, const char *f)
 	tmp[1] = '\0';
 	if (*f == '-')
 	{
-        flags->width = 0;
+		flags->width = 0;
 		while (*f == '-')
 		{
 			f++;
@@ -66,7 +66,7 @@ static const char	*ft_addzero(va_list *args, t_flags *flags, const char *f)
 	if (*f == '0')
 	{
 		f++;
-        flags->width = 0;
+		flags->width = 0;
 		if (*f == '*')
 		{
 			flags->width = va_arg(*args, int);

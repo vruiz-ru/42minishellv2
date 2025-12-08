@@ -13,12 +13,12 @@
 #ifndef MACROS_H
 # define MACROS_H
 
-#define PROMPT_ARROW	" 👉 "
-#define PROMPT_HOME		"minishell:~ 👉 "
-#define HOME	"~"
-#define REPLY	"💬"
-#define WRONG	"❓"
-#define NAME	"minishell42"
-#define CLEAR	"\e[1;1H\e[2J"	// \033[H\033[J
+# define PROMPT_ARROW " 👉 "
+# define PROMPT_HOME "minishell:~ 👉 "
+# define HOME "~"
+# define REPLY "💬"
+# define WRONG "❓"
+# define NAME "minishell42"
+# define CLEAR "\e[1;1H\e[2J" // \033[H\033[J
 
 #endif

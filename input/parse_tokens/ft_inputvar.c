@@ -19,14 +19,14 @@ static char	*safe_value(char *line)
 	bool	dq;
 	bool	sq;
 	size_t	len;
-	
+
 	idx_line = 0;
 	dq = false;
 	sq = false;
 	while (line[idx_line])
 	{
 		if (line[idx_line] == ' ' && !dq && !sq)
-			break;
+			break ;
 		else if (line[idx_line] == '"' && !sq)
 			dq = !dq;
 		else if (line[idx_line] == '\'' && !dq)
@@ -35,9 +35,9 @@ static char	*safe_value(char *line)
 	}
 	len = idx_line;
 	value = ft_substr(line, 0, len);
-	if(!value)
+	if (!value)
 		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-	return(value);
+	return (value);
 }
 
 static char	*construct_variable(char *name, char *value)
@@ -80,7 +80,7 @@ static void	trimmer(char **line, char *delim)
 		}
 	}
 	free(*line);
-	*line = res;	
+	*line = res;
 }
 
 static int	add_to_process_env(t_process *process, char *name, char *value)
@@ -104,21 +104,12 @@ int	ft_inputvar(t_process *process, char **line)
 	char	*name;
 	char	*value;
 
-	// CASO 1: Es una variable ($VAR)
 	if (*(*line) == '$')
 	{
-		// Intentamos expandirla
 		if (return_value(process, *line + 1))
-			return (1); // Se encontró y se añadió
-		
-		// <--- FIX: Si NO se encontró, es una variable vacía.
-		// Retornamos 1 (éxito) para que el parser continúe sin añadir nada,
-		// en lugar de caer al código de abajo y crashear.
-		return (1); 
+			return (1);
+		return (1);
 	}
-
-	// CASO 2: Es una asignación (VAR=VAL)
-	// Solo llegamos aquí si NO empezaba por $
 	name = ft_strtok(*line, "=");
 	value = safe_value(ft_strchr(*line, '='));
 	process->is_variable = true;

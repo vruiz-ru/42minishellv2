@@ -11,101 +11,45 @@
 /* ************************************************************************** */
 
 #include "builtins.h"
-/*
-
-On success, zero is returned.  On error, -1 is returned, and  errno  is
-	   set to indicate the error.
-".."	~= moving up one folder
-"~"		= home directory
-"-"		= Switches to the previous working directory.
-"."		= Stays in the current directory (no actual movement).
-"/" 	= Moves to the root directory.
-"--" 	= End of options; the rest is taken as the directory path (useful if a directory name starts with a dash).
-"/absolute/path or cd relative/path"= Moves to the specified absolute or relative path.
-
-!!!! new: -L -P valid options:
-
-	-L: Follow symbolic links (default behavior). -L stands for link
-	example:
-			first we create an example 
-					$>: mkdir /home/user/Documents/dir_example
-			second make an symbol link for a path
-					$>: ln -s /home/user/Documents/projectA_example ~/symlink_to_example
-			third we move to the symbol link
-					$>: cd -L ~/symlink_to_example
-					$>~/symlink_to_example: *we are here*
-
-	-P: Do not follow symbolic links. -P stands for original path
-	example:
-			first we create an example 
-					$>: mkdir /home/user/Documents/dir_example
-			second make an symbol link for a path
-					$>: ln -s /home/user/Documents/projectA_example ~/symlink_to_example
-			third we move to the symbol link
-					$>: cd -L ~/symlink_to_example
-					$>/home/user/Documents/projectA_example: *we are here*
-	
-					
-!!!! resolve "$> cd" simple to go to home directory
-
-*/
 
 static int	ft_home(t_process *process)
 {
 	char	*home_path;
 
-	// 1. Búsqueda dinámica: Leemos el entorno ACTUAL
 	home_path = ft_getvar(process->envs->parent_env, "HOME");
-	
-	// 2. Si no existe (unset HOME), error de Bash
 	if (!home_path)
 	{
 		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
 		return (1);
 	}
-
-	// 3. Intentamos movernos
 	if (chdir(home_path) != 0)
 	{
 		ft_putstr_fd("minishell: cd: ", 2);
-		perror(home_path); // Ojo: perror usa errno, que lo setea chdir
+		perror(home_path);
 		free(home_path);
 		return (1);
 	}
-	
-	// 4. Actualizamos y limpiamos
 	ft_setpaths(process);
 	free(home_path);
 	return (0);
 }
 
-int ft_cd(t_process *process, t_cmd *cmd)
+int	ft_cd(t_process *process, t_cmd *cmd)
 {
-    char    *arg;
+	char	*arg;
 
-    // 1. Si no hay argumentos ("cd"), vamos a casa
-    if (!cmd->args[1])
-        return (ft_home(process));
-    
-    arg = cmd->args[1];
-
-    // 2. Revisar opciones inválidas (comienzan por - pero no son - o --)
-    if (invalid_options(arg))
-        return (ft_putstr_fd("cd: invalid options\n", 2), 1);
-
-    // 3. Features específicas
-    if (!ft_strncmp(arg, "..", 2))
-        return (up_feature(process, cmd));
-        
-    if (arg[0] == '~')
-        return (home_feature(process, cmd));
-        
-    if (!ft_strncmp(arg, "-", 2) && !arg[1])
-        return (back_feature(process, cmd));
-        
-    if (!ft_strncmp(arg, "--", 3)) // Solo -- sin nada más
-        return (dash_feature(process, cmd));
-
-    // 4. Si no es feature, es un path normal o root
-    return (path_input(process, cmd));
+	if (!cmd->args[1])
+		return (ft_home(process));
+	arg = cmd->args[1];
+	if (invalid_options(arg))
+		return (ft_putstr_fd("cd: invalid options\n", 2), 1);
+	if (!ft_strncmp(arg, "..", 2))
+		return (up_feature(process, cmd));
+	if (arg[0] == '~')
+		return (home_feature(process, cmd));
+	if (!ft_strncmp(arg, "-", 2) && !arg[1])
+		return (back_feature(process, cmd));
+	if (!ft_strncmp(arg, "--", 3))
+		return (dash_feature(process, cmd));
+	return (path_input(process, cmd));
 }

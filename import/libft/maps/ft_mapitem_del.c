@@ -33,4 +33,3 @@ int	ft_mapitem_del(char ***map_ref, size_t del_idx)
 	*map_ref = new_map;
 	return (1);
 }
-

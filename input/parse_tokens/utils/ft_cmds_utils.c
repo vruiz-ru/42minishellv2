@@ -27,19 +27,19 @@ t_cmd	*ft_new_cmd(void)
 	return (cmd);
 }
 
-/* Detecta si es cualquier redirección */
 int	is_redir(char *str)
 {
-	if (!ft_strncmp(str, "<<", 3)) // << (len 2 + null)
+	if (!ft_strncmp(str, "<<", 3))
 		return (1);
-	if (!ft_strncmp(str, ">>", 3)) // >>
+	if (!ft_strncmp(str, ">>", 3))
 		return (1);
-	if (!ft_strncmp(str, "<", 2))  // <
+	if (!ft_strncmp(str, "<", 2))
 		return (1);
-	if (!ft_strncmp(str, ">", 2))  // >
+	if (!ft_strncmp(str, ">", 2))
 		return (1);
 	return (0);
 }
+
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new)
 {
 	t_cmd	*temp;

@@ -12,7 +12,6 @@
 
 #include "../builtins.h"
 
-/* Comprueba si es un builtin que debe correr en el PADRE (para persistir) */
 int	ft_is_parent_builtin(t_cmd *cmd)
 {
 	char	*p;
@@ -20,9 +19,8 @@ int	ft_is_parent_builtin(t_cmd *cmd)
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
 	p = cmd->args[0];
-	// Solo estos modifican el entorno o el estado del shell padre
-	if (!ft_strncmp(p, "cd", 3) || !ft_strncmp(p, "export", 7) || \
-		!ft_strncmp(p, "unset", 6) || !ft_strncmp(p, "exit", 5))
+	if (!ft_strncmp(p, "cd", 3) || !ft_strncmp(p, "export", 7) || !ft_strncmp(p,
+			"unset", 6) || !ft_strncmp(p, "exit", 5))
 		return (1);
 	return (0);
 }

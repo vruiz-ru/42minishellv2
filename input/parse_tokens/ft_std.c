@@ -24,11 +24,6 @@ static char	*get_content(t_process *process, char *line)
 	}
 	else
 		content = ft_strtok(NULL, " ");
-	
-	// <--- FIX: Eliminamos el check de error aquí.
-	// Si content es NULL, puede ser fin de línea, no necesariamente error de malloc.
-	// ft_strtok ya imprime "Failed malloc!" internamente si falla de verdad.
-	
 	return (content);
 }
 
@@ -39,11 +34,6 @@ int	ft_std(t_process *process, char *line)
 
 	if (ft_strchr(line, '"') || ft_strchr(line, '\''))
 		return (0);
-	
-	// En ft_std NO tocamos process->in_heredoc.
-	// Por defecto es false (inicializado), así que las variables SE EXPANDEN.
-	// Esto es correcto para << $HOME (sin comillas).
-	
 	token = get_content(process, line);
 	while (token)
 	{

@@ -16,12 +16,12 @@ static int	static_variable(char *str)
 {
 	if (ft_strchr(str, '='))
 		return (1);
-	return (0);	
+	return (0);
 }
 
 static char	*copy_content(char *dst, char *src)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	if (!src)

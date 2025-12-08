@@ -25,13 +25,9 @@ static int	parse_aux(t_process *process, char **res, char **var_name)
 		*res = ft_strjoin_free(*res, *var_name);
 		*var_name = NULL;
 	}
-	
-	// <--- FIX CRÍTICO: Si la variable no existe, res es NULL.
-	// Esto NO es un error, es una cadena vacía.
 	if (!*res)
-		*res = ft_strdup(""); // Asignamos vacío para continuar
-	
-	if (!*res) // Si falla el strdup, entonces sí es error
+		*res = ft_strdup("");
+	if (!*res)
 		return (0);
 	return (1);
 }
@@ -57,8 +53,7 @@ char	*ft_parse_token(t_process *process, char *content, char token)
 			i++;
 		}
 		else if (!parse_aux(process, &res, &var_name))
-            return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-			
+			return (perror("malloc"), exit(EXIT_FAILURE), NULL);
 	}
-	return (free(content), res);	
+	return (free(content), res);
 }

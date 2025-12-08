@@ -76,6 +76,7 @@ static void	fill_cmd(t_cmd *node, t_list **tokens)
 	}
 	node->args[i] = NULL;
 }
+
 static t_cmd	*create_one_cmd(t_list **tokens)
 {
 	t_cmd	*new;
@@ -95,8 +96,8 @@ static t_cmd	*create_one_cmd(t_list **tokens)
 
 int	ft_tokens_to_cmds(t_process *process)
 {
-	t_list *curr;
-	t_cmd *new_node;
+	t_list	*curr;
+	t_cmd	*new_node;
 
 	curr = process->tokens;
 	while (curr)

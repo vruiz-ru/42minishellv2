@@ -12,12 +12,12 @@
 
 #include "maps.h"
 
-int  ft_mapitem_index(char **map, char *str)
+int	ft_mapitem_index(char **map, char *str)
 {
-	size_t  mv_len;
+	size_t	mv_len;
 	size_t	sv_len;
-	size_t  idx;
-	
+	size_t	idx;
+
 	if (!map || !*map || !str || !*str)
 		return (-1);
 	sv_len = right_length(str);

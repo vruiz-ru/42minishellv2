@@ -35,5 +35,5 @@ char	*ft_addchar(char *str, char ch)
 	new[i] = '\0';
 	free(str);
 	str = NULL;
-	return (new);	
+	return (new);
 }

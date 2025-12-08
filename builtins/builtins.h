@@ -13,13 +13,12 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-#include "../headers/macros.h"
-#include "../headers/structs.h"
-#include "../headers/minishell.h"
-#include "../import/libft/libft.h"
-#include <stdio.h>
-#include <stdlib.h>
-
+# include "../headers/macros.h"
+# include "../headers/minishell.h"
+# include "../headers/structs.h"
+# include "../import/libft/libft.h"
+# include <stdio.h>
+# include <stdlib.h>
 
 // BUITLINS/UTILS
 //      CD
@@ -29,21 +28,21 @@ int		home_feature(t_process *process, t_cmd *cmd);
 int		back_feature(t_process *process, t_cmd *cmd);
 int		root_feature(t_process *process, t_cmd *cmd);
 void	ft_setpaths(t_process *process);
-void    update_logical_parent(t_process *process);
+void	update_logical_parent(t_process *process);
 int		invalid_options(char *token);
-int 	path_input(t_process *process, t_cmd *cmd);
+int		path_input(t_process *process, t_cmd *cmd);
 char	*ft_getcwd(void);
 char	*ft_getvar(char **envp, char *var_name);
-int ft_is_parent_builtin(t_cmd *cmd);
+int		ft_is_parent_builtin(t_cmd *cmd);
 // COMMANDS
-int     ft_builtins(t_process *process, t_cmd *cmd); // <--- CAMBIO
-int     ft_echo(t_process *process, t_cmd *cmd);     // <--- CAMBIO
-int     ft_cd(t_process *process, t_cmd *cmd);       // <--- CAMBIO
-int     ft_pwd(t_process *process, t_cmd *cmd);      // <--- CAMBIO
-int     ft_env(t_process *process, t_cmd *cmd);      // <--- CAMBIO
-int     ft_export(t_process *process, t_cmd *cmd);   // <--- CAMBIO
-int     ft_unset(t_process *process, t_cmd *cmd);    // <--- CAMBIO
-int     ft_exit(t_process *process, t_cmd *cmd);     // <--- CAMBIO
-int     ft_clear(t_process *process, t_cmd *cmd);	// <--- CAMBIO	
+int		ft_builtins(t_process *process, t_cmd *cmd);
+int		ft_echo(t_process *process, t_cmd *cmd);
+int		ft_cd(t_process *process, t_cmd *cmd);
+int		ft_pwd(t_process *process, t_cmd *cmd);
+int		ft_env(t_process *process, t_cmd *cmd);
+int		ft_export(t_process *process, t_cmd *cmd);
+int		ft_unset(t_process *process, t_cmd *cmd);
+int		ft_exit(t_process *process, t_cmd *cmd);
+int		ft_clear(t_process *process, t_cmd *cmd);
 
 #endif

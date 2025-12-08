@@ -60,8 +60,8 @@ static int	set_outfile(char *path, t_io_type type)
 
 int	ft_apply_redirs(t_cmd *cmd)
 {
-	t_list *curr;
-	t_io *io;
+	t_list	*curr;
+	t_io	*io;
 
 	curr = cmd->redirs;
 	while (curr)

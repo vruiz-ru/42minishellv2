@@ -12,7 +12,7 @@
 
 #include "../../input.h"
 
-int ft_specialvars(t_process *proc, char **var_name, char ch)
+int	ft_specialvars(t_process *proc, char **var_name, char ch)
 {
 	proc->is_special = false;
 	if (ch == '$')

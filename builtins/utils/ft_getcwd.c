@@ -18,7 +18,7 @@ char	*ft_getcwd(void)
 	char	*res;
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
-		return (NULL); 
+		return (NULL);
 	res = ft_strdup(cwd);
 	if (!res)
 		return (perror("malloc"), NULL);

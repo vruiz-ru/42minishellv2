@@ -26,7 +26,7 @@ int	contains_variable(char *line)
 	return (0);
 }
 
-int return_value(t_process *process, char *line)
+int	return_value(t_process *process, char *line)
 {
 	char	**p_env;
 	char	**s_env;
@@ -38,10 +38,10 @@ int return_value(t_process *process, char *line)
 	p_env = process->envs->parent_env;
 	s_env = process->envs->static_env;
 	if (length == 1 && ft_specialvars(process, &value, *line))
-    {
-        ft_safeadd_tokens(&process->tokens, &value);
-        return (1);
-    }
+	{
+		ft_safeadd_tokens(&process->tokens, &value);
+		return (1);
+	}
 	value = ft_getvar(p_env, line);
 	if (value == NULL)
 		value = ft_getvar(s_env, line);
@@ -50,10 +50,9 @@ int return_value(t_process *process, char *line)
 	ft_safeadd_tokens(&process->tokens, &value);
 	return (1);
 }
-/* Verifica si el siguiente char justifica iniciar la expansión */
+
 int	is_var_start(char c)
 {
-	// Aceptamos alfanuméricos, guion bajo, interrogación ($?) y el propio $ ($$)
 	if (ft_isalnum(c) || c == '_' || c == '?' || c == '$')
 		return (1);
 	return (0);

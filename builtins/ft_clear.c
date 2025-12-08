@@ -14,8 +14,8 @@
 
 int	ft_clear(t_process *process, t_cmd *cmd)
 {
-    (void)process;
+	(void)process;
 	(void)cmd;
 	ft_printf("%s", CLEAR);
-    return (0);
+	return (0);
 }

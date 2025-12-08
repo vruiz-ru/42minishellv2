@@ -14,7 +14,7 @@
 
 int	ft_env(t_process *process, t_cmd *cmd)
 {
-	char    **ptr;
+	char	**ptr;
 
 	(void)cmd;
 	if (!process || !*process->envs->parent_env)

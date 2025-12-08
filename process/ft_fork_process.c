@@ -86,6 +86,16 @@ static void	wait_children(t_process *process, int last_pid)
 		;
 }
 
+static void	update_parent_fds(t_cmd *cmd, int *pipefd, int *prev_fd)
+{
+	close_fds(cmd, *prev_fd);
+	if (cmd->next)
+	{
+		close(pipefd[1]);
+		*prev_fd = pipefd[0];
+	}
+}
+
 int	ft_fork_process(t_process *process)
 {
 	t_cmd	*cmd;
@@ -93,9 +103,9 @@ int	ft_fork_process(t_process *process)
 	int		prev_fd;
 	pid_t	last_pid;
 
-	last_pid = 0;
 	cmd = process->commands;
 	prev_fd = 0;
+	last_pid = 0;
 	signal(SIGINT, SIG_IGN);
 	while (cmd)
 	{
@@ -103,12 +113,7 @@ int	ft_fork_process(t_process *process)
 			return (perror("pipe"), 0);
 		child_process(process, cmd, pipefd, prev_fd);
 		last_pid = process->pid;
-		close_fds(cmd, prev_fd);
-		if (cmd->next)
-		{
-			close(pipefd[1]);
-			prev_fd = pipefd[0];
-		}
+		update_parent_fds(cmd, pipefd, &prev_fd);
 		cmd = cmd->next;
 	}
 	if (prev_fd != 0)

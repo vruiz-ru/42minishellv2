@@ -32,7 +32,7 @@ int	ft_mapitem_add(char ***map_ref, char *item)
 	{
 		ft_mapfree(map_ref);
 		*map_ref = new;
-		return (1);	
+		return (1);
 	}
 	return (0);
 }

@@ -13,16 +13,16 @@
 #ifndef MAPS_H
 # define MAPS_H
 
-#include <unistd.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <limits.h>
-#include "../strings/strings.h"
+# include "../strings/strings.h"
+# include <limits.h>
+# include <stddef.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 // UTILS
 void	free_partial(char **map, size_t count);
 char	**create_new(char **map, char *add_last);
-int	    copy_elements(char **map, char **new_map, size_t skip);
+int		copy_elements(char **map, char **new_map, size_t skip);
 int		right_length(char *item);
 // FUNCTIONS
 size_t	ft_mapsize(char **map);

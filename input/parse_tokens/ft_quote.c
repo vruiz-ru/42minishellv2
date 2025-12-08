@@ -18,29 +18,18 @@ static int	reconstruct_token(t_process *process, char *line, char delim)
 	int		start_idx;
 	int		end_idx;
 
-	// 1. Procesamos lo que hay ANTES de las comillas (ej: "<< ")
 	start_idx = first_occurrence(process, line, delim);
 	if (start_idx < 0)
 		return (-1);
-	
-	// <--- FIX MAESTRO:
-	// Justo después de procesar el pre-texto, comprobamos si añadimos un "<<"
-	// Si es así, activamos in_heredoc INMEDIATAMENTE para la parte entre comillas.
 	if (check_heredoc_trigger(process->tokens))
 		process->in_heredoc = true;
-	// -----------------
-
 	start_idx += 1;
 	end_idx = quote_pos(line, delim, 2) - start_idx;
 	res = ft_substr(line, start_idx, end_idx);
 	if (!res)
 		return (perror("malloc"), exit(EXIT_FAILURE), 0);
-	
-	// 2. Procesamos lo que hay DENTRO de las comillas (ej: "$HOME")
-	// Como in_heredoc ya está actualizado, si es true, NO expandirá.
 	if (delim == '"')
 		res = ft_parse_token(process, res, 'd');
-	
 	ft_safeadd_tokens(&process->tokens, &res);
 	return (1);
 }
@@ -48,7 +37,6 @@ static int	reconstruct_token(t_process *process, char *line, char delim)
 static char	*standard_token(t_process *process, char *line)
 {
 	char	*added;
-	char	*line_left;
 	int		i;
 	int		len;
 
@@ -65,16 +53,13 @@ static char	*standard_token(t_process *process, char *line)
 	if (!added)
 		return (free(line), NULL);
 	ft_safeadd_tokens(&process->tokens, &added);
-	if (line[i + len])
-	{
-		line_left = ft_strdup(line + i + len);
-		if (!line_left)
-			return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-		ft_addspace(&process->tokens);
-		free(line);
-		return (line_left);
-	}
-	return (free(line), NULL);
+	if (!line[i + len])
+		return (free(line), NULL);
+	ft_addspace(&process->tokens);
+	added = ft_strdup(line + i + len);
+	if (!added)
+		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
+	return (free(line), added);
 }
 
 static char	*quotes_token(t_process *process, char *line, char delim)

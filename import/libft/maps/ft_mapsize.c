@@ -15,7 +15,7 @@
 size_t	ft_mapsize(char **map)
 {
 	size_t	i;
-	
+
 	i = 0;
 	if (!map || !*map)
 		return (0);

@@ -14,8 +14,8 @@
 
 int	ft_mapitem_replace(char ***map, char *item, size_t idx)
 {
-	char    *temp;
-	
+	char	*temp;
+
 	if (!map || !*map || ft_mapsize(*map) <= idx)
 		return (0);
 	temp = ft_strdup(item);

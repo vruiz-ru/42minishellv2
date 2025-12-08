@@ -29,8 +29,8 @@ char	**ft_mapdup(char **map)
 	{
 		dup[i] = ft_strdup(map[i]);
 		if (!dup[i])
-            return (free_partial(dup, i),  free(dup), NULL);
-        i++;
+			return (free_partial(dup, i), free(dup), NULL);
+		i++;
 	}
 	dup[i] = NULL;
 	return (dup);

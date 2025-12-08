@@ -30,44 +30,25 @@ int	dash_feature(t_process *process, t_cmd *cmd)
 
 int	up_feature(t_process *process, t_cmd *cmd)
 {
-	char	*test_cwd;
-	char	*new_path;
+	char	*tmp;
 
 	(void)cmd;
-	// 1. Nos movemos físicamente
 	if (chdir("..") != 0)
+		return (ft_putstr_fd("minishell: cd: ..: No such file or directory\n",
+				2), 1);
+	tmp = ft_getcwd();
+	if (tmp)
+		return (free(tmp), update_logical_parent(process), ft_setpaths(process),
+			0);
+	ft_putstr_fd("cd: error retrieving current directory: getcwd: cannot access"\
+			" parent directories: No such file or directory\n", 2);
+	tmp = ft_strjoin(process->prompt->current_wd, "/..");
+	if (tmp)
 	{
-		ft_putstr_fd("minishell: cd: ..: No such file or directory\n", 2);
-		return (1);
+		free(process->prompt->current_wd);
+		process->prompt->current_wd = tmp;
 	}
-
-	// 2. Comprobamos si el terreno es firme (getcwd funciona)
-	test_cwd = ft_getcwd();
-	
-	if (test_cwd)
-	{
-		// CASO NORMAL: El directorio existe.
-		free(test_cwd);
-		update_logical_parent(process); // Cortamos la ruta limpiamente (/p1/p2 -> /p1)
-	}
-	else
-	{
-		// CASO DIRECTORIO BORRADO (Modo Bash)
-		// Imprimimos el error característico
-		ft_putstr_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", 2);
-		
-		// En lugar de cortar, añadimos "/.." al final para simular movimiento relativo ciego
-		new_path = ft_strjoin(process->prompt->current_wd, "/..");
-		if (new_path)
-		{
-			free(process->prompt->current_wd);
-			process->prompt->current_wd = new_path;
-		}
-	}
-
-	// 3. Sincronizamos (ft_setpaths respetará nuestro current_wd si getcwd falla)
-	ft_setpaths(process);
-	return (0);
+	return (ft_setpaths(process), 0);
 }
 
 int	home_feature(t_process *process, t_cmd *cmd)

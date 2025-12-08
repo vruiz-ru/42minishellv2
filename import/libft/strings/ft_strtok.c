@@ -52,15 +52,15 @@ static char	*trim_static(char *cpy, const char *delim)
 	size = 0;
 	if (!cpy[size])
 		return (free(cpy), NULL);
-	while (cpy[size] && ft_strchr(delim, cpy[size]))	// skip leading delim
+	while (cpy[size] && ft_strchr(delim, cpy[size]))
 		size++;
-	while (cpy[size] && !ft_strchr(delim, cpy[size]))	// skip last token
+	while (cpy[size] && !ft_strchr(delim, cpy[size]))
 		size++;
-	while (cpy[size] && ft_strchr(delim, cpy[size]))	// skip delim 
+	while (cpy[size] && ft_strchr(delim, cpy[size]))
 		size++;
 	if (!cpy[size])
 		return (free(cpy), NULL);
-	new = malloc((ft_strlen(cpy + size) + 1) * sizeof(char));		
+	new = malloc((ft_strlen(cpy + size) + 1) * sizeof(char));
 	if (!new)
 		return (failed_malloc());
 	i = 0;
@@ -73,7 +73,7 @@ static char	*trim_static(char *cpy, const char *delim)
 
 char	*ft_strtok(char *str, const char *delim)
 {
-	static char *cpy = NULL;
+	static char	*cpy = NULL;
 	char		*token;
 
 	if (str == NULL && cpy == NULL)

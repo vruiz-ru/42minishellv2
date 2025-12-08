@@ -15,7 +15,7 @@
 static int	assign_value(char **env, char **dest, int idx)
 {
 	char	*value;
-	
+
 	value = ft_strdup(ft_strchr(env[idx], '=') + 1);
 	if (!value)
 	{
@@ -36,9 +36,9 @@ static int	assign_value(char **env, char **dest, int idx)
 int	already_exists(char **env, char *var_name)
 {
 	int	idx;
-	int len_invar;
+	int	len_invar;
 	int	len_cmpvar;
-	
+
 	idx = 0;
 	len_cmpvar = ft_strlen(var_name);
 	while (env && env[idx])
@@ -46,9 +46,9 @@ int	already_exists(char **env, char *var_name)
 		len_invar = -1;
 		if (ft_strchr(env[idx], '='))
 			len_invar = ft_strchr(env[idx], '=') - env[idx];
-		if (len_invar && len_invar == len_cmpvar && \
-			!ft_strncmp(env[idx], var_name, len_invar))
-				return (idx);	
+		if (len_invar && len_invar == len_cmpvar && !ft_strncmp(env[idx],
+				var_name, len_invar))
+			return (idx);
 		idx++;
 	}
 	return (-1);
@@ -62,18 +62,13 @@ char	*clean_line(char *content, char token)
 
 	i = 0;
 	new = NULL;
-	seq = "`\"\\"; // Default para comillas dobles
-	
-	// CAMBIO CRÍTICO: En modo normal ('n'), no escapamos NADA.
-	// El subject dice "no interpretar \", así que vaciamos seq.
+	seq = "`\"\\";
 	if (token == 'n')
-		seq = ""; 
-	
+		seq = "";
 	while (content[i] != '\0')
 	{
-		// FIX: Añadimos check de content[i+1] para no escapar el final
-		// Y check de *seq para asegurarnos de que hay algo que escapar
-		if (content[i] == '\\' && content[i + 1] && *seq && ft_strchr(seq, content[i + 1]))
+		if (content[i] == '\\' && content[i + 1] && *seq && ft_strchr(seq,
+				content[i + 1]))
 		{
 			i++;
 			new = ft_addchar(new, content[i]);
@@ -95,14 +90,14 @@ void	scan_char(t_process *process, char *content, char **var_name, int *idx)
 		(*idx)++;
 		return ;
 	}
-	// CORRECCIÓN: Añadimos check !process->in_heredoc
-	else if (content[*idx] == '$' && !process->in_heredoc && is_var_start(content[*idx + 1]))
+	else if (content[*idx] == '$' && !process->in_heredoc
+		&& is_var_start(content[*idx + 1]))
 	{
 		(*idx)++;
 		if (ft_specialvars(process, var_name, content[*idx]))
 		{
 			(*idx)++;
-			return ;   
+			return ;
 		}
 		while (content[*idx] && !ft_strchr(stop, content[*idx]))
 		{

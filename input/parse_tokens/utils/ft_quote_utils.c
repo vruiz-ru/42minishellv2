@@ -12,80 +12,81 @@
 
 #include "../../input.h"
 
-static void	quote_pos_aux(char **str, int *idx, int *slash)
+static void	process_pre_quote(t_process *proc, char *chunk)
 {
-	while ((*str)[*idx] == '\\')
+	char	*token;
+	char	*parsed;
+
+	if (!chunk)
+		return ;
+	token = ft_strtok(chunk, " ");
+	while (token)
 	{
-		(*slash)++;
+		parsed = ft_parse_token(proc, token, 'n');
+		ft_safeadd_tokens(&proc->tokens, &parsed);
+		ft_addspace(&proc->tokens);
+		token = ft_strtok(NULL, " ");
+	}
+	free(chunk);
+}
+
+static int	skip_backslashes(char *str, int *idx)
+{
+	int	slash;
+
+	slash = 0;
+	while (str[*idx] == '\\')
+	{
+		slash++;
 		(*idx)++;
-	}   
+	}
+	return (slash);
 }
 
 int	quote_pos(char *str, char delim, int times)
 {
 	int	idx;
-	int	occurrence;
-	int quote_idx;
-	int slash;
-	
-	quote_idx = -1;
+	int	found;
+	int	slash;
+
 	idx = 0;
-	occurrence = 0;
+	found = 0;
 	while (str[idx])
 	{
-		slash = 0;
-		quote_pos_aux(&str, &idx, &slash);
+		slash = skip_backslashes(str, &idx);
 		if (!str[idx])
-			break;
-		if (str[idx] == delim && \
-            (idx == 0 || str[idx - 1] != '\\' || slash % 2 == 0))
+			break ;
+		if (str[idx] == delim && (idx == 0 || str[idx - 1] != '\\' || slash
+				% 2 == 0))
 		{
-			occurrence++;
-			quote_idx = idx;
+			found++;
+			if (found == times)
+				return (idx);
 		}
-		if (occurrence == times)
-			break;
 		idx++;
 	}
-	// <--- FIX CRÍTICO: Si no encontramos las 'times' ocurrencias, fallamos
-	if (occurrence < times)
-		return (-1);
-	// ---------------------------------------------------------------------
-	return (quote_idx);
+	return (-1);
 }
 
 int	first_occurrence(t_process *process, char *line, char delim)
 {
 	char	*chunk;
-	char	*token;
-	char	*parsed;
 	int		idx;
-	int     len;
+	int		len;
 
 	idx = quote_pos(line, delim, 1);
-	if (idx < 0)
-		return (-1);
-	if (idx > 0)
+	if (idx <= 0)
+		return (idx);
+	len = idx;
+	if (check_ansi_quote(line, idx, delim))
+		len = idx - 1;
+	chunk = ft_substr(line, 0, len);
+	if (!chunk)
 	{
-		len = idx;
-		// CORRECCIÓN: Usamos la función externa para recortar el $ si es $'
-		if (check_ansi_quote(line, idx, delim))
-			len = idx - 1;
-
-		chunk = ft_substr(line, 0, len);
-		if (!chunk)
-			return (perror("malloc"), exit(EXIT_FAILURE), 0);
-		
-		token = ft_strtok(chunk, " ");
-		while (token)
-		{
-			parsed = ft_parse_token(process, token, 'n');
-			ft_safeadd_tokens(&process->tokens, &parsed);
-			ft_addspace(&process->tokens); // Añadimos separador
-			token = ft_strtok(NULL, " ");
-		}
-		free(chunk);
+		perror("malloc");
+		exit(EXIT_FAILURE);
 	}
+	process_pre_quote(process, chunk);
 	return (idx);
 }
 
