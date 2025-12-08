@@ -15,6 +15,7 @@
 static void	process_pre_quote(t_process *proc, char *chunk)
 {
 	char	*token;
+	char	*next_token;
 	char	*parsed;
 
 	if (!chunk)
@@ -24,8 +25,10 @@ static void	process_pre_quote(t_process *proc, char *chunk)
 	{
 		parsed = ft_parse_token(proc, token, 'n');
 		ft_safeadd_tokens(&proc->tokens, &parsed);
-		ft_addspace(&proc->tokens);
-		token = ft_strtok(NULL, " ");
+		next_token = ft_strtok(NULL, " ");
+		if (next_token)
+			ft_addspace(&proc->tokens);
+		token = next_token;
 	}
 	free(chunk);
 }

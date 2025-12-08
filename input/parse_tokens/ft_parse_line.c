@@ -82,7 +82,7 @@ static char	*format_line(char *line)
 	fill_line(new, line, 0, 0);
 	return (new);
 }
-
+/*
 int	ft_parse_line(t_process *process)
 {
 	char	*cmd;
@@ -98,6 +98,36 @@ int	ft_parse_line(t_process *process)
 	process->line = fmt;
 	cmd = ft_strtok(process->line, " ");
 	ft_safeadd_tokens(&process->tokens, &cmd);
+	if (!ft_strchr(process->line, ' '))
+		return (ft_clear_strtok(), 1);
+	if (!ft_std(process, process->line) && !ft_quote(process, process->line))
+		return (ft_clear_strtok(), 0);
+	return (ft_clear_strtok(), 1);
+}*/
+
+int	ft_parse_line(t_process *process)
+{
+	char	*cmd;
+	char	*fmt;
+
+	if (contains_variable(process->line))
+		if (!ft_inputvar(process, &process->line))
+			return (ft_clear_strtok(), 0);
+	fmt = format_line(process->line);
+	if (!fmt)
+		return (perror("malloc"), ft_clear_strtok(), 0);
+	free(process->line);
+	process->line = fmt;
+	
+	// --- FIX: Delimitadores y Espacio Seguro ---
+	cmd = ft_strtok(process->line, " \t"); // Soporte para TABs
+	ft_safeadd_tokens(&process->tokens, &cmd);
+	
+	// Solo añadimos espacio si YA hay algo en la lista (evita args vacíos al inicio)
+	if (process->tokens) 
+		ft_addspace(&process->tokens);
+	// -------------------------------------------
+
 	if (!ft_strchr(process->line, ' '))
 		return (ft_clear_strtok(), 1);
 	if (!ft_std(process, process->line) && !ft_quote(process, process->line))

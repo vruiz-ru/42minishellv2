@@ -51,7 +51,7 @@ static int	count_args(t_list *tokens)
 	}
 	return (i);
 }
-
+/*
 static void	fill_cmd(t_cmd *node, t_list **tokens)
 {
 	int		i;
@@ -73,6 +73,52 @@ static void	fill_cmd(t_cmd *node, t_list **tokens)
 			node->args[i++] = ft_strdup(str);
 		if (*tokens)
 			*tokens = (*tokens)->next;
+	}
+	node->args[i] = NULL;
+}*/
+static int	is_separator(char *str)
+{
+	if (is_redir(str) || !ft_strncmp(str, " ", 2) || str[0] == '|')
+		return (1);
+	return (0);
+}
+
+static void	fill_cmd(t_cmd *node, t_list **tokens)
+{
+	int		i;
+	char	*accum;
+	char	*temp;
+
+	i = 0;
+	while (*tokens && ((char *)(*tokens)->content)[0] != '|')
+	{
+		if (is_redir((*tokens)->content))
+		{
+			char *redir = (*tokens)->content;
+			*tokens = (*tokens)->next;
+			while (*tokens && !ft_strncmp((*tokens)->content, " ", 2))
+				*tokens = (*tokens)->next;
+			if (*tokens)
+				parse_redir(node, redir, (char *)(*tokens)->content);
+			if (*tokens) *tokens = (*tokens)->next;
+		}
+		else if (!ft_strncmp((*tokens)->content, " ", 2))
+		{
+			*tokens = (*tokens)->next; // Ignorar espacios sueltos
+		}
+		else
+		{
+			// Concatenación Segura
+			accum = ft_strdup("");
+			while (*tokens && !is_separator((*tokens)->content))
+			{
+				temp = ft_strjoin(accum, (*tokens)->content);
+				free(accum);
+				accum = temp;
+				*tokens = (*tokens)->next;
+			}
+			node->args[i++] = accum;
+		}
 	}
 	node->args[i] = NULL;
 }

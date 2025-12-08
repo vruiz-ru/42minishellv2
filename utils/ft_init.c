@@ -61,8 +61,9 @@ int	init_parent(t_process **parent, char *name, char *envp[])
 	*parent = init();
 	if (!*parent)
 		return (0);
-	(*parent)->envs->parent_env = ft_mapdup(envp);
-	if (!(*parent)->envs->parent_env)
+	if (*envp)
+		(*parent)->envs->parent_env = ft_mapdup(envp);
+	if (*envp && !(*parent)->envs->parent_env)
 		return (perror("malloc"), exit(EXIT_FAILURE), 0);
 	(*parent)->prompt->shell_name = ft_strdup(name);
 	if (!(*parent)->prompt->shell_name)

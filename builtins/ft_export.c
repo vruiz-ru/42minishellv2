@@ -12,6 +12,57 @@
 
 #include "builtins.h"
 
+static void	print_export_line(char *str)
+{
+	char	*eq;
+
+	if (ft_strncmp(str, "_=", 2) == 0)
+		return ;
+	ft_putstr_fd("declare -x ", 1);
+	eq = ft_strchr(str, '=');
+	if (eq)
+	{
+		write(1, str, eq - str);
+		write(1, "=\"", 2);
+		ft_putstr_fd(eq + 1, 1);
+		write(1, "\"\n", 2);
+	}
+	else
+	{
+		ft_putstr_fd(str, 1);
+		write(1, "\n", 1);
+	}
+}
+
+static int	export_no_args(t_process *p)
+{
+	char	**dup;
+	char	*tmp;
+	int		i;
+	int		j;
+
+	dup = ft_mapdup(p->envs->parent_env);
+	if (!dup)
+		return (1);
+	i = -1;
+	while (dup[++i])
+	{
+		j = -1;
+		while (dup[++j + 1])
+		{
+			if (ft_strncmp(dup[j], dup[j + 1], ft_strlen(dup[j]) + 1) < 0)
+			{
+				tmp = dup[j];
+				dup[j] = dup[j + 1];
+				dup[j + 1] = tmp;
+			}
+		}
+	}
+	while (i-- > 0)
+		print_export_line(dup[i]);
+	return (ft_mapfree(&dup), 0);
+}
+
 static int	is_valid_id(char *str)
 {
 	int	i;
@@ -55,7 +106,7 @@ int	ft_export(t_process *process, t_cmd *cmd)
 
 	status = 0;
 	if (!cmd->args[1])
-		return (0);
+		return (export_no_args(process));
 	i = 1;
 	while (cmd->args[i])
 	{
@@ -67,9 +118,7 @@ int	ft_export(t_process *process, t_cmd *cmd)
 			status = 1;
 		}
 		else
-		{
 			export_logic(process, cmd->args[i]);
-		}
 		i++;
 	}
 	return (status);
