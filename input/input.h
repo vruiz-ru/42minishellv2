@@ -38,6 +38,7 @@ void	insert_value(t_process *process, char **dest, char *var_name);
 int		is_var_start(char c);
 int		check_ansi_quote(char *line, int idx, char delim);
 int		check_heredoc_trigger(t_list *tokens);
+int ft_tokenize_line(t_process *process, char *line);
 //		QUOTE
 char	quote_delimiter(char *line);
 int		quote_pos(char *str, char delim, int times);
@@ -48,4 +49,6 @@ int		ft_parse_line(t_process *process);
 char	*ft_parse_token(t_process *process, char *content, char token);
 int		ft_quote(t_process *process, char *line);
 int		ft_std(t_process *process, char *line);
+char	*ft_parse_delimiter(char *str, int *quoted);
+char	*ft_expand_heredoc_line(t_process *proc, char *str);
 #endif

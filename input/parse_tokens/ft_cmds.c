@@ -12,13 +12,23 @@
 
 #include "../../headers/minishell.h"
 
-static void	parse_redir(t_cmd *node, char *redir, char *file)
+/* 1. Modifica parse_redir para detectar la marca y pasar 'proc' */
+static void	parse_redir(t_cmd *node, char *redir, char *file, t_process *proc)
 {
 	int	heredoc_fd;
+	int	expand;
+	int	len;
 
 	if (!ft_strncmp(redir, "<<", 3))
 	{
-		heredoc_fd = ft_heredoc(file);
+		expand = 1; // Por defecto expandimos
+		len = ft_strlen(file);
+		if (len > 0 && file[len - 1] == 1) // ¿Tiene la marca mágica?
+		{
+			expand = 0; // Había comillas -> NO expandir
+			file[len - 1] = '\0'; // Borramos la marca
+		}
+		heredoc_fd = ft_heredoc(file, expand, proc); // <--- NUEVA FIRMA
 		ft_add_io(node, IO_HEREDOC, "heredoc", heredoc_fd);
 	}
 	else if (!ft_strncmp(redir, ">>", 3))
@@ -40,14 +50,14 @@ static int	count_args(t_list *tokens)
 		str = (char *)tokens->content;
 		if (is_redir(str))
 		{
-			tokens = tokens->next;
-			while (tokens && !ft_strncmp(tokens->content, " ", 2))
-				tokens = tokens->next;
+			tokens = tokens->next; // Salta símbolo
+			if (tokens) tokens = tokens->next; // Salta archivo
 		}
-		else if (ft_strncmp(str, " ", 2) != 0)
+		else
+		{
 			i++;
-		if (tokens)
 			tokens = tokens->next;
+		}
 	}
 	return (i);
 }
@@ -76,88 +86,66 @@ static void	fill_cmd(t_cmd *node, t_list **tokens)
 	}
 	node->args[i] = NULL;
 }*/
-static int	is_separator(char *str)
-{
-	if (is_redir(str) || !ft_strncmp(str, " ", 2) || str[0] == '|')
-		return (1);
-	return (0);
-}
 
-static void	fill_cmd(t_cmd *node, t_list **tokens)
+
+/* 2. Actualiza fill_cmd para recibir y pasar 'proc' */
+static void	fill_cmd(t_cmd *node, t_list **tokens, t_process *proc)
 {
 	int		i;
-	char	*accum;
-	char	*temp;
+	char	*str;
 
 	i = 0;
 	while (*tokens && ((char *)(*tokens)->content)[0] != '|')
 	{
-		if (is_redir((*tokens)->content))
+		str = (char *)(*tokens)->content;
+		if (is_redir(str))
 		{
-			char *redir = (*tokens)->content;
 			*tokens = (*tokens)->next;
-			while (*tokens && !ft_strncmp((*tokens)->content, " ", 2))
-				*tokens = (*tokens)->next;
 			if (*tokens)
-				parse_redir(node, redir, (char *)(*tokens)->content);
-			if (*tokens) *tokens = (*tokens)->next;
-		}
-		else if (!ft_strncmp((*tokens)->content, " ", 2))
-		{
-			*tokens = (*tokens)->next; // Ignorar espacios sueltos
+			{
+				parse_redir(node, str, (char *)(*tokens)->content, proc);
+				*tokens = (*tokens)->next;
+			}
 		}
 		else
 		{
-			// Concatenación Segura
-			accum = ft_strdup("");
-			while (*tokens && !is_separator((*tokens)->content))
-			{
-				temp = ft_strjoin(accum, (*tokens)->content);
-				free(accum);
-				accum = temp;
-				*tokens = (*tokens)->next;
-			}
-			node->args[i++] = accum;
+			node->args[i++] = ft_strdup(str);
+			*tokens = (*tokens)->next;
 		}
 	}
 	node->args[i] = NULL;
 }
 
-static t_cmd	*create_one_cmd(t_list **tokens)
-{
-	t_cmd	*new;
 
-	new = ft_new_cmd();
-	if (!new)
-		return (NULL);
-	new->args = malloc(sizeof(char *) * (count_args(*tokens) + 1));
-	if (!new->args)
-	{
-		free(new);
-		return (NULL);
-	}
-	fill_cmd(new, tokens);
-	return (new);
-}
 
 int	ft_tokens_to_cmds(t_process *process)
 {
 	t_list	*curr;
-	t_cmd	*new_node;
+	t_cmd	*head;
+	t_cmd	*last;
+	t_cmd	*new;
 
 	curr = process->tokens;
+	head = NULL;
+	last = NULL;
 	while (curr)
 	{
-		if (!ft_strncmp(curr->content, " ", 2)
-			|| ((char *)curr->content)[0] == '|')
+		if (((char *)curr->content)[0] == '|') // Saltamos pipes en la lista
 		{
 			curr = curr->next;
 			continue ;
 		}
-		new_node = create_one_cmd(&curr);
-		if (!new_node)
+		new = ft_new_cmd();
+		if (!new)
 			return (0);
-		ft_cmdadd_back(&process->commands, new_node);
+		new->args = malloc(sizeof(char *) * (count_args(curr) + 1));
+		fill_cmd(new, &curr, process);
+		if (!head)
+			head = new;
+		else
+			last->next = new;
+		last = new;
 	}
+	process->commands = head;
 	return (1);
 }

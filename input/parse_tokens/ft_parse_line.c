@@ -107,30 +107,23 @@ int	ft_parse_line(t_process *process)
 
 int	ft_parse_line(t_process *process)
 {
-	char	*cmd;
 	char	*fmt;
 
+	// 1. Gestionar asignaciones VAR=... (Mantenemos tu lógica)
 	if (contains_variable(process->line))
 		if (!ft_inputvar(process, &process->line))
-			return (ft_clear_strtok(), 0);
+			return (0);
+
+	// 2. Formatear operadores (poner espacios alrededor de | < >)
 	fmt = format_line(process->line);
 	if (!fmt)
-		return (perror("malloc"), ft_clear_strtok(), 0);
+		return (perror("malloc"), 0);
 	free(process->line);
 	process->line = fmt;
-	
-	// --- FIX: Delimitadores y Espacio Seguro ---
-	cmd = ft_strtok(process->line, " \t"); // Soporte para TABs
-	ft_safeadd_tokens(&process->tokens, &cmd);
-	
-	// Solo añadimos espacio si YA hay algo en la lista (evita args vacíos al inicio)
-	if (process->tokens) 
-		ft_addspace(&process->tokens);
-	// -------------------------------------------
 
-	if (!ft_strchr(process->line, ' '))
-		return (ft_clear_strtok(), 1);
-	if (!ft_std(process, process->line) && !ft_quote(process, process->line))
-		return (ft_clear_strtok(), 0);
-	return (ft_clear_strtok(), 1);
+	// 3. ¡NUEVO TOKENIZADOR! (Reemplaza a strtok/ft_std/ft_quote)
+	if (!ft_tokenize_line(process, process->line))
+		return (0);
+
+	return (1);
 }

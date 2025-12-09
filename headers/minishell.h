@@ -50,6 +50,6 @@ int			ft_tokens_to_cmds(t_process *process);
 char		*ft_get_cmd_path(char *cmd, char **envp);
 void		ft_free_array(char **arr);
 void		ft_free_cmds(t_cmd *cmds);
-int			ft_heredoc(char *delimiter);
+int ft_heredoc(char *delimiter, int expand, t_process *proc);
 
 #endif

@@ -30,7 +30,8 @@ static void	write_to_tmp(int fd, char *line)
 	free(line);
 }
 
-static int	process_heredoc_loop(int fd, char *delimiter)
+/* Bucle principal: Ahora decide si expandir o no */
+static int	process_heredoc_loop(int fd, char *delimiter, int expand, t_process *proc)
 {
 	char	*line;
 
@@ -48,12 +49,22 @@ static int	process_heredoc_loop(int fd, char *delimiter)
 			free(line);
 			break ;
 		}
+		
+		// --- LÓGICA DE EXPANSIÓN AÑADIDA ---
+		if (expand)
+		{
+			// ft_expand_heredoc_line libera la 'line' vieja y devuelve la nueva
+			line = ft_expand_heredoc_line(proc, line);
+		}
+		// -----------------------------------
+
 		write_to_tmp(fd, line);
 	}
 	return (0);
 }
 
-int	ft_heredoc(char *delimiter)
+/* Función principal actualizada con los nuevos parámetros */
+int	ft_heredoc(char *delimiter, int expand, t_process *proc)
 {
 	int	fd;
 	int	stdin_backup;
@@ -65,8 +76,12 @@ int	ft_heredoc(char *delimiter)
 	fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
 		return (close(stdin_backup), perror("heredoc open"), -1);
+	
 	signal(SIGINT, heredoc_sigint);
-	status = process_heredoc_loop(fd, delimiter);
+	
+	// Pasamos los nuevos argumentos al bucle
+	status = process_heredoc_loop(fd, delimiter, expand, proc);
+	
 	dup2(stdin_backup, STDIN_FILENO);
 	close(stdin_backup);
 	close(fd);

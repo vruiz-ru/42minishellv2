@@ -108,20 +108,27 @@ int	ft_inputvar(t_process *process, char **line)
 	{
 		if (return_value(process, *line + 1))
 			return (1);
-		return (1);
+		return (1); 
 	}
+
 	name = ft_strtok(*line, "=");
 	value = safe_value(ft_strchr(*line, '='));
+	
 	process->is_variable = true;
-	if (!ft_std(process, value) && !ft_quote(process, value))
+	
+	// --- CAMBIO AQUÍ: Usamos el nuevo tokenizador ---
+	if (!ft_tokenize_line(process, value))
 		return (0);
+	// -----------------------------------------------
+
 	trimmer(line, value);
 	value = ft_construct(process->tokens, value);
 	if (!add_to_process_env(process, name, value))
 		return (0);
+	
 	ft_lstclear(&process->tokens, free);
 	process->tokens = NULL;
 	process->is_variable = false;
-	ft_clear_strtok();
+	// ft_clear_strtok(); // Ya no es necesario si no usas strtok aquí
 	return (1);
 }

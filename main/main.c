@@ -71,7 +71,7 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	t_process	*process;
 
-	if (argc > 2)
+	if (argc > 1)
 		return (0);
 	process = NULL;
 	if (!init_parent(&process, argv[0], envp))
