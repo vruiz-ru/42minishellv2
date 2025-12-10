@@ -27,7 +27,7 @@ char	*ft_strjoin_free(char const *s1, char const *s2)
 			return (free((void *)s2), s2 = NULL, NULL);
 		return (free((void *)s2), s2 = NULL, join);
 	}
-	join = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) +1) * sizeof(char));
+	join = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
 	if (!join)
 		return (free((void *)s1), free((void *)s2), NULL);
 	join_i = -1;

@@ -18,9 +18,12 @@
 # include "import/libft/libft.h"
 # include "macros.h"
 # include "structs.h"
+# include <errno.h>
 # include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/stat.h>
+# include <sys/types.h>
 # include <sys/wait.h>
 
 // VARIABLE GLOBAL
@@ -40,7 +43,7 @@ char		*ft_construct(t_list *tokens, char *str);
 void		free_process(t_process *proc);
 void		ft_addspace(t_list **tokens);
 void		ft_safeadd_tokens(t_list **tokens, char **token);
-// En mini/headers/minishell.h
+// EXEC
 t_cmd		*ft_new_cmd(void);
 int			is_redir(char *str);
 void		ft_cmdadd_back(t_cmd **lst, t_cmd *new);
@@ -50,6 +53,7 @@ int			ft_tokens_to_cmds(t_process *process);
 char		*ft_get_cmd_path(char *cmd, char **envp);
 void		ft_free_array(char **arr);
 void		ft_free_cmds(t_cmd *cmds);
-int ft_heredoc(char *delimiter, int expand, t_process *proc);
+int			ft_heredoc(char *delimiter, int expand, t_process *proc);
+void		ft_exec_error(char *path, char *cmd, int err);
 
 #endif

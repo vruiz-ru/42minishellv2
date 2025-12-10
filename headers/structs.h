@@ -16,13 +16,13 @@
 # include "../import/libft/lists/lists.h"
 # include <stdbool.h>
 
-typedef struct Environment_utils
+typedef struct s_environment_utils
 {
 	char			**parent_env;
 	char			**static_env;
 }					t_envs;
 
-typedef struct Prompt_utils
+typedef struct s_prompt_utils
 {
 	char			*display;
 	char			*shell_name;
@@ -55,7 +55,7 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }					t_cmd;
 
-typedef struct Process_utils
+typedef struct s_process_utils
 {
 	t_prompt		*prompt;
 	t_envs			*envs;

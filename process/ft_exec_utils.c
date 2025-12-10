@@ -56,12 +56,8 @@ char	*ft_get_cmd_path(char *cmd, char **envp)
 	char	*final_path;
 	int		i;
 
-	if (ft_strchr(cmd, '/') != NULL)
-	{
-		if (access(cmd, F_OK) == 0)
-			return (ft_strdup(cmd));
-		return (NULL);
-	}
+	if (ft_strchr(cmd, '/'))
+		return (ft_strdup(cmd));
 	i = 0;
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
@@ -86,4 +82,26 @@ void	cmd_not_found(char *cmd)
 	ft_putstr_fd(msg, 2);
 	free(msg);
 	exit(127);
+}
+
+void	ft_exec_error(char *path, char *cmd, int err)
+{
+	struct stat	sb;
+
+	ft_putstr_fd("minishell: ", 2);
+	if (stat(path, &sb) == 0 && S_ISDIR(sb.st_mode))
+	{
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		free(path);
+		exit(126);
+	}
+	errno = err;
+	perror(cmd);
+	free(path);
+	if (err == ENOENT)
+		exit(127);
+	if (err == EACCES)
+		exit(126);
+	exit(1);
 }

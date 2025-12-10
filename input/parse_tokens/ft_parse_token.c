@@ -22,8 +22,8 @@ static int	append_var(t_process *p, char **res, char *str, int i)
 	if (str[i] == '?')
 	{
 		val = ft_itoa(p->status);
-		*res = ft_strjoin_free(*res, val); // ft_strjoin_free libera val
-		return (i + 1); // ¡NO HACEMOS free(val) AQUÍ!
+		*res = ft_strjoin_free(*res, val);
+		return (i + 1);
 	}
 	start = i;
 	if (!ft_isalnum(str[i]) && str[i] != '_')
@@ -35,8 +35,8 @@ static int	append_var(t_process *p, char **res, char *str, int i)
 	if (!val)
 		val = ft_getvar(p->envs->static_env, var_name);
 	if (val)
-		*res = ft_strjoin_free(*res, val); // ft_strjoin_free libera val
-	return (free(var_name), i); // ¡NO HACEMOS free(val) AQUÍ!
+		*res = ft_strjoin_free(*res, val);
+	return (free(var_name), i);
 }
 
 char	*ft_parse_token(t_process *process, char *str, char token)
@@ -68,38 +68,33 @@ char	*ft_parse_token(t_process *process, char *str, char token)
 	return (free(str), res);
 }
 
-/* 1. Limpia el delimitador y nos avisa si tenía comillas */
 char	*ft_parse_delimiter(char *str, int *quoted)
 {
 	char	*res;
 	int		i;
-	char	quote;
+	char	q;
 
 	if (!str)
 		return (NULL);
 	res = ft_strdup("");
-	i = 0;
-	quote = 0;
+	i = -1;
+	q = 0;
 	*quoted = 0;
-	while (str[i])
+	while (str[++i])
 	{
-		if (!quote && (str[i] == '\'' || str[i] == '"'))
+		if (!q && (str[i] == '\'' || str[i] == '\"'))
 		{
-			quote = str[i++];
-			*quoted = 1; // ¡Detectamos comillas!
+			q = str[i];
+			*quoted = 1;
 		}
-		else if (quote && str[i] == quote)
-		{
-			quote = 0;
-			i++;
-		}
+		else if (q && str[i] == q)
+			q = 0;
 		else
-			res = ft_addchar(res, str[i++]);
+			res = ft_addchar(res, str[i]);
 	}
 	return (free(str), res);
 }
 
-/* 2. Expande una línea del heredoc (Solo busca $) */
 char	*ft_expand_heredoc_line(t_process *proc, char *str)
 {
 	char	*res;
@@ -112,7 +107,7 @@ char	*ft_expand_heredoc_line(t_process *proc, char *str)
 	while (str[i])
 	{
 		if (str[i] == '$')
-			i = append_var(proc, &res, str, i); // Reutilizamos tu append_var existente
+			i = append_var(proc, &res, str, i);
 		else
 			res = ft_addchar(res, str[i++]);
 	}

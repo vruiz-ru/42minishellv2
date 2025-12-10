@@ -29,14 +29,11 @@ static t_process	*init(void)
 	return (process);
 }
 
-
-/* Asegura que existan PWD y OLDPWD si el entorno está vacío (env -i) */
 static void	ensure_minimal_env(t_process *process)
 {
 	char	*cwd;
 	char	*tmp;
 
-	/* 1. PWD: Si no existe, lo creamos con la ruta actual */
 	if (ft_mapitem_index(process->envs->parent_env, "PWD") == -1)
 	{
 		cwd = getcwd(NULL, 0);
@@ -48,7 +45,6 @@ static void	ensure_minimal_env(t_process *process)
 			free(tmp);
 		}
 	}
-	/* 2. OLDPWD: Si no existe, lo creamos para export (sin valor) */
 	if (ft_mapitem_index(process->envs->parent_env, "OLDPWD") == -1)
 	{
 		ft_mapitem_add(&process->envs->parent_env, "OLDPWD");
@@ -89,20 +85,14 @@ int	init_parent(t_process **parent, char *name, char *envp[])
 		return (0);
 	if (envp && *envp)
 		(*parent)->envs->parent_env = ft_mapdup(envp);
-	
-	/* NUEVO: Aseguramos variables mínimas antes de tocar SHLVL */
 	ensure_minimal_env(*parent);
-	
-	/* Incrementamos SHLVL (creándolo si no existe) */
 	increment_shell_level(*parent);
-	
-	/* Guardamos una copia estática para ft_getvar de respaldo */
 	(*parent)->envs->static_env = ft_mapdup((*parent)->envs->parent_env);
-
 	(*parent)->prompt->shell_name = ft_strdup(name);
 	if (!(*parent)->prompt->shell_name)
 		return (perror("malloc"), exit(EXIT_FAILURE), 0);
-	(*parent)->prompt->home_path = ft_getvar((*parent)->envs->parent_env, "HOME");
+	(*parent)->prompt->home_path = ft_getvar((*parent)->envs->parent_env,
+			"HOME");
 	(*parent)->prompt->current_wd = ft_getcwd();
 	if (!(*parent)->prompt->current_wd)
 		return (perror("malloc"), exit(EXIT_FAILURE), 0);

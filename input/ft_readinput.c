@@ -10,9 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../headers/minishell.h"
 #include "input.h"
-
-extern int	g_signal_status;
 
 void	ft_readinput(t_process *process)
 {
