@@ -14,113 +14,111 @@
 
 static char	*safe_value(char *line)
 {
-	char	*value;
-	int		idx_line;
+	int		i;
 	bool	dq;
 	bool	sq;
-	size_t	len;
 
-	idx_line = 0;
+	i = 0;
 	dq = false;
 	sq = false;
-	while (line[idx_line])
+	while (line[i])
 	{
-		if (line[idx_line] == ' ' && !dq && !sq)
+		if (line[i] == ' ' && !dq && !sq)
 			break ;
-		else if (line[idx_line] == '"' && !sq)
+		else if (line[i] == '"' && !sq)
 			dq = !dq;
-		else if (line[idx_line] == '\'' && !dq)
+		else if (line[i] == '\'' && !dq)
 			sq = !sq;
-		idx_line++;
+		i++;
 	}
-	len = idx_line;
-	value = ft_substr(line, 0, len);
-	if (!value)
-		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-	return (value);
+	return (ft_substr(line, 0, i));
 }
 
-static char	*construct_variable(char *name, char *value)
-{
-	char	*variable;
-
-	variable = NULL;
-	variable = ft_strdup(name);
-	if (!variable)
-		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-	if (!ft_strchr(value, '='))
-		variable = ft_addchar(variable, '=');
-	if (!variable)
-		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-	variable = ft_strjoin_free(variable, value);
-	if (!variable)
-		return (perror("malloc"), exit(EXIT_FAILURE), NULL);
-	return (variable);
-}
-
-static void	trimmer(char **line, char *delim)
+static void	trimmer(char **line, char *name, char *val)
 {
 	char	*res;
-	char	*line_from_delim;
-	int		line_len;
-	int		from_idx;
+	size_t	cut_len;
 
-	res = NULL;
-	line_len = ft_strlen(*line);
-	line_from_delim = ft_strnstr(*line, delim, line_len);
-	from_idx = line_len - ft_strlen(line_from_delim);
-	from_idx += ft_strlen(delim);
-	if ((*line)[from_idx])
+	cut_len = ft_strlen(name) + 1 + ft_strlen(val);
+	if ((*line)[cut_len])
+		res = ft_strdup(*line + cut_len);
+	else
+		res = ft_strdup("");
+	if (!res)
 	{
-		res = ft_strdup(*line + from_idx);
-		if (!res)
-		{
-			perror("malloc");
-			exit(EXIT_FAILURE);
-		}
+		perror("malloc");
+		exit(EXIT_FAILURE);
 	}
 	free(*line);
 	*line = res;
 }
 
-static int	add_to_process_env(t_process *process, char *name, char *value)
+static int	add_var(t_process *proc, char *n, char *v)
 {
 	char	*var;
 	int		idx;
 
-	var = construct_variable(name, value);
+	var = ft_strjoin(n, "=");
 	if (!var)
-		return (free(name), 0);
-	idx = ft_mapitem_index(*&process->envs->static_env, var);
-	if (idx >= 0 && !ft_mapitem_replace(&process->envs->static_env, var, idx))
-		return (free(var), free(name), 0);
-	else if (!ft_mapitem_add(&process->envs->static_env, var))
-		return (free(var), free(name), 0);
-	return (free(var), free(name), 1);
+		return (free(n), 0);
+	var = ft_strjoin_free(var, v);
+	if (!var)
+		return (free(n), 0);
+	idx = ft_mapitem_index(proc->envs->static_env, var);
+	if (idx >= 0)
+	{
+		if (!ft_mapitem_replace(&proc->envs->static_env, var, idx))
+			return (free(var), free(n), 0);
+	}
+	else if (!ft_mapitem_add(&proc->envs->static_env, var))
+		return (free(var), free(n), 0);
+	return (free(var), free(n), 1);
 }
 
-int	ft_inputvar(t_process *process, char **line)
+static int	get_data(char *line, char **name, char **val)
+{
+	char	*eq;
+
+	eq = ft_strchr(line, '=');
+	if (!eq)
+		return (0);
+	*val = safe_value(eq + 1);
+	if (!*val)
+		return (0);
+	*name = ft_substr(line, 0, eq - line);
+	if (!*name)
+	{
+		free(*val);
+		return (0);
+	}
+	return (1);
+}
+
+int	ft_inputvar(t_process *p, char **line)
 {
 	char	*name;
-	char	*value;
+	char	*val;
 
 	if (*(*line) == '$')
 	{
-		if (return_value(process, *line + 1))
+		if (return_value(p, *line + 1))
 			return (1);
 		return (1);
 	}
-	name = ft_strtok(*line, "=");
-	value = safe_value(ft_strchr(*line, '='));
-	process->is_variable = true;
-	if (!ft_tokenize_line(process, value))
+	if (!get_data(*line, &name, &val))
 		return (0);
-	trimmer(line, value);
-	value = ft_construct(process->tokens, value);
-	if (!add_to_process_env(process, name, value))
-		return (0);
-	ft_lstclear(&process->tokens, free);
-	process->tokens = NULL;
-	process->is_variable = false;
-	return (1);
+	if (*val)
+	{
+		p->is_variable = true;
+		if (!ft_tokenize_line(p, val))
+			return (free(name), free(val), 0);
+		trimmer(line, name, val);
+		val = ft_construct(p->tokens, val);
+		ft_lstclear(&p->tokens, free);
+		p->tokens = NULL;
+		p->is_variable = false;
+	}
+	else
+		trimmer(line, name, val);
+	return (add_var(p, name, val));
 }

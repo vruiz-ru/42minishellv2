@@ -97,5 +97,7 @@ int	ft_parse_line(t_process *process)
 	process->line = fmt;
 	if (!ft_tokenize_line(process, process->line))
 		return (0);
+	if (!ft_check_syntax(process))
+		return (0);
 	return (1);
 }

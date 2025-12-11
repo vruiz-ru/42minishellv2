@@ -51,4 +51,5 @@ int		ft_quote(t_process *process, char *line);
 int		ft_std(t_process *process, char *line);
 char	*ft_parse_delimiter(char *str, int *quoted);
 char	*ft_expand_heredoc_line(t_process *proc, char *str);
+int		ft_check_syntax(t_process *proc);
 #endif

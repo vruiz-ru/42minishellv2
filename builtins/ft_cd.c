@@ -43,7 +43,7 @@ int	ft_cd(t_process *process, t_cmd *cmd)
 	arg = cmd->args[1];
 	if (invalid_options(arg))
 		return (ft_putstr_fd("cd: invalid options\n", 2), 1);
-	if (!ft_strncmp(arg, "..", 2))
+	if (!ft_strncmp(arg, "..", 3))
 		return (up_feature(process, cmd));
 	if (arg[0] == '~')
 		return (home_feature(process, cmd));

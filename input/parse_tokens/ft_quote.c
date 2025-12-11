@@ -10,9 +10,22 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../headers/minishell.h"
 #include "../input.h"
 
-static void	skip_quotes(char *line, int *i)
+static int	handle_error(t_process *proc, int type)
+{
+	if (type == 1)
+	{
+		ft_putstr_fd("minishell: syntax error: unclosed quotes\n", 2);
+		proc->status = 2;
+	}
+	ft_lstclear(&proc->tokens, free);
+	proc->tokens = NULL;
+	return (2);
+}
+
+static int	skip_quotes(char *line, int *i)
 {
 	char	quote;
 
@@ -21,18 +34,27 @@ static void	skip_quotes(char *line, int *i)
 	while (line[*i] && line[*i] != quote)
 		(*i)++;
 	if (line[*i] == quote)
+	{
 		(*i)++;
+		return (0);
+	}
+	return (1);
 }
 
-static int	get_token_len(char *line)
+static int	get_full_len(char *line)
 {
 	int	i;
 
+	if (ft_strchr("<>|", *line))
+		return (1 + (ft_strchr("<>", *line) && *line == line[1]));
 	i = 0;
 	while (line[i] && !ft_strchr(" \t<>|", line[i]))
 	{
 		if (line[i] == '\'' || line[i] == '"')
-			skip_quotes(line, &i);
+		{
+			if (skip_quotes(line, &i))
+				return (-1);
+		}
 		else
 			i++;
 	}
@@ -57,9 +79,7 @@ static int	add_next_token(t_process *process, char *line, int len)
 			parsed = ft_addchar(parsed, 1);
 	}
 	else
-	{
 		parsed = ft_parse_token(process, raw, 'n');
-	}
 	if (!parsed)
 		return (free(raw), 0);
 	ft_safeadd_tokens(&process->tokens, &parsed);
@@ -79,12 +99,11 @@ int	ft_tokenize_line(t_process *proc, char *line)
 			i++;
 			continue ;
 		}
-		if (ft_strchr("<>|", line[i]))
-			len = 1 + (ft_strchr("<>", line[i]) && line[i] == line[i + 1]);
-		else
-			len = get_token_len(line + i);
+		len = get_full_len(line + i);
+		if (len == -1)
+			return (handle_error(proc, 1));
 		if (!add_next_token(proc, line + i, len))
-			return (0);
+			return (handle_error(proc, 0));
 		i += len;
 	}
 	return (1);
