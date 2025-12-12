@@ -38,6 +38,7 @@ static int	append_var(t_process *p, char **res, char *str, int i)
 		*res = ft_strjoin_free(*res, val);
 	return (free(var_name), i);
 }
+
 static int	check_quotes(char c, char *quote)
 {
 	if (!*quote && (c == '\'' || c == '"'))
@@ -52,8 +53,6 @@ static int	check_quotes(char c, char *quote)
 	}
 	return (0);
 }
-
-
 
 char	*ft_parse_token(t_process *process, char *str, char token)
 {

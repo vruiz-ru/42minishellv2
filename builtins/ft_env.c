@@ -28,4 +28,3 @@ int	ft_env(t_process *process, t_cmd *cmd)
 	}
 	return (0);
 }
-
