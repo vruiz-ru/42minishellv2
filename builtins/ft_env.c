@@ -17,13 +17,15 @@ int	ft_env(t_process *process, t_cmd *cmd)
 	char	**ptr;
 
 	(void)cmd;
-	if (!process || !*process->envs->parent_env)
+	if (!process || !process->envs->parent_env || !*process->envs->parent_env)
 		return (0);
 	ptr = process->envs->parent_env;
 	while (*ptr)
 	{
-		ft_printf("%s\n", *ptr);
+		if (ft_strchr(*ptr, '='))
+			ft_printf("%s\n", *ptr);
 		ptr++;
 	}
 	return (0);
 }
+

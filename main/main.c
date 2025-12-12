@@ -12,7 +12,7 @@
 
 #include "../headers/minishell.h"
 
-int		g_signal_status = 0;
+int	g_signal_status = 0;
 
 void	reset_utils(t_process **process)
 {

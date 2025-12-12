@@ -38,6 +38,22 @@ static int	append_var(t_process *p, char **res, char *str, int i)
 		*res = ft_strjoin_free(*res, val);
 	return (free(var_name), i);
 }
+static int	check_quotes(char c, char *quote)
+{
+	if (!*quote && (c == '\'' || c == '"'))
+	{
+		*quote = c;
+		return (1);
+	}
+	if (*quote && c == *quote)
+	{
+		*quote = 0;
+		return (1);
+	}
+	return (0);
+}
+
+
 
 char	*ft_parse_token(t_process *process, char *str, char token)
 {
@@ -53,15 +69,15 @@ char	*ft_parse_token(t_process *process, char *str, char token)
 	quote = 0;
 	while (str[i])
 	{
-		if (!quote && (str[i] == '\'' || str[i] == '"'))
-			quote = str[i++];
-		else if (quote && str[i] == quote)
-		{
-			quote = 0;
+		if (check_quotes(str[i], &quote))
 			i++;
-		}
 		else if (str[i] == '$' && quote != '\'')
-			i = append_var(process, &res, str, i);
+		{
+			if (!quote && (str[i + 1] == '\'' || str[i + 1] == '"'))
+				i++;
+			else
+				i = append_var(process, &res, str, i);
+		}
 		else
 			res = ft_addchar(res, str[i++]);
 	}

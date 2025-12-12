@@ -13,15 +13,11 @@
 #include "../headers/minishell.h"
 #include "input.h"
 
-/*
 void	ft_readinput(t_process *process)
 {
+	int	exit_code;
+
 	process->prompt->display = ft_prompt(process);
-	if (process->prompt->display == NULL)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
 	process->line = readline(process->prompt->display);
 	if (g_signal_status != 0)
 	{
@@ -31,36 +27,9 @@ void	ft_readinput(t_process *process)
 	if (process->line == NULL)
 	{
 		ft_putstr_fd("exit\n", 1);
-		exit(process->status);
-	}
-	if (*(process->line) == '\0')
-		return ;
-	add_history(process->line);
-	ft_parse_line(process);
-}*/
-
-void	ft_readinput(t_process *process)
-{
-	int	exit_code;
-
-	process->prompt->display = ft_prompt(process);
-	if (process->prompt->display == NULL)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
-	process->line = readline(process->prompt->display);
-	if (g_signal_status != 0)
-	{
-		process->status = g_signal_status;
-		g_signal_status = 0;
-	}
-	if (process->line == NULL) // Detectamos Ctrl+D
-	{
-		ft_putstr_fd("exit\n", 1);
 		exit_code = process->status;
-		free_process(process); // <-- IMPORTANTE: Liberar memoria struct
-		rl_clear_history();    // <-- IMPORTANTE: Limpiar historial readline
+		free_process(process);
+		rl_clear_history();
 		exit(exit_code);
 	}
 	if (*(process->line) == '\0')
@@ -68,4 +37,3 @@ void	ft_readinput(t_process *process)
 	add_history(process->line);
 	ft_parse_line(process);
 }
-

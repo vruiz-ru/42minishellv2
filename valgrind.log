@@ -1,0 +1,212 @@
+==1370423== Memcheck, a memory error detector
+==1370423== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1370423== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1370423== Command: ./minishell
+==1370423== Parent PID: 1367137
+==1370423== 
+==1370554== 
+==1370554== FILE DESCRIPTORS: 7 open (3 std) at exit.
+==1370554== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
+==1370554==    <inherited from parent>
+==1370554== 
+==1370554== Open AF_UNIX socket 41: <unknown>
+==1370554==    <inherited from parent>
+==1370554== 
+==1370554== Open file descriptor 40: /home/vruiz-ru/.config/Code/logs/20251212T172924/ptyhost.log
+==1370554==    <inherited from parent>
+==1370554== 
+==1370554== Open file descriptor 3: /home/vruiz-ru/Desktop/v2mini/valgrind.log
+==1370554==    <inherited from parent>
+==1370554== 
+==1370554== 
+==1370554== HEAP SUMMARY:
+==1370554==     in use at exit: 218,161 bytes in 393 blocks
+==1370554==   total heap usage: 699 allocs, 306 frees, 239,972 bytes allocated
+==1370554== 
+==1370554== 7 bytes in 2 blocks are still reachable in loss record 1 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x40873D: ft_calloc (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x408695: ft_strdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4072AF: ft_safeadd_tokens (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4050C4: add_next_token (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x404DC5: ft_tokenize_line (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4043FD: ft_parse_line (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x405D0E: ft_readinput (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407857: shell_loop (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407809: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 7 bytes in 2 blocks are still reachable in loss record 2 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x40873D: ft_calloc (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x408695: ft_strdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x40556E: fill_cmd (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4053C1: ft_tokens_to_cmds (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4078C4: execute_commands (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407896: shell_loop (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407809: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 8 bytes in 1 blocks are still reachable in loss record 3 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x40873D: ft_calloc (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x408695: ft_strdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x409DF7: ft_mapitem_replace (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406FBE: increment_shell_level (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406BB7: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 8 bytes in 1 blocks are still reachable in loss record 5 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x40447C: format_line (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4043A9: ft_parse_line (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x405D0E: ft_readinput (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407857: shell_loop (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407809: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 12 bytes in 1 blocks are still reachable in loss record 7 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x40873D: ft_calloc (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x408695: ft_strdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406BE5: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 15 bytes in 1 blocks are still reachable in loss record 10 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x40873D: ft_calloc (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x408695: ft_strdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x401CB1: ft_getvar (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406C41: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 16 bytes in 1 blocks are still reachable in loss record 13 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x406D73: init (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406B48: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 24 bytes in 1 blocks are still reachable in loss record 17 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x40825A: ft_strjoin (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x405A63: ft_prompt (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x405C24: ft_readinput (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407857: shell_loop (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407809: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 24 bytes in 1 blocks are still reachable in loss record 20 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x4053A6: ft_tokens_to_cmds (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4078C4: execute_commands (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407896: shell_loop (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407809: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 30 bytes in 1 blocks are still reachable in loss record 23 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x40873D: ft_calloc (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x408695: ft_strdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x401BAE: ft_getcwd (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406C57: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 30 bytes in 1 blocks are still reachable in loss record 24 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x40873D: ft_calloc (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x408695: ft_strdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x401BAE: ft_getcwd (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406C9B: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 32 bytes in 1 blocks are still reachable in loss record 25 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x403C91: ft_new_cmd (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x405373: ft_tokens_to_cmds (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4078C4: execute_commands (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407896: shell_loop (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407809: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 32 bytes in 2 blocks are still reachable in loss record 26 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x409085: ft_lstnew (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4072E8: ft_safeadd_tokens (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4050C4: add_next_token (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x404DC5: ft_tokenize_line (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4043FD: ft_parse_line (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x405D0E: ft_readinput (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407857: shell_loop (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x407809: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 40 bytes in 1 blocks are still reachable in loss record 27 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x406D88: init (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406B48: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 64 bytes in 1 blocks are still reachable in loss record 32 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x406D31: init (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406B48: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 568 bytes in 1 blocks are still reachable in loss record 41 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x409881: ft_mapdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406B8E: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 568 bytes in 1 blocks are still reachable in loss record 42 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x409881: ft_mapdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406BCA: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 4,150 bytes in 69 blocks are still reachable in loss record 70 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x40873D: ft_calloc (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x408695: ft_strdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4098C8: ft_mapdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406B8E: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== 4,158 bytes in 70 blocks are still reachable in loss record 71 of 85
+==1370554==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1370554==    by 0x40873D: ft_calloc (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x408695: ft_strdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4098C8: ft_mapdup (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x406BCA: init_parent (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554==    by 0x4077EB: main (in /home/vruiz-ru/Desktop/v2mini/minishell)
+==1370554== 
+==1370554== LEAK SUMMARY:
+==1370554==    definitely lost: 0 bytes in 0 blocks
+==1370554==    indirectly lost: 0 bytes in 0 blocks
+==1370554==      possibly lost: 0 bytes in 0 blocks
+==1370554==    still reachable: 9,793 bytes in 159 blocks
+==1370554==         suppressed: 208,368 bytes in 234 blocks
+==1370554== 
+==1370554== For lists of detected and suppressed errors, rerun with: -s
+==1370554== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1370423== 
+==1370423== FILE DESCRIPTORS: 7 open (3 std) at exit.
+==1370423== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
+==1370423==    <inherited from parent>
+==1370423== 
+==1370423== Open AF_UNIX socket 41: <unknown>
+==1370423==    <inherited from parent>
+==1370423== 
+==1370423== Open file descriptor 40: /home/vruiz-ru/.config/Code/logs/20251212T172924/ptyhost.log
+==1370423==    <inherited from parent>
+==1370423== 
+==1370423== Open file descriptor 3: /home/vruiz-ru/Desktop/v2mini/valgrind.log
+==1370423==    <inherited from parent>
+==1370423== 
+==1370423== 
+==1370423== HEAP SUMMARY:
+==1370423==     in use at exit: 208,205 bytes in 222 blocks
+==1370423==   total heap usage: 732 allocs, 510 frees, 240,429 bytes allocated
+==1370423== 
+==1370423== LEAK SUMMARY:
+==1370423==    definitely lost: 0 bytes in 0 blocks
+==1370423==    indirectly lost: 0 bytes in 0 blocks
+==1370423==      possibly lost: 0 bytes in 0 blocks
+==1370423==    still reachable: 0 bytes in 0 blocks
+==1370423==         suppressed: 208,205 bytes in 222 blocks
+==1370423== 
+==1370423== For lists of detected and suppressed errors, rerun with: -s
+==1370423== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
